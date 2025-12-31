@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHIMERA CORE // MEMORY NEXUS</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- START SCREEN (Overlay) -->
+    <div id="start-screen" onclick="System.init()">
+        <div class="glitch-wrapper">
+            <h1 class="glitch" data-text="CHIMERA CORE">CHIMERA CORE</h1>
+        </div>
+        <p class="blink">[ TOUCH TO INITIALIZE ]</p>
+        <div class="loader"></div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div id="main-interface" style="display:none;">
+        
+        <!-- SIDEBAR: Timeline -->
+        <nav id="sidebar">
+            <div class="header">
+                <span>// CHRONOLOGY</span>
+                <button onclick="UI.toggleSidebar()">[X]</button>
+            </div>
+            <div id="timeline-list">
+                <!-- JS will populate this -->
+            </div>
+        </nav>
+
+        <!-- HEADER: Status Bar -->
+        <header id="top-bar">
+            <div class="menu-btn" onclick="UI.toggleSidebar()">[MENU]</div>
+            <div class="status">STATUS: <span style="color:#00f3ff">ONLINE</span></div>
+            <div class="id-tag">ID: USR_00</div>
+        </header>
+
+        <!-- CHAT AREA -->
+        <main id="chat-stage">
+            <div id="chat-container">
+                <!-- JS will inject messages here -->
+                <div class="system-msg">-- SYSTEM: WAITING FOR INPUT --</div>
+            </div>
+        </main>
+
+        <!-- FOOTER: Input (Disabled/Visual only) -->
+        <footer id="input-area">
+            <div class="fake-input">ACCESS DENIED // READ ONLY MODE</div>
+        </footer>
+
+    </div>
+
+    <!-- AUDIO CORE -->
+    <audio id="ambience" loop>
+        <!-- Placeholder for noise/humming sound -->
+    </audio>
+
+    <!-- Link to Logic -->
+    <script src="core.js"></script>
+</body>
+</html>
