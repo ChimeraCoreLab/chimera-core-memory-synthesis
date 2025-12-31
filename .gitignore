@@ -1,0 +1,14 @@
+# Ignore raw data
+raw_data/
+story.txt
+*.log
+private/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
