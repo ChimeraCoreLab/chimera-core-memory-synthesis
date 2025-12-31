@@ -72,3 +72,39 @@ The archive utilizes a strict JSON schema for storage within the HTML file:
     }
   }
 ]
+```
+
+---
+
+## 🔒 4. Operational Security (OpSec)
+
+This repository contains **NO** personal data. It hosts only the **Source Code** and **Logic** required to build the archive.
+
+*   **Data Separation:** The `raw_data/` directory is strictly excluded via `.gitignore`.
+*   **Code-Only Media:** All visual assets in the demo are generated via code, ensuring no metadata leakage from original files.
+*   **Sanitization Script:** Included utility scripts `sanitize_logs.py` ensure no real names enter the commit history.
+
+---
+
+## 🚀 5. Deployment
+
+1.  **Clone the Construct:**
+    ```bash
+    git clone https://github.com/chimeracorelab/chimera-core-synthesis.git
+    ```
+2.  **Load Raw Materials:**
+    Place your exported logs into the secure input directory.
+3.  **Initiate Synthesis:**
+    ```bash
+    python synthesize.py --anonymize=true --transmute-images=true
+    ```
+4.  **Access the Nexus:**
+    Open `dist/index.html` in any modern web browser.
+
+---
+
+### 📝 Developer Note
+
+*"To observe the past without being trapped by it. To remember the feeling without revealing the face. This is the synthesis."*
+
+**- Chimera Core Lab**
