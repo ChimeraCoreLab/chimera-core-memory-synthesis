@@ -2,7 +2,10 @@
 
 ![Project Status](https://img.shields.io/badge/Status-Active_Research-00f3ff?style=for-the-badge)
 ![Core](https://img.shields.io/badge/Core-Digital_Synthesis-ff003c?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-333333?style=for-the-badge)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/Data_License-CC_BY--NC--SA_4.0-ff003c.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+> **"Code is governed by GPLv3. Memory is governed by CC BY-NC-SA 4.0."**
 
 > **"If memories are data, then immortality is just a backup away."**
 > — *ChimeraCoreLab*
