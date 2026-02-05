@@ -45,3 +45,5 @@ This project contains highly personal data synthesis methods. It is intended for
 
 ---
 **ChimeraCoreLab** // *Constructing the Ghost in the Machine.*
+
+The software (Code) is licensed under GPLv3. However, the embedded datasets (Anonymized Logs/Memories) are for academic and research purposes only. DESECRATION OR COMMERCIAL HARVESTING OF HUMAN MEMORY DATA IS STRICTLY PROHIBITED
