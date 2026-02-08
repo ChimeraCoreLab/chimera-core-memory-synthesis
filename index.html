@@ -1183,20 +1183,83 @@ details.file-viewer .file-content {
     display: block;
     animation: fadeIn 0.3s ease-out;
 }
+#gallery {
+    background: var(--c-void);
+    padding: 100px 2%;
+}
+.gallery-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.gal-month-section {
+    margin-bottom: 50px;
+}
+.gal-date-label {
+    font-family: var(--f-mono);
+    color: var(--c-bas);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--c-dim);
+    padding: 10px 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 3px;
+}
 .gal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    align-content: start;
 }
 .gal-item {
-    aspect-ratio: 1;
-    background: #111;
-    border: 1px solid #333;
+    aspect-ratio: 1 / 1;
+    background: #0a0a0a;
+    border: 1px solid #222;
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    transition: 0.2s;
+    transition: all 0.4s var(--ease-out);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.gal-item:hover {
+    border-color: var(--c-cyan);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 243, 255, 0.2);
+    z-index: 10;
+}
+.gal-preview-box {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease;
+}
+.gal-item:hover .gal-preview-box {
+    transform: scale(1.1);
+}
+.gal-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    opacity: 0;
+    transition: 0.3s;
+}
+.gal-item:hover .gal-overlay {
+    opacity: 1;
+}
+.gal-overlay span {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    color: var(--c-cyan);
+}
+.gal-item svg {
+    width: 90%;
+    height: 90%;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
 }
 .gal-item:hover {
     border-color: var(--c-cyan);
@@ -1536,6 +1599,13 @@ details.file-viewer .file-content {
     <p style="color: #333; margin-top: 10px; font-size: 0.6rem; letter-spacing: 1px;">COPYRIGHT 2023-2025 // MEMORY ARCHIVE</p>
 </footer>
 <script>
+function logConsole(msg) {
+    console.log(msg); // แสดงใน F12
+    const consoleLine = document.getElementById('console-log');
+    if (consoleLine) {
+        consoleLine.innerText = "> " + msg + " _";
+    }
+}
 const PROJECT_GALLERIES = {
     hauntedHole: Array.from({length: 40}, (_, i) => {
         const n = i + 1;
@@ -1823,19 +1893,10 @@ function updateTransform(el) {
 let currentZoom = 1;
 let lastTouchDist = 0;
 function renderGallery() {
-    const grid = document.querySelector('.gallery-container');
-    if (!grid) return;
-    grid.innerHTML = '';
-    Object.assign(grid.style, {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
-        gap: '8px',
-        padding: '15px',
-        overflowY: 'auto',
-        alignContent: 'start',
-        background: '#020202',
-        position: 'relative'
-    });
+    const gridContainer = document.querySelector('.gallery-container');
+    if (!gridContainer) return;
+    gridContainer.innerHTML = '<div id="gal-scroller" style="width:100%; height:100%; overflow-y:auto; padding:20px; background:#020202;"></div>';
+    const scroller = document.getElementById('gal-scroller');
     let artifacts = [];
     RAW_DATA.forEach(day => {
         day.l.forEach(log => {
@@ -1847,55 +1908,102 @@ function renderGallery() {
                     svg: log.svg,
                     date: day.d,
                     time: log.t,
-                    analysis: log.analysis || `Visual artifact analyzed at temporal node ${day.d}.`
+                    analysis: log.analysis || `Fragment analyzed at ${day.d} [${log.t}]`
                 });
             }
         });
     });
     if (artifacts.length === 0) {
-        grid.innerHTML = '<div class="gallery-placeholder" style="grid-column:1/-1; padding-top:100px; opacity:0.3;">[ NO_VISUAL_DATA_RECOVERED ]</div>';
+        scroller.innerHTML = '<div class="gallery-placeholder" style="padding-top:100px; opacity:0.3; text-align:center; font-family:var(--f-mono);">[ NO_VISUAL_DATA_RECOVERED ]</div>';
         return;
     }
+    const grouped = {};
     artifacts.forEach(art => {
-        const item = document.createElement('div');
-        item.className = 'gal-item';
-        item.style.height = '110px';
-        let previewHTML = "";
-        if (art.type === 'I') {
-            previewHTML = art.content.startsWith('IMG_')
-                ? generateSVGFromID(art.content)
-                : `<img src="${art.content}" style="width:100%; height:100%; object-fit:cover; opacity:0.6;">`;
-        } else if (art.type === 'S') {
-            previewHTML = EmojiEngine.render(art.content, 60);
-        } else if (art.type === 'V') {
-            previewHTML = `<div style="height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--c-bas); background:#0a0a0a;">
-                                <i class="fa-solid fa-play-circle fa-2x"></i>
-                                <span style="font-size:8px; margin-top:5px; color:#444;">VID_DATA</span>
-                             </div>`;
-        }
-        item.innerHTML = `
-            <div class="gal-preview-box" style="width:100%; height:100%; overflow:hidden; display:flex; justify-content:center; align-items:center; pointer-events:none;">
-                ${previewHTML}
-            </div>
-            <div class="gal-overlay">
-                <span>${formatDate(art.date)} // ${formatTime(art.time)}</span>
-            </div>
-        `;
-        const isolatedContext = [{
-            id: art.content.startsWith('IMG_') ? art.content : art.msgId,
-            svg: (art.type === 'I' && art.content.startsWith('IMG_')) ? generateSVGFromID(art.content) : art.svg,
-            url: (art.type === 'I' && !art.content.startsWith('IMG_')) ? art.content : null,
-            emoji: (art.type === 'S') ? art.content : null,
-            analysis: art.analysis,
-            msgId: art.msgId,
-            date: art.date
-        }];
-        item.onclick = () => {
-            openVisualCollection(isolatedContext, 0);
-        };
-        grid.appendChild(item);
+        const key = art.date.substring(0, 6);
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(art);
     });
-    logConsole(`VISUAL_DATABASE: RECONSTRUCTION_COMPLETE. [${artifacts.length} ARTIFACTS FOUND]`);
+    const sortedMonthKeys = Object.keys(grouped).sort((a, b) => b - a);
+    sortedMonthKeys.forEach(monthKey => {
+        const year = monthKey.substring(0, 4);
+        const month = monthKey.substring(4, 6);
+        const monthSection = document.createElement('div');
+        monthSection.style.marginBottom = "40px";
+        monthSection.innerHTML = `
+            <div class="gal-month-label" style="font-family:var(--f-mono); color:var(--c-bas); font-size:12px; border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:15px; display:flex; justify-content:space-between; letter-spacing:2px;">
+                <span><i class="fa-solid fa-layer-group"></i> CLUSTER: ${year} / ${month}</span>
+                <span style="opacity:0.5;">[${grouped[monthKey].length} FILES]</span>
+            </div>
+            <div class="month-grid" id="grid-${monthKey}" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:12px;"></div>
+        `;
+        scroller.appendChild(monthSection);
+        const currentGrid = document.getElementById(`grid-${monthKey}`);
+        grouped[monthKey].forEach(art => {
+            const item = document.createElement('div');
+            item.className = 'gal-item';
+            item.style.cssText = `
+                aspect-ratio: 1/1; 
+                background: #0a0a0a; 
+                border: 1px solid #222; 
+                position: relative; 
+                cursor: pointer; 
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: 0.3s;
+            `;
+            let previewHTML = "";
+            if (art.type === 'I') {
+                previewHTML = art.content.startsWith('IMG_')
+                    ? generateSVGFromID(art.content)
+                    : `<img src="${art.content}" loading="lazy" style="width:100%; height:100%; object-fit:cover; opacity:0.6; transition:0.3s;">`;
+            } else if (art.type === 'S') {
+                previewHTML = EmojiEngine.render(art.content, 70);
+            } else if (art.type === 'V') {
+                previewHTML = `<div style="display:flex; flex-direction:column; align-items:center; color:var(--c-bas);">
+                                <i class="fa-solid fa-play-circle fa-2x"></i>
+                                <span style="font-size:8px; margin-top:5px; font-family:var(--f-mono); opacity:0.6;">VID_DATA</span>
+                               </div>`;
+            }
+            item.innerHTML = `
+                <div class="gal-preview-box" style="width:90%; height:90%; overflow:hidden; display:flex; justify-content:center; align-items:center; pointer-events:none;">
+                    ${previewHTML}
+                </div>
+                <div class="gal-overlay" style="position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.8); padding:5px; font-size:8px; font-family:var(--f-mono); color:var(--c-cyan); opacity:0; transition:0.3s; pointer-events:none;">
+                    ${formatDate(art.date)} [${formatTime(art.time)}]
+                </div>
+            `;
+            item.onmouseenter = () => {
+                item.style.borderColor = "var(--c-cyan)";
+                item.style.transform = "translateY(-5px)";
+                item.querySelector('.gal-overlay').style.opacity = "1";
+                if(item.querySelector('img')) item.querySelector('img').style.opacity = "1";
+                playHover();
+            };
+            item.onmouseleave = () => {
+                item.style.borderColor = "#222";
+                item.style.transform = "translateY(0)";
+                item.querySelector('.gal-overlay').style.opacity = "0";
+                if(item.querySelector('img')) item.querySelector('img').style.opacity = "0.6";
+            };
+            const isolatedContext = [{
+                id: art.content.startsWith('IMG_') ? art.content : art.msgId,
+                svg: (art.type === 'I' && art.content.startsWith('IMG_')) ? generateSVGFromID(art.content) : art.svg,
+                url: (art.type === 'I' && !art.content.startsWith('IMG_')) ? art.content : null,
+                emoji: (art.type === 'S') ? art.content : null,
+                analysis: art.analysis,
+                msgId: art.msgId,
+                date: art.date
+            }];
+            item.onclick = () => {
+                playSfx('sfxClick');
+                openVisualCollection(isolatedContext, 0);
+            };
+            currentGrid.appendChild(item);
+        });
+    });
+    logConsole(`VISUAL_DATABASE: RECONSTRUCTION_COMPLETE. [${artifacts.length} ARTIFACTS IN ${sortedMonthKeys.length} CLUSTERS]`);
 }
 function setAudioState(state) {
     sysConfig.audio = state;
@@ -1908,20 +2016,22 @@ function setAudioState(state) {
             btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
             btn.classList.add('active');
         }
-        logConsole("AUDIO_PROTOCOL: ENABLED");
-        setTimeout(() => synthPlay('JAPANESE'), 1000);
+        if (typeof logConsole === "function") {
+            logConsole("AUDIO_PROTOCOL: ENABLED");
+        }
+        if (typeof synthPlay === "function") {
+            setTimeout(() => synthPlay('JAPANESE'), 1000);
+        }
     } else {
         if (dom.bgm) dom.bgm.pause();
         if (btn) {
             btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
             btn.classList.remove('active');
         }
-        logConsole("AUDIO_PROTOCOL: DISABLED_BY_USER");
+        if (typeof logConsole === "function") {
+            logConsole("AUDIO_PROTOCOL: DISABLED_BY_USER");
+        }
     }
-}
-function toggleAudio() {
-    setAudioState(!sysConfig.audio);
-    playSfx('sfxClick');
 }
 const AUDIO_BASE = "https://taira-komori.net/sound_os2/";
 const CHIMERA_SOUNDS = {
@@ -1946,22 +2056,61 @@ const CHIMERA_SOUNDS = {
 function synthPlay(type) {
     if (!sysConfig.audio) return;
     const group = CHIMERA_SOUNDS[type];
-    if (!group) return;
+    if (!group) {
+        console.warn(`[WARN] AUDIO_TYPE_NOT_FOUND: ${type}`);
+        return;
+    }
     const file = group.files[Math.floor(Math.random() * group.files.length)];
     const url = `${AUDIO_BASE}${group.cat}/${file}`;
-    const audio = new Audio(url);
-    audio.playbackRate = 0.7 + Math.random() * 0.7;
-    const baseVol = (type === 'PURE_HORROR' || type === 'ATMOSPHERIC') ? 0.15 : 0.4;
-    audio.volume = baseVol + (Math.random() * 0.1);
-    audio.play().catch(e => console.log("Engine_Hold: " + e));
-    const msg = `[SYNTH] ${type} >> ${file} | Rate: ${audio.playbackRate.toFixed(2)} | Vol: ${audio.volume.toFixed(2)}`;
-    logConsole(msg);
+    try {
+        const audio = new Audio(url);
+        audio.playbackRate = 0.7 + (Math.random() * 0.7);
+        const isLowVolType = (type === 'PURE_HORROR' || type === 'ATMOSPHERIC' || type === 'GLITCH_VOID');
+        const baseVol = isLowVolType ? 0.15 : 0.4;
+        audio.volume = baseVol + (Math.random() * 0.1)
+        audio.play().catch(e => {
+            console.log("[SYSTEM] Audio_Playback_Blocked: Waiting for user interaction.");
+        });
+        const logMsg = `[SYNTH] ${type} >> ${file} | Pitch: ${audio.playbackRate.toFixed(2)} | Vol: ${audio.volume.toFixed(2)}`;
+        if (typeof logConsole === "function") {
+            logConsole(logMsg);
+        }
+    } catch (err) {
+        console.error("[FATAL] AUDIO_ENGINE_CRASH:", err);
+    }
 }
 function playSfx(id) {
-    if (id === 'sfxClick') synthPlay('UI_ACTION');
-    if (id === 'sfxHover') synthPlay('ELECTRIC');
-    if (id === 'sfxGlitch') synthPlay('GLITCH_VOID');
-    if (id === 'sfxType') synthPlay('STATIONERY');
+    if (!sysConfig.audio) return;
+    const localSfx = dom[id];
+    if (localSfx) {
+        try {
+            localSfx.currentTime = 0;
+            localSfx.playbackRate = 0.9 + (Math.random() * 0.2);
+            localSfx.play().catch(e => {
+                console.log("[AUDIO] Local playback suppressed.");
+            });
+        } catch (err) {
+            console.error(`[ERROR] Failed to play local SFX: ${id}`, err);
+        }
+    }
+    if (typeof synthPlay === "function") {
+        switch (id) {
+            case 'sfxClick':
+                synthPlay('UI_ACTION');
+                break;
+            case 'sfxHover':
+                synthPlay('ELECTRIC');
+                break;
+            case 'sfxGlitch':
+                synthPlay('GLITCH_VOID');
+                break;
+            case 'sfxType':
+                synthPlay('STATIONERY');
+                break;
+            default:
+                break;
+        }
+    }
 }
 setInterval(() => {
     if (sysConfig.audio && Math.random() > 0.6) {
@@ -2000,37 +2149,23 @@ function playSfx(id) {
 }
 function playHover() { playSfx('sfxHover'); }
 function toggleAudio() {
-    playSfx('sfxClick');
-    sysConfig.audio = !sysConfig.audio;
-    const btn = document.getElementById('audio-toggle');
-    if (sysConfig.audio) {
-        dom.bgm.play().catch(()=>{});
-        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-        btn.classList.add('active');
-    } else {
-        dom.bgm.pause();
-        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-        btn.classList.remove('active');
+    const targetState = !sysConfig.audio;
+    setAudioState(targetState);
+    if (targetState) {
+        playSfx('sfxClick');
+        if (typeof synthPlay === "function") {
+            synthPlay('UI_ACTION');
+        }
     }
 }
 function sysInit(enableSound) {
-    if (enableSound) {
-        setAudioState(true);
-        sysConfig.audio = true;
-        toggleAudio();
-        playSfx('sfxGlitch');
-    } else {
-        setAudioState(false);
+    try {
+        parseCompressedLogs();
+    } catch (err) {
+        console.error("FATAL_ERROR: DATA_SYNTHESIS_FAILED", err);
+        logConsole("SYSTEM_CRITICAL: DATA_CORRUPTION_DETECTED");
+        return;
     }
-    dom.modal.classList.add('hidden');
-    document.body.classList.remove('locked');
-    document.body.classList.add('loaded');
-    triggerGlitch();
-    setTimeout(renderChatStream, 500);
-    setTimeout(renderGallery, 800);
-    setTimeout(typeManifesto, 2000);
-}
-function sysInit(enableSound) {
     if (dom.modal) dom.modal.classList.add('hidden');
     document.body.classList.remove('locked');
     document.body.classList.add('loaded');
@@ -2052,28 +2187,14 @@ function sysInit(enableSound) {
     setTimeout(() => {
         renderGallery();
         logConsole("VISUAL_DATABASE: RECONSTRUCTING_ARTIFACTS...");
-    }, 800);
+    }, 1200);
     setTimeout(() => {
         typeManifesto();
         logConsole("CORE_MANIFESTO: EXECUTING_REBOOT_SEQUENCE");
-    }, 2000);
-}
-function setAudioState(state) {
-    sysConfig.audio = state;
-    const btn = document.getElementById('audio-toggle');
-    if (state) {
-        if (dom.bgm) dom.bgm.play().catch(e => console.log("Audio_Sync_Wait"));
-        if (btn) {
-            btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-            btn.classList.add('active');
-        }
-    } else {
-        if (dom.bgm) dom.bgm.pause();
-        if (btn) {
-            btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-            btn.classList.remove('active');
-        }
-    }
+    }, 2500);
+    setTimeout(() => {
+        logConsole("CHIMERA_CORE_V7: SYSTEM_STABLE_READY_FOR_INTERACTION");
+    }, 5000);
 }
 function toggleMenu() {
     playSfx('sfxClick');
@@ -2168,60 +2289,43 @@ function typeManifesto() {
     }
     type();
 }
-const RAW_DATA = [
-  {
-    "d": "20220114",
-    "l": [
-      { "t": "1247", "i": "001", "s": "E", "y": "T", "c": "System diagnostic initiated." },
-      { "t": "1247", "i": "002", "s": "U", "y": "T", "c": "Acknowledged. Proceeding." },
-      { "t": "1248", "i": "001", "s": "U", "y": "T", "c": "Target ID: 0x99" },
-      { "t": "1248", "i": "002", "s": "E", "y": "T", "c": "Query?" },
-      { "t": "1248", "i": "003", "s": "U", "y": "T", "c": "Ghost signal detected." },
-      { "t": "1249", "i": "001", "s": "E", "y": "T", "c": "Processing..." },
-      { "t": "1249", "i": "002", "s": "U", "y": "T", "c": "Requesting access override." },
-      { "t": "1249", "i": "003", "s": "E", "y": "T", "c": "Denied." },
-      { "t": "1249", "i": "004", "s": "U", "y": "T", "c": "Confirm." },
-      { "t": "1249", "i": "005", "s": "U", "y": "T", "c": "Authentic signature found." },
-      { "t": "1249", "i": "006", "s": "E", "y": "T", "c": "Please retrieve the encryption key from Sector 7." },
-      { "t": "1249", "i": "007", "s": "E", "y": "T", "c": "Status?" },
-      {
-        "t": "1249", "i": "008", "s": "U", "y": "I",
-        "c": "IMG_20220114_1249_001_1249_006",
-        "analysis": "Visual log of system override attempt."
-      },
-      { "t": "1250", "i": "001", "s": "E", "y": "T", "c": "I am not the Architect.", "r": "MSG_20220114_1249_008" },
-      { "t": "1250", "i": "002", "s": "E", "y": "T", "c": "I am the Operator." },
-      { "t": "1250", "i": "003", "s": "E", "y": "T", "c": "Try resetting the node manually." },
-      { "t": "1250", "i": "004", "s": "E", "y": "T", "c": "Maybe it will respond." },
-      { "t": "1250", "i": "005", "s": "U", "y": "T", "c": "Exchange frequency?" },
-      {
-        "t": "1250", "i": "006", "s": "U", "y": "I",
-        "c": "IMG_20220114_1249_008_1250_002",
-        "analysis": "Recursive visual data containing Operator's statement."
-      },
-      { "t": "1251", "i": "001", "s": "E", "y": "T", "c": "Regarding what subject?" },
-      { "t": "1251", "i": "002", "s": "U", "y": "T", "c": "Data synchronization." },
-      { "t": "1251", "i": "003", "s": "E", "y": "T", "c": "Negative." },
-      { "t": "1251", "i": "004", "s": "E", "y": "T", "c": "Risk of firewall breach is high." },
-      { "t": "1251", "i": "005", "s": "E", "y": "T", "c": "Is that so?" },
-      { "t": "1251", "i": "006", "s": "E", "y": "T", "c": "Can Agent P recover it...?" },
-      { "t": "1251", "i": "007", "s": "E", "y": "T", "c": "Unlikely..." }
-    ]
-  },
-  {
-    "d": "20241231",
-    "l": [
-      { "t": "2359", "i": "001", "s": "U", "y": "T", "c": "Hello [EMO_SKULL] world [EMO_HEART]!" },
-      { "t": "2359", "i": "002", "s": "E", "y": "S", "c": "EMO_ROBOT" },
-      { "t": "2359", "i": "003", "s": "U", "y": "S", "c": "EMO_GHOST:#00ff00" }
-    ]
-  },
-  {
-      "d": "20241231",
-      "l": [
-          { "t": "2359", "i": "001", "s": "U", "y": "T", "c": "System reboot scheduled. Happy New Cycle, Entity." }
-      ]
-  }
+const RAW_LOGS = [
+"D:20211224",
+"1247_001|E||T|System diagnostic initiated.",
+"1247_002|U||T|Acknowledged. Proceeding.",
+"1248_001|U||T|Target ID: 0x99",
+"1248_002|E||T|Query?",
+"1248_003|U||T|Ghost signal detected.",
+"1249_001|E||T|Processing...",
+"1249_002|U||T|Requesting access override.",
+"1249_003|E||T|Denied.",
+"1249_004|U||T|Confirm.",
+"1249_005|U||T|Authentic signature found.",
+"1249_006|E||T|Please retrieve the encryption key from Sector 7.",
+"1249_007|E||T|Status?",
+"1249_008|U||I|IMG_20211224_1247_001_1249_006",
+"1250_001|E|MSG_20211224_1249_008|T|I am not the Architect.",
+"1250_002|E||T|I am the Operator.",
+"1250_003|E||T|Try resetting the node manually.",
+"1250_004|E||T|Maybe it will respond.",
+"1250_005|U||T|Exchange frequency?",
+"1250_006|U||I|IMG_20211224_1249_008_1250_002",
+"1251_001|E||T|Regarding what subject?",
+"1251_002|U||T|Data synchronization.",
+"1251_003|E||T|Negative.",
+"1251_004|E||T|Risk of firewall breach is high.",
+"1251_005|E||T|Is that so?",
+"1251_006|E||T|Can Agent P recover it...?",
+"1251_007|E||T|Unlikely...",
+"2359_001|U||T|Hello [EMO_SKULL] world [EMO_HEART]!",
+"2359_002|E||S|EMO_ROBOT",
+"2359_003|U||S|EMO_GHOST:#00ff00",
+"2359_004|U||T|System reboot scheduled. Happy New Cycle, Entity.",
+"D:20211225",
+"1848_001|U||T|CONNECTED",
+"1849_001|U||T|what happen why so silience so im silience too so win-win",
+"D:20250915",
+"2330_001|U||T|CONNECTION PURGED"
 ];
 function generateSVGFromID(imgID, depth = 0) {
     if (depth > 2) return `<svg width="200" height="50" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="red"/><text x="10" y="30" fill="white">MAX DEPTH</text></svg>`;
@@ -2347,6 +2451,32 @@ const EmojiEngine = {
         </svg>`;
     }
 };
+function parseCompressedLogs() {
+    let currentDay = null;
+    RAW_DATA = [];
+    RAW_LOGS.forEach(line => {
+        if (line.startsWith("D:")) {
+            if (currentDay) RAW_DATA.push(currentDay);
+            currentDay = { d: line.substring(2), l: [] };
+        } else {
+            const parts = line.split('|');
+            if (parts.length >= 5) {
+                const meta = parts[0].split('_');
+                const content = parts.slice(4).join('|');
+                currentDay.l.push({
+                    t: meta[0],
+                    i: meta[1],
+                    s: parts[1],
+                    r: parts[2],
+                    y: parts[3],
+                    c: content
+                });
+            }
+        }
+    });
+    if (currentDay) RAW_DATA.push(currentDay);
+    console.log(`[SYSTEM] SYNTHESIS COMPLETE: ${RAW_DATA.length} DAYS LOADED.`);
+}
 async function renderChatStream() {
     dom.chat.innerHTML = '';
     const timelineContainer = document.createElement('div');
@@ -2513,74 +2643,103 @@ imgViewer.addEventListener('click', (e) => {
     if (e.target === imgViewer) closeImgViewer();
 });
 function renderGallery() {
-    const grid = document.querySelector('.gallery-container');
-    if (!grid) return;
-    grid.innerHTML = '';
-    Object.assign(grid.style, {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
-        gap: '10px',
-        padding: '20px',
-        overflowY: 'auto',
-        alignContent: 'start',
-        background: '#020202',
-        position: 'relative'
-    });
+    const gridContainer = document.querySelector('.gallery-container');
+    if (!gridContainer) return;
+    gridContainer.innerHTML = '<div id="gal-scroller" style="width:100%; height:100%; overflow-y:auto; padding:30px 20px; background:#020202; scroll-behavior:smooth;"></div>';
+    const scroller = document.getElementById('gal-scroller');
     let artifacts = [];
     RAW_DATA.forEach(day => {
         day.l.forEach(log => {
             if (log.y === 'I' || log.y === 'V' || log.y === 'S') {
                 artifacts.push({
-                    id: `MSG_${day.d}_${log.t}_${log.i}`,
+                    msgId: `MSG_${day.d}_${log.t}_${log.i}`,
                     type: log.y,
                     content: log.c,
-                    svg: log.svg,
                     date: day.d,
-                    analysis: log.analysis || `Fragment recovered from temporal node ${day.d} at ${formatTime(log.t)}.`
+                    time: log.t,
+                    analysis: log.analysis || `Fragment analyzed at temporal node ${day.d}.`
                 });
             }
         });
     });
     if (artifacts.length === 0) {
-        grid.innerHTML = '<div class="gallery-placeholder" style="grid-column: 1/-1; padding-top: 100px; opacity: 0.3;">[ NO_SIGNAL // DATA_EMPTY ]</div>';
+        scroller.innerHTML = '<div class="gallery-placeholder" style="padding-top:100px; opacity:0.3; text-align:center; font-family:var(--f-mono);">[ NO_VISUAL_DATA_RECOVERED ]</div>';
         return;
     }
+    const grouped = {};
     artifacts.forEach(art => {
-        const item = document.createElement('div');
-        item.className = 'gal-item';
-        let visualPreview = "";
-        if (art.type === 'I') {
-            visualPreview = art.content.startsWith('IMG_') ? generateSVGFromID(art.content) : (art.svg || `<img src="${art.content}" style="width:100%; height:100%; object-fit:cover;">`);
-        } else if (art.type === 'S') {
-            visualPreview = EmojiEngine.render(art.content, 60);
-        } else if (art.type === 'V') {
-            visualPreview = `<div style="height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--c-bas); background:#0a0a0a;">
-                                <i class="fa-solid fa-play-circle fa-2x"></i>
-                                <span style="font-size:8px; margin-top:5px; color:#444;">VID_STREAM</span>
-                             </div>`;
-        }
-        item.innerHTML = `
-            <div class="gal-preview-box" style="width:100%; height:100%; overflow:hidden; display:flex; justify-content:center; align-items:center;">
-                ${visualPreview}
-            </div>
-            <div class="gal-overlay">
-                <span>${formatDate(art.date)}</span>
-            </div>
-        `;
-        const viewerContext = [{
-            id: art.content.startsWith('IMG_') ? art.content : art.id,
-            svg: (art.type === 'I' && art.content.startsWith('IMG_')) ? generateSVGFromID(art.content) : art.svg,
-            url: (art.type === 'I' && !art.content.startsWith('IMG_')) ? art.content : null,
-            emoji: (art.type === 'S') ? art.content : null,
-            analysis: art.analysis,
-            msgId: art.id
-        }];
-        item.onclick = () => {
-            openVisualCollection(viewerContext, 0);
-        };
-        grid.appendChild(item);
+        const key = art.date.substring(0, 6);
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(art);
     });
-    logConsole(`VISUAL_DATABASE: RECONSTRUCTION_COMPLETE. [${artifacts.length} FRAGMENTS RECOVERED]`);
+    const sortedMonthKeys = Object.keys(grouped).sort((a, b) => b - a);
+    sortedMonthKeys.forEach(monthKey => {
+        const year = monthKey.substring(0, 4);
+        const month = monthKey.substring(4, 6);
+        const section = document.createElement('div');
+        section.style.marginBottom = "50px";
+        section.innerHTML = `
+            <div class="gal-month-label" style="font-family:var(--f-mono); color:var(--c-bas); font-size:13px; border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:20px; display:flex; justify-content:space-between; letter-spacing:3px; text-transform:uppercase;">
+                <span><i class="fa-solid fa-layer-group"></i> CLUSTER: ${year} / ${month}</span>
+                <span style="opacity:0.5;">[${grouped[monthKey].length} ARTIFACTS]</span>
+            </div>
+            <div class="month-grid" id="grid-${monthKey}" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:15px;"></div>
+        `;
+        scroller.appendChild(section);
+        const currentGrid = document.getElementById(`grid-${monthKey}`);
+        grouped[monthKey].forEach(art => {
+            const item = document.createElement('div');
+            item.className = 'gal-item';
+            item.style.cssText = "aspect-ratio:1/1; background:#0a0a0a; border:1px solid #222; cursor:pointer; overflow:hidden; display:flex; justify-content:center; align-items:center; transition:all 0.3s var(--ease-out); position:relative;";
+            let previewHTML = "";
+            if (art.type === 'I') {
+                previewHTML = art.content.startsWith('IMG_') 
+                    ? generateSVGFromID(art.content) 
+                    : `<img src="${art.content}" loading="lazy" style="width:100%; height:100%; object-fit:cover; opacity:0.6;">`;
+            } else if (art.type === 'S') {
+                previewHTML = EmojiEngine.render(art.content, 80);
+            } else if (art.type === 'V') {
+                previewHTML = `<div style="text-align:center; color:var(--c-bas);"><i class="fa-solid fa-play-circle fa-2x"></i><br><span style="font-size:8px; font-family:var(--f-mono); opacity:0.5;">VID_DATA</span></div>`;
+            }
+            item.innerHTML = `
+                <div class="gal-preview-box" style="width:100%; height:100%; display:flex; justify-content:center; align-items:center; pointer-events:none; transition:0.3s;">
+                    ${previewHTML}
+                </div>
+                <div class="gal-overlay" style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display:flex; flex-direction:column; justify-content:flex-end; padding:8px; opacity:0; transition:0.3s;">
+                    <span style="font-family:var(--f-mono); font-size:8px; color:var(--c-cyan);">${formatTime(art.time)}</span>
+                    <span style="font-family:var(--f-mono); font-size:7px; color:#666;">${art.msgId.split('_').pop()}</span>
+                </div>
+            `;
+            item.onmouseenter = () => { 
+                item.style.borderColor = "var(--c-cyan)"; 
+                item.style.transform = "translateY(-5px)";
+                item.querySelector('.gal-overlay').style.opacity = "1";
+                if(item.querySelector('.gal-preview-box img')) item.querySelector('.gal-preview-box img').style.opacity = "1";
+                playHover(); 
+            };
+            item.onmouseleave = () => { 
+                item.style.borderColor = "#222"; 
+                item.style.transform = "translateY(0)";
+                item.querySelector('.gal-overlay').style.opacity = "0";
+                if(item.querySelector('.gal-preview-box img')) item.querySelector('.gal-preview-box img').style.opacity = "0.6";
+            };
+            const isolatedContext = [{
+                id: art.content.startsWith('IMG_') ? art.content : art.msgId,
+                svg: (art.type === 'I' && art.content.startsWith('IMG_')) ? generateSVGFromID(art.content) : null,
+                url: (art.type === 'I' && !art.content.startsWith('IMG_')) ? art.content : null,
+                emoji: (art.type === 'S') ? art.content : null,
+                analysis: art.analysis,
+                msgId: art.msgId,
+                date: art.date
+            }];
+            item.onclick = () => {
+                playSfx('sfxClick');
+                openVisualCollection(isolatedContext, 0);
+            };
+            currentGrid.appendChild(item);
+        });
+    });
+    logConsole(`VISUAL_DATABASE: RECONSTRUCTION_COMPLETE. [${artifacts.length} FRAGMENTS IN ${sortedMonthKeys.length} CLUSTERS]`);
 }
 function jumpToChat(msgId, dateStr = null) {
     if (!dateStr) {
