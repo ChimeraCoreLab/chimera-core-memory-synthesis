@@ -18,12 +18,12 @@
 <style>
 @font-face {
     font-family: 'IPAM';
-    src: url('https://github.com/loveencounterflow/jizura-fonts/master/fonts/ipam.ttf?raw=true') format('truetype');
+    src: url('https://cdn.jsdelivr.net/gh/loveencounterflow/jizura-fonts@master/fonts/ipam.ttf') format('truetype');
     font-display: swap;
 }
 @font-face {
     font-family: 'Onryou';
-    src: url('https://github.com/h3902340/PrisonOfWordFont/master/onryou-Regular.ttf?raw=true') format('truetype');
+    src: url('https://cdn.jsdelivr.net/gh/h3902340/PrisonOfWordFont@master/onryou-Regular.ttf') format('truetype');
     font-display: swap;
 }
 :root {
@@ -36,15 +36,12 @@
     --c-cyan: #00f3ff;
     --c-bas: #ff003c;
     --c-dim: rgba(255, 255, 255, 0.05);
-
     --f-mono: 'IBM Plex Mono', 'IPAM', monospace;
     --f-serif: 'Zen Old Mincho', 'Noto Sans Thai', serif;
     --f-horror: 'Onryou', serif;
-
     --ease-sfs: cubic-bezier(0.85, 0, 0.15, 1);
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-
     --g-scan: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
 }
 *, *::before, *::after {
@@ -89,34 +86,41 @@ img {
     position: fixed;
     top: 0;
     left: 0;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     border: 2px solid var(--c-accent);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 99999;
+    z-index: 999999;
     transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+    transition: width 0.3s var(--ease-out), 
+    height 0.3s var(--ease-out), 
+    background 0.3s var(--ease-out), 
+    border-color 0.3s var(--ease-out);
     mix-blend-mode: exclusion;
-    will-change: transform;
+    will-change: left, top, transform;
+    display: block;
 }
 #cursor.hovered {
-    width: 60px;
-    height: 60px;
-    background: rgba(0, 243, 255, 0.05);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 0, 60, 0.1);
     border-color: var(--c-cyan);
     border-width: 1px;
     border-style: dashed;
-    animation: spinCursor 8s linear infinite;
+    animation: spinCursor 4s linear infinite;
 }
 #cursor.clicked {
-    transform: translate(-50%, -50%) scale(0.8);
+    transform: translate(-50%, -50%) scale(0.6);
     background: var(--c-accent);
     border-style: solid;
 }
 @keyframes spinCursor {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@media (pointer: fine) {
+    body, * { cursor: none !important; }
 }
 .vfx-container {
     position: fixed;
@@ -214,45 +218,77 @@ body.glitching {
 }
 .btn-group {
     display: flex;
-    gap: 4rem;
+    gap: 2rem;
     opacity: 0;
     animation: fadeIn 1s 2.5s forwards;
+    z-index: 10005;
+    pointer-events: auto;
 }
 .btn-start {
     background: transparent;
-    border: 1px solid #333;
+    border: 1px solid #444;
     color: var(--c-text);
     padding: 15px 50px;
     font-family: var(--f-mono);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: none;
-    transition: all 0.4s var(--ease-out);
+    transition: all 0.3s var(--ease-out);
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    z-index: 10001;
-    pointer-events: auto;
+    letter-spacing: 4px;
+    z-index: 10006;
+    pointer-events: auto !important;
+    outline: none;
+    box-shadow: inset 0 0 0 rgba(255, 0, 60, 0);
 }
 .btn-start:hover {
-    background: var(--c-text);
+    background: transparent;
+    color: #fff;
+    border-color: var(--c-bas);
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.4), 
+                inset 0 0 10px rgba(255, 0, 60, 0.2);
+    transform: translateY(-2px) scale(1.02);
+    text-shadow: 2px 0 var(--c-cyan), -2px 0 var(--c-bas);
+}
+.btn-start:active {
+    transform: scale(0.95);
+    background: var(--c-bas);
     color: #000;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-    border-color: #fff;
-    transform: scale(1.05);
+    transition: all 0.1s;
 }
 .btn-start::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
+    top: -50%;
+    left: -150%;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-    transition: 0.5s;
+    height: 200%;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent
+    );
+    transform: rotate(25deg);
+    transition: 0.8s;
 }
 .btn-start:hover::after {
-    left: 100%;
+    left: 150%;
+}
+@media (max-width: 768px) {
+    .btn-group {
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 100%;
+        align-items: center;
+    }
+    .btn-start {
+        width: 250px;
+        padding: 18px 0;
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
 }
 .nav-toggle {
     position: fixed;
@@ -409,11 +445,11 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') center/cover;
-    opacity: 0.15;
+    background: url('https://raw.githubusercontent.com/ChimeraCoreLab/Philosophical-AI-Companion/main/logo.jpg') center/cover;
+    opacity: 0.2;
     z-index: 0;
     animation: zoomBreath 25s ease-in-out infinite alternate;
-    filter: contrast(150%) grayscale(100%) brightness(0.8);
+    filter: contrast(180%) grayscale(100%) brightness(0.6); 
 }
 .glitch-wrapper {
     position: relative;
@@ -572,7 +608,6 @@ section {
 .chat-body::-webkit-scrollbar-thumb {
     background: #333;
 }
-
 .msg-date {
     text-align: center;
     font-family: var(--f-mono);
@@ -808,15 +843,18 @@ section {
     position: relative;
     overflow: hidden;
     background: repeating-linear-gradient(45deg, #030303, #030303 20px, #060606 20px, #060606 40px);
-}
-.gallery-placeholder {
+}.gallery-placeholder {
     font-family: var(--f-mono);
     color: #333;
     font-size: 1.2rem;
-    animation: pulse 3s infinite;
     z-index: 2;
     letter-spacing: 2px;
     text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 0 var(--c-bas), -2px 0 var(--c-cyan);
+    animation: 
+        pulse 3s infinite, 
+        glitchNoSignal 0.2s infinite;
 }
 .gallery-scan {
     position: absolute;
@@ -1152,37 +1190,6 @@ details.file-viewer .file-content {
     border-bottom: 1px solid #222;
     margin-bottom: 20px;
 }
-.day-header {
-    background: #0a0a0a;
-    padding: 10px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--f-mono);
-    color: var(--c-sys);
-    font-size: 0.8rem;
-    border-left: 2px solid transparent;
-    transition: 0.2s;
-}
-.day-header:hover {
-    background: #111;
-    border-left-color: var(--c-accent);
-    color: #fff;
-}
-.day-header.active {
-    border-left-color: var(--c-da);
-    background: #151515;
-}
-.day-content {
-    display: none;
-    padding: 20px;
-    background: rgba(0,0,0,0.3);
-}
-.day-content.show {
-    display: block;
-    animation: fadeIn 0.3s ease-out;
-}
 #gallery {
     background: var(--c-void);
     padding: 100px 2%;
@@ -1280,35 +1287,81 @@ details.file-viewer .file-content {
     border: 1px solid var(--c-accent);
     box-shadow: 0 0 30px rgba(255,0,60,0.2);
 }
+.day-cluster {
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
 .day-header {
-    background: #111;
-    border: 1px solid #333;
-    padding: 15px 20px;
-    margin: 10px 20px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    padding: 12px 20px;
+    margin: 5px 20px;
     font-family: var(--f-mono);
-    color: var(--c-da);
+    color: var(--c-sys);
+    font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.3s;
+    transition: all 0.3s var(--ease-out);
+    border-left: 3px solid transparent;
+    letter-spacing: 1px;
 }
-.day-header:hover { background: #1a1a1a; border-color: var(--c-accent); }
-.day-header.active { background: var(--c-accent); color: #000; border-color: var(--c-accent); }
-.day-header .arrow { transition: 0.3s; }
-.day-header.active .arrow { transform: rotate(180deg); }
+.day-header:hover {
+    background: #111;
+    border-left-color: var(--c-bas);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+.day-header.active {
+    background: #151515;
+    border-left-color: var(--c-cyan);
+    color: var(--c-cyan);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+}
+.day-header .arrow {
+    transition: transform 0.4s var(--ease-sfs), opacity 0.3s;
+    font-size: 0.8rem;
+    opacity: 0.4;
+}
+.day-header.active .arrow {
+    transform: rotate(180deg);
+    opacity: 1;
+    color: var(--c-cyan);
+}
 .day-logs {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease-out;
+    opacity: 0;
     padding: 0 20px;
-    border-left: 1px dashed #333;
     margin-left: 40px;
+    border-left: 1px dashed #222;
+    transition: 
+        max-height 0.8s var(--ease-out), 
+        opacity 0.4s ease,
+        padding 0.4s ease;
 }
 .day-logs.open {
-    max-height: 5000px;
-    padding: 20px;
+    max-height: 50000px;
+    padding: 30px 20px;
+    opacity: 1;
     overflow: visible;
+}
+.day-logs .msg-row {
+    margin-bottom: 18px;
+    will-change: transform, opacity;
+}
+.day-content {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+}
+@keyframes pulseHighlight {
+    0% { background: transparent; }
+    50% { background: rgba(0, 243, 255, 0.15); border-color: var(--c-da); }
+    100% { background: transparent; }
+}
+.msg-bubble.highlight {
+    animation: pulseHighlight 1s ease-in-out 3;
 }
 .msg-reply {
     font-size: 0.7em;
@@ -1409,11 +1462,17 @@ details.file-viewer .file-content {
     user-select: none;
     -webkit-user-drag: none;
 }
+@keyframes glitchNoSignal {
+    0% { transform: translate(0); opacity: 0.3; }
+    20% { transform: translate(-2px, 1px); opacity: 0.5; }
+    40% { transform: translate(2px, -1px); opacity: 0.3; }
+    100% { transform: translate(0); opacity: 0.4; }
+}
 </style>
 </head>
 <body class="locked">
-<audio id="bgm" src="https://ia800605.us.archive.org/8/items/AmbientDarkSpaceMusic/AmbientDarkSpaceMusic-15984.mp3" loop preload="auto"></audio>
-<audio id="sfx-hover" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+<audio id="bgm" src="https://ia902208.us.archive.org/23/items/dark-ambient-loop-01/DarkAmbientLoop01.mp3" loop preload="auto"></audio>
+<audio id="sfx-hover" src="https://ia802506.us.archive.org/16/items/button-3/button-3.mp3" preload="auto"></audio>
 <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
 <audio id="sfx-glitch" src="https://assets.mixkit.co/active_storage/sfx/2592/2592-preview.mp3" preload="auto"></audio>
 <audio id="sfx-type" src="https://assets.mixkit.co/active_storage/sfx/2565/2565-preview.mp3" preload="auto"></audio>
@@ -1433,7 +1492,7 @@ details.file-viewer .file-content {
         <p style="animation-delay: 2.0s; font-size: 1.1rem; margin-top: 2rem;">>> INITIALIZE CONNECTION? [Y/N]</p>
     </div>
     <div class="btn-group">
-        <button class="btn-start" onclick="sysInit(true)" onmouseenter="playHover()">[ YES ]</button>
+        <button class="btn-start" onclick="sysInit(true)" onmouseenter="playSfx('sfxHover')">[ YES ]</button>
         <button class="btn-start" onclick="sysInit(false)" onmouseenter="playHover()">[ NO ]</button>
     </div>
 </div>
@@ -1538,6 +1597,14 @@ details.file-viewer .file-content {
                 </div>
                 <div class="module-tags"><span class="tag">SPECS</span><span class="tag">HISTORY</span></div>
             </div>
+            <div class="module-card" style="border-color: var(--c-cyan);" onclick="openModule('genesis')" onmouseenter="playHover()">
+                <div>
+                    <i class="fa-solid fa-microchip module-icon" style="color: var(--c-cyan);"></i>
+                    <h3 class="module-title">GENESIS</h3>
+                    <p class="module-desc">Central Logic Hub. Consolidated prompt engineering archives and exported mindset fragments from Bluesky (Purged Account).</p>
+                </div>
+                <div class="module-tags"><span class="tag">MINDSET</span><span class="tag">PROMPTS</span><span class="tag">SYNTHESIS</span></div>
+            </div>
         </div>
     </section>
     <div id="module-viewer" class="modal-overlay">
@@ -1599,8 +1666,21 @@ details.file-viewer .file-content {
     <p style="color: #333; margin-top: 10px; font-size: 0.6rem; letter-spacing: 1px;">COPYRIGHT 2023-2025 // MEMORY ARCHIVE</p>
 </footer>
 <script>
+const AUDIO_MANIFEST = {"ANIMALS01": {"bulbul.mp3": {"d": 18.91, "mx": -0.4, "mn": -25.0, "p": 7879}, "cat1a.mp3": {"d": 1.42, "mx": -2.1, "mn": -15.2, "p": 9397}, "cat1b.mp3": {"d": 1.07, "mx": -0.7, "mn": -15.1, "p": 7688}, "cat2a.mp3": {"d": 2.09, "mx": -1.2, "mn": -16.2, "p": 5070}, "cat2b.mp3": {"d": 1.33, "mx": -1.4, "mn": -16.7, "p": 4076}, "cat3a.mp3": {"d": 1.59, "mx": -0.7, "mn": -14.9, "p": 5152}, "cat3b.mp3": {"d": 1.07, "mx": -2.7, "mn": -16.2, "p": 8545}, "cat3c.mp3": {"d": 1.44, "mx": 0.0, "mn": -14.7, "p": 1630}, "cat4a.mp3": {"d": 7.92, "mx": -0.9, "mn": -21.3, "p": 5256}, "cat4b.mp3": {"d": 23.17, "mx": -0.9, "mn": -21.1, "p": 7986}, "cat5a.mp3": {"d": 1.46, "mx": -0.6, "mn": -17.2, "p": 6128}, "cat_sweet_voice1.mp3": {"d": 1.33, "mx": -0.6, "mn": -15.5, "p": 2494}, "cat_sweet_voice2.mp3": {"d": 1.1, "mx": -1.4, "mn": -17.0, "p": 2458}, "cat_sweet_voice3.mp3": {"d": 1.65, "mx": 0.0, "mn": -15.4, "p": 2906}, "cat_sweet_voice4.mp3": {"d": 6.56, "mx": -0.0, "mn": -19.0, "p": 3207}, "cats_fighting.mp3": {"d": 65.45, "mx": -1.5, "mn": -23.6, "p": 8588}, "chick.mp3": {"d": 1.49, "mx": -0.9, "mn": -9.8, "p": 2547}, "chicks.mp3": {"d": 10.4, "mx": -7.3, "mn": -20.0, "p": 2826}, "cow1.mp3": {"d": 2.48, "mx": -2.2, "mn": -15.1, "p": 2247}, "crow1.mp3": {"d": 3.53, "mx": -0.3, "mn": -17.2, "p": 8818}, "crow2.mp3": {"d": 2.04, "mx": -0.9, "mn": -16.3, "p": 10220}, "crow3.mp3": {"d": 1.59, "mx": -1.0, "mn": -18.6, "p": 10391}, "crow4.mp3": {"d": 2.82, "mx": -2.6, "mn": -22.5, "p": 8275}, "crow5.mp3": {"d": 5.67, "mx": -0.8, "mn": -19.8, "p": 10017}, "crow6.mp3": {"d": 5.04, "mx": -0.3, "mn": -17.7, "p": 9771}, "crow7.mp3": {"d": 2.82, "mx": -0.8, "mn": -16.9, "p": 9977}, "crows.mp3": {"d": 15.57, "mx": 0.0, "mn": -13.2, "p": 9360}, "dog1a.mp3": {"d": 1.02, "mx": 0.0, "mn": -16.0, "p": 5695}, "dog1b.mp3": {"d": 0.5, "mx": -2.7, "mn": -18.7, "p": 4404}, "dog2a.mp3": {"d": 1.59, "mx": -1.0, "mn": -16.1, "p": 2290}, "dog2b.mp3": {"d": 1.12, "mx": -0.8, "mn": -18.8, "p": 2304}, "dog3a.mp3": {"d": 2.48, "mx": 0.0, "mn": -14.7, "p": 2372}, "dog_barking1.mp3": {"d": 37.36, "mx": -0.2, "mn": -22.5, "p": 5469}, "dog_barking2.mp3": {"d": 16.64, "mx": -1.5, "mn": -24.0, "p": 3047}, "flap1.mp3": {"d": 1.85, "mx": -0.8, "mn": -14.4, "p": 3574}, "flycatcher1.mp3": {"d": 40.33, "mx": -0.0, "mn": -24.9, "p": 5002}, "give_me_food.mp3": {"d": 6.77, "mx": 0.0, "mn": -19.4, "p": 973}, "hawk1.mp3": {"d": 2.47, "mx": -0.1, "mn": -17.7, "p": 4296}, "heron.mp3": {"d": 0.94, "mx": -0.4, "mn": -21.7, "p": 6538}, "heron2.mp3": {"d": 0.84, "mx": -1.1, "mn": -19.6, "p": 2825}, "howling.mp3": {"d": 4.65, "mx": -1.3, "mn": -24.1, "p": 4578}, "little_grebe1.mp3": {"d": 4.03, "mx": -0.3, "mn": -18.6, "p": 6476}, "little_grebe2.mp3": {"d": 2.45, "mx": -0.1, "mn": -17.0, "p": 8990}, "magpie1.mp3": {"d": 0.84, "mx": -0.0, "mn": -18.8, "p": 8958}, "mallard1.mp3": {"d": 2.25, "mx": -3.3, "mn": -21.4, "p": 6575}, "maltese_dog1.mp3": {"d": 0.7, "mx": 0.0, "mn": -20.8, "p": 680}, "maltese_dog2.mp3": {"d": 0.72, "mx": -2.7, "mn": -20.5, "p": 1003}, "maltese_dog3.mp3": {"d": 0.71, "mx": 0.0, "mn": -14.7, "p": 961}, "maltese_dog4.mp3": {"d": 0.91, "mx": 0.0, "mn": -15.9, "p": 967}, "maltese_dog5.mp3": {"d": 1.54, "mx": 0.0, "mn": -20.0, "p": 969}, "maltese_dog6.mp3": {"d": 1.02, "mx": 0.0, "mn": -13.5, "p": 912}, "maltese_dog7.mp3": {"d": 1.93, "mx": 0.0, "mn": -16.9, "p": 902}, "old_cat1.mp3": {"d": 1.31, "mx": -2.2, "mn": -18.8, "p": 7204}, "old_cat2.mp3": {"d": 1.28, "mx": -2.8, "mn": -21.4, "p": 6412}, "old_cat3.mp3": {"d": 1.38, "mx": -1.2, "mn": -16.6, "p": 6784}, "owl.mp3": {"d": 5.04, "mx": -1.1, "mn": -17.5, "p": 4025}, "play_with_me.mp3": {"d": 3.79, "mx": -0.1, "mn": -16.9, "p": 1011}, "purring.mp3": {"d": 6.16, "mx": -0.5, "mn": -16.0, "p": 154}, "river_bird.mp3": {"d": 4.42, "mx": -0.8, "mn": -23.0, "p": 3641}, "small_dog1.mp3": {"d": 4.1, "mx": -0.4, "mn": -13.3, "p": 4703}, "small_dog2.mp3": {"d": 5.88, "mx": -0.0, "mn": -20.7, "p": 2687}, "sparrows.mp3": {"d": 13.09, "mx": -0.1, "mn": -29.8, "p": 8511}, "swallows.mp3": {"d": 19.06, "mx": -0.0, "mn": -22.8, "p": 4396}, "take_me1.mp3": {"d": 3.26, "mx": 0.0, "mn": -17.3, "p": 886}, "take_me2.mp3": {"d": 6.22, "mx": 0.0, "mn": -16.4, "p": 809}, "talking_dog.mp3": {"d": 5.57, "mx": -1.8, "mn": -25.9, "p": 717}, "tropical_bird1.mp3": {"d": 0.96, "mx": -2.1, "mn": -17.1, "p": 11164}, "tropical_bird2.mp3": {"d": 0.6, "mx": -0.2, "mn": -16.7, "p": 8456}, "tropical_bird3.mp3": {"d": 0.82, "mx": 0.0, "mn": -15.0, "p": 7320}, "warbler1.mp3": {"d": 2.85, "mx": -0.0, "mn": -19.8, "p": 3185}, "warbler2.mp3": {"d": 2.98, "mx": -0.3, "mn": -24.1, "p": 3181}, "warbler3.mp3": {"d": 118.88, "mx": -0.2, "mn": -26.9, "p": 3294}}, "COOKING01": {"Japanese_radish1.mp3": {"d": 6.06, "mx": -3.6, "mn": -24.4, "p": 7916}, "Japanese_radish2.mp3": {"d": 9.46, "mx": -1.3, "mn": -24.6, "p": 7645}, "beating_egg1.mp3": {"d": 12.75, "mx": -0.2, "mn": -30.1, "p": 6895}, "beating_egg2.mp3": {"d": 7.97, "mx": -0.5, "mn": -31.6, "p": 7235}, "beating_egg3.mp3": {"d": 9.43, "mx": 0.0, "mn": -26.4, "p": 6586}, "beating_egg4.mp3": {"d": 7.86, "mx": 0.0, "mn": -26.3, "p": 6402}, "boiling1.mp3": {"d": 16.22, "mx": -1.0, "mn": -25.0, "p": 3669}, "boiling_covering.mp3": {"d": 16.13, "mx": -3.5, "mn": -25.6, "p": 3018}, "boiling_opening.mp3": {"d": 14.86, "mx": -1.4, "mn": -25.4, "p": 3773}, "bringing_kitchen_knife.mp3": {"d": 0.78, "mx": -4.0, "mn": -26.9, "p": 5733}, "clearing_bottles.mp3": {"d": 18.05, "mx": 0.0, "mn": -31.5, "p": 8967}, "clearing_table1.mp3": {"d": 6.84, "mx": -0.0, "mn": -30.3, "p": 7653}, "clearing_table2.mp3": {"d": 24.76, "mx": 0.0, "mn": -22.1, "p": 8581}, "clearing_table3.mp3": {"d": 5.54, "mx": 0.0, "mn": -21.5, "p": 9074}, "clearing_table4.mp3": {"d": 1.85, "mx": -0.3, "mn": -19.7, "p": 5690}, "clearing_table5.mp3": {"d": 4.62, "mx": 0.0, "mn": -18.7, "p": 8768}, "clearing_tablewares.mp3": {"d": 16.14, "mx": 0.0, "mn": -26.9, "p": 8444}, "cracking_egg1.mp3": {"d": 4.36, "mx": -1.5, "mn": -32.7, "p": 7155}, "cracking_egg2.mp3": {"d": 4.1, "mx": 0.0, "mn": -30.7, "p": 4800}, "cracking_egg3.mp3": {"d": 1.1, "mx": -4.2, "mn": -27.6, "p": 6651}, "cracking_egg4.mp3": {"d": 1.54, "mx": -2.8, "mn": -36.0, "p": 9107}, "cupboard2_C.mp3": {"d": 0.86, "mx": -0.7, "mn": -21.2, "p": 2749}, "cutting_burdock.mp3": {"d": 7.97, "mx": 0.0, "mn": -26.4, "p": 4998}, "cutting_cabbage.mp3": {"d": 0.46, "mx": 0.0, "mn": -22.9, "p": 9844}, "cutting_green_pepper1.mp3": {"d": 1.12, "mx": -0.3, "mn": -28.4, "p": 5766}, "cutting_green_pepper2.mp3": {"d": 1.23, "mx": -2.1, "mn": -28.4, "p": 5311}, "cutting_green_pepper3.mp3": {"d": 36.36, "mx": 0.0, "mn": -31.3, "p": 5738}, "cutting_green_pepper4.mp3": {"d": 86.36, "mx": 0.0, "mn": -33.2, "p": 5485}, "cutting_napa.mp3": {"d": 0.41, "mx": 0.0, "mn": -15.0, "p": 7954}, "cutting_onion1.mp3": {"d": 0.48, "mx": 0.0, "mn": -22.8, "p": 5937}, "cutting_onion2.mp3": {"d": 1.85, "mx": -0.0, "mn": -26.6, "p": 6770}, "cutting_onion3.mp3": {"d": 1.03, "mx": -1.0, "mn": -22.5, "p": 9330}, "cutting_onion4.mp3": {"d": 4.56, "mx": 0.0, "mn": -25.5, "p": 6164}, "cutting_onions_speedy.mp3": {"d": 3.65, "mx": 0.0, "mn": -19.6, "p": 5231}, "cutting_plastic_wrap.mp3": {"d": 1.54, "mx": -0.9, "mn": -27.6, "p": 9766}, "cutting_potato1.mp3": {"d": 7.6, "mx": 0.0, "mn": -32.5, "p": 5260}, "cutting_potato_slowly.mp3": {"d": 16.85, "mx": -1.0, "mn": -34.7, "p": 6091}, "dishwasher_O.mp3": {"d": 1.31, "mx": -1.3, "mn": -18.5, "p": 1099}, "drawing_a_cork1.mp3": {"d": 0.84, "mx": -1.0, "mn": -20.8, "p": 1500}, "drawing_a_cork2.mp3": {"d": 0.44, "mx": -1.3, "mn": -21.2, "p": 1729}, "fish_can.mp3": {"d": 2.66, "mx": 0.0, "mn": -27.9, "p": 6845}, "grilling1.mp3": {"d": 56.58, "mx": 0.0, "mn": -19.6, "p": 8110}, "grilling2.mp3": {"d": 30.51, "mx": 0.0, "mn": -19.4, "p": 7185}, "grilling3.mp3": {"d": 43.76, "mx": 0.0, "mn": -22.9, "p": 8980}, "instant_coffee_C1.mp3": {"d": 1.25, "mx": -0.4, "mn": -27.3, "p": 7079}, "instant_coffee_C2.mp3": {"d": 1.1, "mx": -0.4, "mn": -26.6, "p": 7016}, "instant_coffee_O.mp3": {"d": 0.39, "mx": -6.8, "mn": -28.5, "p": 3577}, "into_water_boiler1.mp3": {"d": 7.0, "mx": -0.9, "mn": -18.1, "p": 9891}, "into_water_boiler2.mp3": {"d": 8.2, "mx": -4.6, "mn": -23.2, "p": 8571}, "into_water_boiler3.mp3": {"d": 10.11, "mx": 0.0, "mn": -26.6, "p": 8608}, "kettle_boiling.mp3": {"d": 31.19, "mx": -0.3, "mn": -18.0, "p": 5251}, "kitchen_fan.mp3": {"d": 31.32, "mx": 0.0, "mn": -31.9, "p": 4115}, "kitchen_gas_switch1.mp3": {"d": 18.62, "mx": -0.2, "mn": -36.3, "p": 5064}, "kitchen_gas_switch2.mp3": {"d": 7.68, "mx": 0.0, "mn": -30.3, "p": 9778}, "kitchen_timer1.mp3": {"d": 16.12, "mx": 0.0, "mn": -12.3, "p": 2837}, "kitchen_timer2.mp3": {"d": 0.24, "mx": -1.3, "mn": -13.6, "p": 4286}, "kitchen_timer3.mp3": {"d": 3.0, "mx": -0.0, "mn": -15.5, "p": 6808}, "matal_bottle_C.mp3": {"d": 3.53, "mx": -0.1, "mn": -27.6, "p": 4678}, "microwave.mp3": {"d": 21.14, "mx": 0.0, "mn": -30.9, "p": 8017}, "microwave1_O.mp3": {"d": 0.98, "mx": -0.9, "mn": -26.5, "p": 8315}, "microwave2_O.mp3": {"d": 0.98, "mx": -0.1, "mn": -24.5, "p": 6159}, "microwave_C.mp3": {"d": 0.82, "mx": 0.0, "mn": -21.6, "p": 3256}, "minibottle_C.mp3": {"d": 2.17, "mx": 0.0, "mn": -26.2, "p": 7931}, "minibottle_O.mp3": {"d": 2.56, "mx": -3.0, "mn": -29.3, "p": 7964}, "moving_kitchen_knife.mp3": {"d": 0.91, "mx": -4.8, "mn": -29.5, "p": 6717}, "oven.mp3": {"d": 25.49, "mx": -0.6, "mn": -38.3, "p": 11413}, "oven_O.mp3": {"d": 1.78, "mx": -1.7, "mn": -29.9, "p": 8476}, "pepper_bottle1.mp3": {"d": 0.29, "mx": -0.3, "mn": -31.0, "p": 7664}, "pepper_bottle2.mp3": {"d": 0.34, "mx": -2.7, "mn": -29.9, "p": 3108}, "piling_dishes.mp3": {"d": 0.76, "mx": 0.0, "mn": -16.6, "p": 7328}, "putting_kitchen_knife.mp3": {"d": 1.02, "mx": -3.4, "mn": -28.0, "p": 7843}, "putting_pan_lighting.mp3": {"d": 10.13, "mx": -0.4, "mn": -29.0, "p": 9311}, "refrigerater1_C.mp3": {"d": 1.22, "mx": -0.2, "mn": -18.4, "p": 4293}, "refrigerater1_O.mp3": {"d": 2.18, "mx": -1.9, "mn": -23.7, "p": 2942}, "refrigerater2_C.mp3": {"d": 1.12, "mx": 0.0, "mn": -18.7, "p": 2441}, "refrigerater2_O.mp3": {"d": 1.65, "mx": 0.0, "mn": -22.3, "p": 3310}, "refrigerater3_C.mp3": {"d": 1.32, "mx": 0.0, "mn": -21.5, "p": 2354}, "refrigerater3_O.mp3": {"d": 1.32, "mx": -1.0, "mn": -24.4, "p": 4133}, "refrigerater4_C.mp3": {"d": 1.75, "mx": 0.0, "mn": -18.2, "p": 2038}, "refrigerater4_O.mp3": {"d": 1.65, "mx": 0.0, "mn": -22.3, "p": 3310}, "refrigerator1.mp3": {"d": 4.51, "mx": -19.1, "mn": -29.0, "p": 1977}, "refrigerator2.mp3": {"d": 4.1, "mx": -15.4, "mn": -25.6, "p": 3572}, "rice1.mp3": {"d": 1.8, "mx": -1.2, "mn": -20.9, "p": 10171}, "rice2.mp3": {"d": 2.25, "mx": -0.7, "mn": -24.8, "p": 10280}, "rice_cooker1_C.mp3": {"d": 3.13, "mx": -0.2, "mn": -30.7, "p": 3900}, "rice_cooker1_O.mp3": {"d": 5.62, "mx": -0.4, "mn": -32.6, "p": 3970}, "rice_cooker2_C.mp3": {"d": 0.77, "mx": 0.0, "mn": -21.8, "p": 4273}, "rice_cooker2_O.mp3": {"d": 1.25, "mx": -1.3, "mn": -28.2, "p": 4490}, "roasting1.mp3": {"d": 44.96, "mx": -1.0, "mn": -24.9, "p": 9646}, "roasting2.mp3": {"d": 41.43, "mx": 0.0, "mn": -19.2, "p": 9248}, "roasting_bacon.mp3": {"d": 15.54, "mx": 0.0, "mn": -26.7, "p": 9745}, "roasting_butter.mp3": {"d": 7.05, "mx": 0.0, "mn": -13.9, "p": 9201}, "roasting_potato.mp3": {"d": 33.02, "mx": 0.0, "mn": -15.0, "p": 9834}, "roasting_sausage.mp3": {"d": 34.64, "mx": 0.0, "mn": -22.5, "p": 8624}, "shaving_burdock1.mp3": {"d": 52.19, "mx": -3.6, "mn": -29.7, "p": 8621}, "shaving_burdock2.mp3": {"d": 13.11, "mx": -2.4, "mn": -27.2, "p": 8899}, "tableware_crash1.mp3": {"d": 0.89, "mx": 0.0, "mn": -19.0, "p": 8921}, "toaster.mp3": {"d": 1.37, "mx": 0.0, "mn": -25.3, "p": 9213}, "washing_tableware1.mp3": {"d": 59.81, "mx": 0.0, "mn": -29.2, "p": 9567}, "washing_tableware2.mp3": {"d": 249.36, "mx": -0.3, "mn": -34.0, "p": 7114}, "water_boiler_C.mp3": {"d": 1.62, "mx": 0.0, "mn": -26.1, "p": 9665}, "water_boiler_O.mp3": {"d": 1.1, "mx": -0.8, "mn": -28.5, "p": 6824}, "water_heater1.mp3": {"d": 27.06, "mx": 0.0, "mn": -26.0, "p": 3863}, "water_heater2.mp3": {"d": 17.61, "mx": -8.6, "mn": -22.2, "p": 4879}, "water_into_a_kettle.mp3": {"d": 13.2, "mx": -0.9, "mn": -19.8, "p": 4567}}, "DAILY01": {"Japanese_toilet1.mp3": {"d": 20.83, "mx": -0.4, "mn": -22.1, "p": 5056}, "bath1.mp3": {"d": 15.62, "mx": -2.1, "mn": -23.7, "p": 7985}, "bath2.mp3": {"d": 15.62, "mx": -0.4, "mn": -27.2, "p": 4387}, "bath3.mp3": {"d": 24.92, "mx": -0.5, "mn": -22.2, "p": 8668}, "bathroom_scale1.mp3": {"d": 2.86, "mx": -1.8, "mn": -26.0, "p": 5835}, "bathroom_scale2.mp3": {"d": 3.22, "mx": -1.2, "mn": -28.8, "p": 9151}, "being_knocked1.mp3": {"d": 1.2, "mx": 0.0, "mn": -20.4, "p": 4008}, "being_knocked2.mp3": {"d": 3.19, "mx": 0.0, "mn": -22.6, "p": 4079}, "being_knocked3.mp3": {"d": 1.65, "mx": 0.0, "mn": -19.6, "p": 4212}, "breaking_a_cup.mp3": {"d": 1.57, "mx": 0.0, "mn": -24.0, "p": 9046}, "breaking_a_glass.mp3": {"d": 2.01, "mx": 0.0, "mn": -19.1, "p": 9058}, "brooming1.mp3": {"d": 6.48, "mx": -4.3, "mn": -27.1, "p": 9475}, "brooming2.mp3": {"d": 12.38, "mx": -2.1, "mn": -22.9, "p": 9924}, "circulating_a_driver.mp3": {"d": 7.42, "mx": 0.0, "mn": -30.2, "p": 11196}, "cleaning_glass_parts1.mp3": {"d": 13.24, "mx": 0.0, "mn": -25.1, "p": 10035}, "cleaning_glass_parts2.mp3": {"d": 2.48, "mx": -2.5, "mn": -23.6, "p": 9236}, "dial_letter_box_C.mp3": {"d": 4.28, "mx": 0.0, "mn": -24.2, "p": 5185}, "dial_letter_box_O.mp3": {"d": 8.39, "mx": 0.0, "mn": -32.5, "p": 7192}, "door_bell.mp3": {"d": 4.85, "mx": -0.7, "mn": -19.7, "p": 3349}, "door_chime0.mp3": {"d": 4.03, "mx": -0.5, "mn": -18.3, "p": 2011}, "door_chime1.mp3": {"d": 1.04, "mx": -0.4, "mn": -25.2, "p": 12164}, "door_chime2.mp3": {"d": 1.44, "mx": 0.0, "mn": -23.6, "p": 12153}, "door_chime3.mp3": {"d": 5.85, "mx": -3.8, "mn": -19.6, "p": 431}, "door_chimes.mp3": {"d": 3.45, "mx": -0.0, "mn": -21.4, "p": 12120}, "duster.mp3": {"d": 9.22, "mx": -3.3, "mn": -26.7, "p": 8680}, "entering_a_house1.mp3": {"d": 2.5, "mx": -0.6, "mn": -25.4, "p": 6571}, "entering_a_house2.mp3": {"d": 4.13, "mx": -0.3, "mn": -26.1, "p": 5639}, "finding_in_a_drawer1.mp3": {"d": 5.9, "mx": 0.0, "mn": -20.9, "p": 7274}, "finding_in_a_drawer2.mp3": {"d": 6.14, "mx": 0.0, "mn": -18.0, "p": 6315}, "flushing_in_a_toilet.mp3": {"d": 15.26, "mx": -0.7, "mn": -21.7, "p": 8428}, "glass_rolling.mp3": {"d": 2.3, "mx": 0.0, "mn": -21.0, "p": 8582}, "into_a_bath.mp3": {"d": 5.04, "mx": -0.0, "mn": -20.3, "p": 4459}, "kicking_water.mp3": {"d": 17.14, "mx": 0.0, "mn": -22.2, "p": 7126}, "knocked_in_a_bathroom1.mp3": {"d": 1.65, "mx": -0.2, "mn": -21.0, "p": 1624}, "knocked_in_a_bathroom2.mp3": {"d": 4.52, "mx": 0.0, "mn": -20.2, "p": 1538}, "knocked_in_a_bathroom3.mp3": {"d": 2.04, "mx": 0.0, "mn": -14.4, "p": 1560}, "knocking_a_wooden_door1.mp3": {"d": 1.1, "mx": -0.3, "mn": -24.9, "p": 2291}, "knocking_a_wooden_door2.mp3": {"d": 0.84, "mx": -0.5, "mn": -25.8, "p": 2380}, "knocking_an_iron_door1.mp3": {"d": 3.5, "mx": -0.3, "mn": -13.4, "p": 1429}, "knocking_an_iron_door2.mp3": {"d": 2.35, "mx": -0.2, "mn": -19.8, "p": 3179}, "knocking_an_iron_door3.mp3": {"d": 1.68, "mx": -1.0, "mn": -18.9, "p": 3008}, "knocking_an_iron_door4.mp3": {"d": 2.02, "mx": -0.9, "mn": -23.4, "p": 2658}, "knocking_an_iron_door5.mp3": {"d": 2.57, "mx": -0.2, "mn": -18.0, "p": 2895}, "letter_box.mp3": {"d": 4.73, "mx": 0.0, "mn": -22.2, "p": 7989}, "locking_a_wooden_door1.mp3": {"d": 0.74, "mx": -0.6, "mn": -24.9, "p": 5443}, "locking_a_wooden_door2.mp3": {"d": 0.55, "mx": -1.6, "mn": -26.1, "p": 6458}, "magic_tape.mp3": {"d": 0.34, "mx": -0.9, "mn": -22.5, "p": 8653}, "measure1.mp3": {"d": 1.1, "mx": -0.1, "mn": -26.0, "p": 9600}, "mowing_machine.mp3": {"d": 19.46, "mx": 0.0, "mn": -18.0, "p": 9374}, "out_of_a_bath.mp3": {"d": 9.27, "mx": -0.5, "mn": -23.6, "p": 2918}, "out_of_a_toilet.mp3": {"d": 7.1, "mx": -0.6, "mn": -19.0, "p": 6871}, "polishing1.mp3": {"d": 1.75, "mx": -0.4, "mn": -23.0, "p": 8751}, "polishing2.mp3": {"d": 1.72, "mx": -0.2, "mn": -21.0, "p": 8530}, "pulling_a_key.mp3": {"d": 0.62, "mx": -3.8, "mn": -24.6, "p": 5276}, "rolling_can.mp3": {"d": 1.97, "mx": -0.8, "mn": -27.0, "p": 7536}, "rolling_coin.mp3": {"d": 1.59, "mx": -0.1, "mn": -30.6, "p": 9086}, "rolling_pencil.mp3": {"d": 1.9, "mx": 0.0, "mn": -30.1, "p": 10547}, "running_a_bath.mp3": {"d": 23.43, "mx": 0.0, "mn": -22.2, "p": 5565}, "searching_in_a_toolbox.mp3": {"d": 21.7, "mx": 0.0, "mn": -28.5, "p": 7516}, "shaking_a_box_of_tablets1.mp3": {"d": 1.03, "mx": 0.0, "mn": -23.4, "p": 9720}, "shaking_a_box_of_tablets2.mp3": {"d": 1.25, "mx": 0.0, "mn": -24.4, "p": 8885}, "shaking_a_box_of_tablets3.mp3": {"d": 0.89, "mx": -0.5, "mn": -21.9, "p": 10797}, "shaking_a_box_of_tablets4.mp3": {"d": 1.15, "mx": -2.6, "mn": -23.3, "p": 8956}, "shaking_a_box_of_tablets5.mp3": {"d": 0.77, "mx": -1.8, "mn": -26.4, "p": 12412}, "shaking_a_crisp_bag1.mp3": {"d": 1.2, "mx": -0.0, "mn": -28.2, "p": 7469}, "shaking_a_crisp_bag2.mp3": {"d": 1.52, "mx": 0.0, "mn": -24.6, "p": 6006}, "shaking_a_moneybox1.mp3": {"d": 1.57, "mx": 0.0, "mn": -23.4, "p": 6023}, "shaking_a_moneybox2.mp3": {"d": 1.04, "mx": -1.1, "mn": -21.9, "p": 7095}, "shaking_a_petbottle.mp3": {"d": 1.46, "mx": 0.0, "mn": -22.0, "p": 7113}, "shaking_a_small_box.mp3": {"d": 0.89, "mx": -0.9, "mn": -26.0, "p": 6283}, "shower.mp3": {"d": 15.14, "mx": -0.4, "mn": -17.1, "p": 10703}, "spray_long.mp3": {"d": 5.69, "mx": -0.9, "mn": -15.7, "p": 10364}, "spray_short.mp3": {"d": 2.04, "mx": -0.1, "mn": -15.3, "p": 11165}, "sprayer1.mp3": {"d": 0.44, "mx": -7.4, "mn": -24.8, "p": 8697}, "sprayer2.mp3": {"d": 0.81, "mx": -9.1, "mn": -25.4, "p": 8671}, "tap1.mp3": {"d": 4.05, "mx": 0.0, "mn": -24.5, "p": 9001}, "tap2.mp3": {"d": 5.04, "mx": 0.0, "mn": -25.9, "p": 8097}, "tap3.mp3": {"d": 6.14, "mx": 0.0, "mn": -25.7, "p": 8152}, "toilet roll.mp3": {"d": 3.47, "mx": -2.1, "mn": -24.3, "p": 4776}, "toilet_cover_C.mp3": {"d": 0.81, "mx": -0.9, "mn": -21.5, "p": 1902}, "toilet_cover_O.mp3": {"d": 0.5, "mx": -1.6, "mn": -24.8, "p": 7527}, "towel.mp3": {"d": 4.0, "mx": -1.3, "mn": -26.2, "p": 2715}, "turning_a_lock1.mp3": {"d": 0.39, "mx": -1.7, "mn": -30.6, "p": 9457}, "turning_a_lock2.mp3": {"d": 0.34, "mx": -1.1, "mn": -25.8, "p": 8491}, "turning_a_lock3.mp3": {"d": 1.7, "mx": -2.8, "mn": -31.3, "p": 6139}, "washstand.mp3": {"d": 7.15, "mx": -0.6, "mn": -18.3, "p": 9684}, "waste_cans.mp3": {"d": 4.44, "mx": 0.0, "mn": -22.3, "p": 8679}, "waterdrops.mp3": {"d": 15.6, "mx": -1.5, "mn": -33.3, "p": 7601}, "zipper1.mp3": {"d": 1.54, "mx": -1.7, "mn": -18.8, "p": 3512}, "zipper2.mp3": {"d": 1.18, "mx": -4.1, "mn": -18.2, "p": 3335}, "zipper3.mp3": {"d": 0.89, "mx": -3.4, "mn": -22.0, "p": 9399}}, "DAILY02": {"automatic_pencil1.mp3": {"d": 0.26, "mx": 0.0, "mn": -29.5, "p": 9003}, "automatic_pencil2.mp3": {"d": 0.76, "mx": -0.2, "mn": -32.9, "p": 9170}, "automatic_pencil3.mp3": {"d": 3.63, "mx": -0.5, "mn": -31.3, "p": 10196}, "calendar.mp3": {"d": 1.44, "mx": -0.1, "mn": -26.6, "p": 9400}, "closing_a_dictionary.mp3": {"d": 0.39, "mx": -1.7, "mn": -26.2, "p": 6070}, "coins.mp3": {"d": 1.58, "mx": -0.7, "mn": -22.6, "p": 11126}, "cutter.mp3": {"d": 0.65, "mx": -2.5, "mn": -28.0, "p": 10855}, "cutting_a_paper.mp3": {"d": 1.04, "mx": -2.0, "mn": -21.0, "p": 9403}, "drawing_with_maker.mp3": {"d": 29.99, "mx": 0.0, "mn": -21.8, "p": 9339}, "dumping.mp3": {"d": 0.55, "mx": -6.8, "mn": -30.8, "p": 7951}, "finding_in_a_trash_box.mp3": {"d": 8.5, "mx": -3.6, "mn": -25.4, "p": 9299}, "finding_in_papers.mp3": {"d": 5.95, "mx": -0.9, "mn": -26.8, "p": 8861}, "folding_chair1.mp3": {"d": 0.78, "mx": -2.3, "mn": -22.2, "p": 3020}, "folding_chair2.mp3": {"d": 1.23, "mx": -0.6, "mn": -26.5, "p": 4685}, "keys.mp3": {"d": 1.58, "mx": 0.0, "mn": -23.9, "p": 9981}, "knocking_a_pen.mp3": {"d": 0.29, "mx": 0.0, "mn": -29.6, "p": 8137}, "lighter.mp3": {"d": 0.71, "mx": 0.0, "mn": -23.2, "p": 2108}, "lighting_a_match1.mp3": {"d": 4.08, "mx": 0.0, "mn": -30.9, "p": 5318}, "lighting_a_match2.mp3": {"d": 7.29, "mx": 0.0, "mn": -29.0, "p": 3905}, "magazine1.mp3": {"d": 0.96, "mx": -2.6, "mn": -29.7, "p": 9265}, "magazine2.mp3": {"d": 4.25, "mx": -1.5, "mn": -29.3, "p": 8492}, "matches.mp3": {"d": 5.36, "mx": 0.0, "mn": -29.5, "p": 2529}, "money_box1.mp3": {"d": 0.99, "mx": 0.0, "mn": -27.4, "p": 7533}, "money_box2.mp3": {"d": 0.73, "mx": -0.6, "mn": -24.7, "p": 9192}, "newspaper.mp3": {"d": 2.3, "mx": 0.0, "mn": -28.9, "p": 10872}, "pen_cap1.mp3": {"d": 0.68, "mx": -1.4, "mn": -31.3, "p": 5848}, "pen_cap2.mp3": {"d": 0.37, "mx": -2.6, "mn": -28.8, "p": 7205}, "pencil_sharpner1.mp3": {"d": 6.3, "mx": -0.5, "mn": -17.4, "p": 3512}, "pencil_sharpner2.mp3": {"d": 4.78, "mx": -3.2, "mn": -17.6, "p": 3378}, "pens.mp3": {"d": 2.61, "mx": 0.0, "mn": -26.4, "p": 6695}, "plastic_umbrella_rain1.mp3": {"d": 30.07, "mx": -4.8, "mn": -28.0, "p": 5120}, "plastic_umbrella_rain2.mp3": {"d": 21.55, "mx": -6.2, "mn": -26.8, "p": 7413}, "plastic_umbrella_rain3.mp3": {"d": 6.19, "mx": -0.1, "mn": -24.6, "p": 3620}, "pulling_back_a_chair.mp3": {"d": 0.96, "mx": -0.6, "mn": -14.0, "p": 1830}, "rubbing_paper1.mp3": {"d": 9.04, "mx": -4.4, "mn": -23.6, "p": 9533}, "rubbing_paper2.mp3": {"d": 7.94, "mx": -3.2, "mn": -23.1, "p": 9586}, "rubbing_tatami.mp3": {"d": 6.64, "mx": -5.6, "mn": -21.7, "p": 8000}, "rubbing_wooden_wall.mp3": {"d": 8.83, "mx": -0.4, "mn": -19.4, "p": 3555}, "scissoring_papers1.mp3": {"d": 4.46, "mx": -0.4, "mn": -28.4, "p": 9031}, "scissoring_papers2.mp3": {"d": 4.68, "mx": -0.7, "mn": -30.9, "p": 8339}, "scissors1.mp3": {"d": 0.53, "mx": 0.0, "mn": -24.6, "p": 9804}, "scissors2.mp3": {"d": 1.37, "mx": 0.0, "mn": -25.3, "p": 10449}, "scissors3.mp3": {"d": 2.69, "mx": 0.0, "mn": -22.0, "p": 10268}, "scissors4.mp3": {"d": 0.31, "mx": 0.0, "mn": -24.4, "p": 10027}, "sello_tape.mp3": {"d": 2.06, "mx": -1.2, "mn": -28.5, "p": 10349}, "sitting_on_a_chair1.mp3": {"d": 1.57, "mx": -0.5, "mn": -26.7, "p": 8783}, "sliding_a_shelf.mp3": {"d": 1.65, "mx": -0.5, "mn": -17.5, "p": 1212}, "small_drawer_C.mp3": {"d": 2.51, "mx": -2.2, "mn": -26.6, "p": 4414}, "small_drawer_O.mp3": {"d": 3.34, "mx": -0.9, "mn": -30.6, "p": 4114}, "small_wheels.mp3": {"d": 1.72, "mx": -1.8, "mn": -23.2, "p": 3324}, "spray_cap1.mp3": {"d": 1.18, "mx": -2.6, "mn": -33.2, "p": 4689}, "spray_cap2.mp3": {"d": 0.39, "mx": -5.3, "mn": -27.5, "p": 2999}, "staple.mp3": {"d": 0.58, "mx": -0.3, "mn": -28.5, "p": 8911}, "straw1.mp3": {"d": 16.51, "mx": -0.2, "mn": -23.6, "p": 1750}, "straw2.mp3": {"d": 4.6, "mx": 0.0, "mn": -21.9, "p": 2006}, "swish.mp3": {"d": 3.31, "mx": -0.8, "mn": -30.4, "p": 7259}, "taking_off_a_jumper1.mp3": {"d": 4.65, "mx": -10.1, "mn": -30.9, "p": 8423}, "tearing.mp3": {"d": 0.31, "mx": -1.8, "mn": -22.5, "p": 9684}, "tearing_cardboard1.mp3": {"d": 3.84, "mx": 0.0, "mn": -22.4, "p": 8755}, "tearing_cardboard2.mp3": {"d": 1.36, "mx": 0.0, "mn": -23.2, "p": 8257}, "tearing_cardboard3.mp3": {"d": 1.91, "mx": -0.1, "mn": -24.0, "p": 9640}, "tearing_papers1.mp3": {"d": 0.6, "mx": -2.3, "mn": -19.4, "p": 9156}, "tearing_papers2.mp3": {"d": 3.38, "mx": -0.4, "mn": -21.4, "p": 9660}, "tissue1.mp3": {"d": 0.46, "mx": -3.9, "mn": -19.6, "p": 4177}, "tissue2.mp3": {"d": 0.73, "mx": -2.9, "mn": -21.5, "p": 5333}, "tissue3.mp3": {"d": 1.12, "mx": -0.5, "mn": -26.3, "p": 5556}, "umbrella_rain1.mp3": {"d": 36.84, "mx": 0.0, "mn": -29.3, "p": 5308}, "umbrella_rain2.mp3": {"d": 9.41, "mx": 0.0, "mn": -28.4, "p": 5410}, "umbrella_raindrops.mp3": {"d": 3.36, "mx": -4.3, "mn": -27.9, "p": 6337}, "vinyl.mp3": {"d": 13.32, "mx": -1.3, "mn": -21.9, "p": 8106}, "vinyl_bag.mp3": {"d": 16.61, "mx": 0.0, "mn": -27.2, "p": 9185}, "wadding_up1.mp3": {"d": 4.36, "mx": 0.0, "mn": -30.4, "p": 8279}, "wadding_up2.mp3": {"d": 4.28, "mx": -1.1, "mn": -33.0, "p": 8354}, "wadding_up3.mp3": {"d": 8.72, "mx": -1.8, "mn": -34.5, "p": 6964}, "wet_tissue.mp3": {"d": 1.02, "mx": 0.0, "mn": -23.8, "p": 5386}, "writing_in_a_pen.mp3": {"d": 42.74, "mx": -0.4, "mn": -30.3, "p": 735}, "writing_in_a_pencil.mp3": {"d": 26.93, "mx": -1.7, "mn": -30.8, "p": 843}, "writing_with_maker.mp3": {"d": 21.26, "mx": -0.2, "mn": -23.0, "p": 1274}}, "EATING01": {"cereal1.mp3": {"d": 11.81, "mx": 0.0, "mn": -24.5, "p": 9219}, "cereal2.mp3": {"d": 4.36, "mx": 0.0, "mn": -24.1, "p": 9003}, "cereal3.mp3": {"d": 4.62, "mx": -2.4, "mn": -27.1, "p": 9217}, "clinking1.mp3": {"d": 2.33, "mx": 0.0, "mn": -30.8, "p": 8914}, "clinking2.mp3": {"d": 2.16, "mx": -0.4, "mn": -31.6, "p": 8526}, "clinking3.mp3": {"d": 1.97, "mx": 0.0, "mn": -29.9, "p": 10332}, "coffee_with_a_spoon.mp3": {"d": 10.87, "mx": -0.6, "mn": -34.9, "p": 6374}, "cracking_a_chocolate.mp3": {"d": 0.34, "mx": 0.0, "mn": -26.2, "p": 11159}, "drinking1.mp3": {"d": 3.5, "mx": -0.2, "mn": -27.5, "p": 1636}, "drinking2.mp3": {"d": 4.26, "mx": -0.2, "mn": -28.4, "p": 1670}, "drinking_a_hot_one1.mp3": {"d": 2.8, "mx": -3.8, "mn": -32.0, "p": 3275}, "drinking_a_hot_one2.mp3": {"d": 5.04, "mx": -0.9, "mn": -30.6, "p": 3979}, "drinking_a_soup.mp3": {"d": 0.84, "mx": -0.3, "mn": -20.4, "p": 7819}, "eating_crisps1.mp3": {"d": 4.73, "mx": -2.2, "mn": -28.0, "p": 5668}, "eating_crisps2.mp3": {"d": 16.25, "mx": -2.8, "mn": -34.5, "p": 5984}, "hotwater_from_a_pod.mp3": {"d": 7.94, "mx": 0.0, "mn": -27.5, "p": 5248}, "ice_cream_cone1.mp3": {"d": 0.76, "mx": -1.0, "mn": -24.3, "p": 6082}, "ice_cream_cone2.mp3": {"d": 3.42, "mx": 0.0, "mn": -29.1, "p": 8397}, "ice_into_glass1.mp3": {"d": 0.68, "mx": -0.9, "mn": -23.0, "p": 7029}, "ice_into_glass2.mp3": {"d": 0.63, "mx": -4.2, "mn": -27.3, "p": 7884}, "ice_into_glass3.mp3": {"d": 3.47, "mx": -1.0, "mn": -27.2, "p": 8027}, "ice_into_glass4.mp3": {"d": 2.85, "mx": -4.1, "mn": -28.5, "p": 8524}, "ice_into_glass5.mp3": {"d": 2.09, "mx": -8.5, "mn": -29.5, "p": 8577}, "ice_water.mp3": {"d": 3.79, "mx": -2.4, "mn": -31.8, "p": 11528}, "instant_drink.mp3": {"d": 8.31, "mx": -4.3, "mn": -29.0, "p": 2558}, "kettle_and_hot_water.mp3": {"d": 22.47, "mx": -0.6, "mn": -26.4, "p": 7532}, "kyusu1_Japanese_pod.mp3": {"d": 0.62, "mx": 0.0, "mn": -24.8, "p": 8203}, "kyusu2_Japanese_pod.mp3": {"d": 0.46, "mx": -0.3, "mn": -23.7, "p": 4997}, "noodles1.mp3": {"d": 4.1, "mx": -1.6, "mn": -23.1, "p": 4465}, "opening_a_can_pouring.mp3": {"d": 10.99, "mx": 0.0, "mn": -27.4, "p": 7298}, "opening_a_cracker_bag1.mp3": {"d": 4.28, "mx": -0.2, "mn": -26.5, "p": 9611}, "opening_a_cracker_bag2.mp3": {"d": 4.31, "mx": -1.5, "mn": -30.6, "p": 10510}, "opening_a_crisps_bag1.mp3": {"d": 3.26, "mx": 0.0, "mn": -26.7, "p": 8964}, "opening_a_crisps_bag2.mp3": {"d": 4.78, "mx": 0.0, "mn": -24.5, "p": 8687}, "opening_a_crisps_bag3.mp3": {"d": 6.14, "mx": 0.0, "mn": -30.7, "p": 10810}, "opening_a_paper_box1.mp3": {"d": 1.63, "mx": -1.8, "mn": -24.2, "p": 3731}, "opening_a_paper_box2.mp3": {"d": 0.7, "mx": -1.8, "mn": -23.1, "p": 6544}, "opening_a_soda_can.mp3": {"d": 1.85, "mx": 0.0, "mn": -22.8, "p": 9483}, "picking_a_cracker_bag.mp3": {"d": 1.88, "mx": -0.9, "mn": -31.7, "p": 6797}, "pouring_a_coke.mp3": {"d": 9.05, "mx": -1.4, "mn": -29.0, "p": 4353}, "pouring_cold_tea.mp3": {"d": 6.91, "mx": -0.4, "mn": -26.5, "p": 3027}, "pouring_hot_tea.mp3": {"d": 6.22, "mx": -1.0, "mn": -33.7, "p": 6039}, "pouring_into_bottle.mp3": {"d": 11.55, "mx": -1.8, "mn": -28.8, "p": 3330}, "pouring_sake.mp3": {"d": 7.21, "mx": 0.0, "mn": -28.3, "p": 5054}, "pouring_water1.mp3": {"d": 3.92, "mx": -0.1, "mn": -28.2, "p": 6595}, "pouring_water2.mp3": {"d": 4.3, "mx": -0.7, "mn": -25.1, "p": 3961}, "rice_cracker1.mp3": {"d": 6.53, "mx": -0.7, "mn": -35.9, "p": 5499}, "rice_cracker2.mp3": {"d": 8.83, "mx": -1.5, "mn": -33.3, "p": 3008}, "rice_cracker3.mp3": {"d": 18.08, "mx": -0.8, "mn": -34.9, "p": 3881}, "rice_cracker4.mp3": {"d": 5.88, "mx": -2.1, "mn": -35.9, "p": 9203}, "sifting_on_a_rice1.mp3": {"d": 0.52, "mx": -0.6, "mn": -22.0, "p": 9216}, "sifting_on_a_rice2.mp3": {"d": 0.65, "mx": -1.6, "mn": -21.8, "p": 9474}, "sifting_on_a_rice3.mp3": {"d": 0.86, "mx": -1.5, "mn": -20.8, "p": 9109}, "tea_with_a_spoon.mp3": {"d": 7.85, "mx": -1.6, "mn": -35.9, "p": 12299}}, "ELECTRIC01": {"0_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1261}, "1_s.mp3": {"d": 0.21, "mx": 0.0, "mn": -9.3, "p": 1119}, "2_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1227}, "3_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.6, "p": 1353}, "4_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1131}, "5_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1238}, "6_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1354}, "7_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1143}, "8_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1246}, "9_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1367}, "autoshaver.mp3": {"d": 10.1, "mx": -0.2, "mn": -20.6, "p": 8735}, "broadcast_stopping.mp3": {"d": 6.09, "mx": -11.2, "mn": -14.4, "p": 361}, "camera1.mp3": {"d": 0.39, "mx": -0.7, "mn": -23.1, "p": 9176}, "camera2.mp3": {"d": 2.17, "mx": 0.0, "mn": -31.2, "p": 9356}, "camera3.mp3": {"d": 7.05, "mx": 0.0, "mn": -20.6, "p": 9235}, "cleaner_far.mp3": {"d": 12.31, "mx": -0.3, "mn": -14.5, "p": 7251}, "cleaner_nearly.mp3": {"d": 12.31, "mx": -1.3, "mn": -15.2, "p": 10030}, "click.mp3": {"d": 0.31, "mx": -2.0, "mn": -28.9, "p": 10806}, "clock1.mp3": {"d": 12.1, "mx": -2.2, "mn": -29.1, "p": 4004}, "clock2.mp3": {"d": 12.1, "mx": -2.5, "mn": -28.7, "p": 4402}, "clock3.mp3": {"d": 60.05, "mx": 0.0, "mn": -28.8, "p": 6399}, "clock_bell.mp3": {"d": 16.1, "mx": 0.0, "mn": -15.6, "p": 9564}, "cutting_a_breaker.mp3": {"d": 0.6, "mx": 0.0, "mn": -25.9, "p": 6130}, "duble_clicks.mp3": {"d": 0.62, "mx": -0.7, "mn": -28.0, "p": 11034}, "fan1.mp3": {"d": 19.73, "mx": -0.5, "mn": -18.6, "p": 13279}, "fan2.mp3": {"d": 29.9, "mx": -0.5, "mn": -9.1, "p": 13341}, "fluorescent_switch1.mp3": {"d": 0.74, "mx": 0.0, "mn": -21.8, "p": 7894}, "fluorescent_switch2.mp3": {"d": 2.83, "mx": 0.0, "mn": -28.6, "p": 9908}, "fluorescent_switch3.mp3": {"d": 2.02, "mx": -0.9, "mn": -28.7, "p": 10103}, "hair_dryer1.mp3": {"d": 44.56, "mx": -4.7, "mn": -18.6, "p": 8700}, "kome_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1158}, "mike_noise.mp3": {"d": 5.02, "mx": -21.9, "mn": -27.5, "p": 211}, "new_printer1.mp3": {"d": 11.05, "mx": -1.1, "mn": -27.7, "p": 5055}, "new_printer2.mp3": {"d": 24.35, "mx": -0.4, "mn": -29.2, "p": 4805}, "new_printer3.mp3": {"d": 20.66, "mx": 0.0, "mn": -27.5, "p": 6418}, "new_printer4.mp3": {"d": 43.96, "mx": -0.1, "mn": -28.8, "p": 5631}, "pc_keyboard.mp3": {"d": 6.89, "mx": 0.0, "mn": -27.8, "p": 9713}, "phone_calling.mp3": {"d": 9.96, "mx": -0.6, "mn": -21.0, "p": 2956}, "phone_interruption.mp3": {"d": 8.46, "mx": -0.9, "mn": -15.7, "p": 363}, "phone_sound.mp3": {"d": 10.08, "mx": -8.2, "mn": -12.7, "p": 320}, "phone_vibration1.mp3": {"d": 5.35, "mx": -1.4, "mn": -11.1, "p": 2596}, "phone_vibration2.mp3": {"d": 3.94, "mx": -11.1, "mn": -20.4, "p": 8755}, "phoning1.mp3": {"d": 2.59, "mx": 0.0, "mn": -10.3, "p": 1255}, "phoning2.mp3": {"d": 1.83, "mx": 0.0, "mn": -8.8, "p": 1255}, "phoning3.mp3": {"d": 1.52, "mx": 0.0, "mn": -8.1, "p": 1246}, "phoning4.mp3": {"d": 9.98, "mx": 0.0, "mn": -10.2, "p": 1247}, "phoning5.mp3": {"d": 13.8, "mx": -0.2, "mn": -15.9, "p": 1646}, "power_point1.mp3": {"d": 1.23, "mx": 0.0, "mn": -22.1, "p": 4213}, "power_point2.mp3": {"d": 0.65, "mx": -0.5, "mn": -23.7, "p": 3159}, "printer.mp3": {"d": 37.18, "mx": -0.4, "mn": -23.2, "p": 2713}, "pushing_a_key.mp3": {"d": 0.22, "mx": 0.0, "mn": -25.6, "p": 10760}, "radio.mp3": {"d": 9.01, "mx": -2.4, "mn": -20.8, "p": 3115}, "reciever1.mp3": {"d": 0.53, "mx": -0.8, "mn": -25.7, "p": 8173}, "reciever2.mp3": {"d": 0.67, "mx": -0.1, "mn": -24.4, "p": 6353}, "scaner1.mp3": {"d": 15.05, "mx": -0.4, "mn": -16.8, "p": 9363}, "scaner2.mp3": {"d": 26.59, "mx": -0.5, "mn": -19.9, "p": 9870}, "setting_clock.mp3": {"d": 4.83, "mx": 0.0, "mn": -25.7, "p": 10086}, "sewing_machine1.mp3": {"d": 13.66, "mx": -0.3, "mn": -16.2, "p": 2514}, "sewing_machine2.mp3": {"d": 21.58, "mx": -0.3, "mn": -15.8, "p": 2481}, "sharp_s.mp3": {"d": 0.16, "mx": 0.0, "mn": -8.5, "p": 1377}, "socket1.mp3": {"d": 5.09, "mx": -0.0, "mn": -23.7, "p": 3499}, "socket2.mp3": {"d": 4.83, "mx": -1.9, "mn": -27.2, "p": 3334}, "switch1.mp3": {"d": 0.31, "mx": 0.0, "mn": -26.0, "p": 9064}, "washing_machine1.mp3": {"d": 17.35, "mx": 0.0, "mn": -14.1, "p": 2062}, "washing_machine2.mp3": {"d": 132.79, "mx": -0.4, "mn": -15.2, "p": 2046}}, "ENVIRONMENT01": {"1min_siren.mp3": {"d": 64.34, "mx": -1.2, "mn": -13.8, "p": 6227}, "ambulance_loop.mp3": {"d": 2.47, "mx": -1.0, "mn": -13.5, "p": 7219}, "ambulance_passing.mp3": {"d": 16.49, "mx": -0.1, "mn": -14.7, "p": 5115}, "automatic_door.mp3": {"d": 1.8, "mx": -0.3, "mn": -18.6, "p": 4220}, "boat_race.mp3": {"d": 167.97, "mx": -0.1, "mn": -16.8, "p": 2036}, "cafe_girls.mp3": {"d": 28.27, "mx": -0.5, "mn": -26.2, "p": 6377}, "can_from_a_machine.mp3": {"d": 3.48, "mx": -1.4, "mn": -25.6, "p": 7585}, "car_and_rain.mp3": {"d": 24.01, "mx": -1.1, "mn": -21.8, "p": 5199}, "car_streets1.mp3": {"d": 86.57, "mx": -0.9, "mn": -19.1, "p": 2644}, "coin_into_a_machine.mp3": {"d": 2.45, "mx": -0.4, "mn": -32.6, "p": 10253}, "conveni_office.mp3": {"d": 80.45, "mx": -0.2, "mn": -27.5, "p": 4548}, "convenience_store1.mp3": {"d": 65.45, "mx": 0.0, "mn": -27.1, "p": 6067}, "convenience_store2.mp3": {"d": 2.51, "mx": -0.4, "mn": -12.8, "p": 1830}, "elevator_button.mp3": {"d": 0.78, "mx": -4.1, "mn": -28.1, "p": 4788}, "elevator_down1.mp3": {"d": 30.02, "mx": -1.1, "mn": -19.0, "p": 1252}, "elevator_down2.mp3": {"d": 30.98, "mx": 0.0, "mn": -22.0, "p": 2231}, "elevator_up1.mp3": {"d": 33.67, "mx": -0.5, "mn": -18.6, "p": 1270}, "elevator_up2.mp3": {"d": 27.79, "mx": 0.0, "mn": -23.5, "p": 2199}, "escalator.mp3": {"d": 19.15, "mx": -0.5, "mn": -15.6, "p": 1482}, "fall_streets1.mp3": {"d": 79.83, "mx": -0.6, "mn": -16.8, "p": 4187}, "fire_engine_passing.mp3": {"d": 39.98, "mx": -1.4, "mn": -20.3, "p": 3839}, "fireengine_starting.mp3": {"d": 58.93, "mx": -1.1, "mn": -17.9, "p": 2652}, "fireengines.mp3": {"d": 47.91, "mx": -0.4, "mn": -22.4, "p": 3984}, "game_center.mp3": {"d": 58.31, "mx": -0.2, "mn": -14.8, "p": 5565}, "hubbub_at_a_cafe1.mp3": {"d": 40.54, "mx": -5.5, "mn": -22.2, "p": 2689}, "morning_streets.mp3": {"d": 67.92, "mx": -0.5, "mn": -17.4, "p": 4621}, "pachinco.mp3": {"d": 33.6, "mx": -0.5, "mn": -15.4, "p": 5115}, "port1.mp3": {"d": 31.09, "mx": -1.3, "mn": -23.6, "p": 3900}, "post_office.mp3": {"d": 56.9, "mx": -0.8, "mn": -22.8, "p": 2815}, "posting1.mp3": {"d": 1.15, "mx": -0.2, "mn": -25.4, "p": 6115}, "posting2.mp3": {"d": 3.94, "mx": -0.6, "mn": -22.8, "p": 6616}, "rain_at_building1.mp3": {"d": 312.03, "mx": 0.0, "mn": -26.2, "p": 7261}, "rain_at_building2.mp3": {"d": 112.48, "mx": -2.4, "mn": -27.7, "p": 7693}, "rain_at_building3.mp3": {"d": 90.36, "mx": 0.0, "mn": -26.2, "p": 3813}, "selling_toufu.mp3": {"d": 13.01, "mx": -0.3, "mn": -13.6, "p": 2360}, "shopping_in_an_airport.mp3": {"d": 41.11, "mx": -2.1, "mn": -19.9, "p": 3573}, "shopping_malls1.mp3": {"d": 35.9, "mx": -2.1, "mn": -21.5, "p": 4517}, "siren2.mp3": {"d": 34.27, "mx": -0.4, "mn": -15.3, "p": 6475}, "small_port.mp3": {"d": 68.31, "mx": 0.0, "mn": -17.7, "p": 1790}, "small_town_streets.mp3": {"d": 32.91, "mx": -0.4, "mn": -20.6, "p": 6041}, "streets_afternoon.mp3": {"d": 49.73, "mx": -0.4, "mn": -18.9, "p": 3083}, "summer_streets1.mp3": {"d": 110.18, "mx": -1.1, "mn": -22.5, "p": 5077}, "summer_streets2.mp3": {"d": 80.93, "mx": -0.5, "mn": -17.9, "p": 5398}, "summer_streets3.mp3": {"d": 34.46, "mx": -1.3, "mn": -17.1, "p": 6944}, "summer_streets4.mp3": {"d": 173.42, "mx": -0.5, "mn": -17.3, "p": 1976}, "summer_streets5.mp3": {"d": 37.66, "mx": -0.6, "mn": -17.7, "p": 8695}, "supermarket.mp3": {"d": 45.48, "mx": -0.7, "mn": -18.1, "p": 3195}, "town_afternoon.mp3": {"d": 57.6, "mx": -0.4, "mn": -18.3, "p": 1951}, "town_cross_roads1.mp3": {"d": 476.92, "mx": -0.1, "mn": -20.2, "p": 2911}, "town_cross_roads2.mp3": {"d": 180.98, "mx": -1.1, "mn": -18.0, "p": 2185}, "town_morning.mp3": {"d": 16.25, "mx": -3.3, "mn": -18.8, "p": 1963}, "vending_machine1.mp3": {"d": 9.8, "mx": -6.1, "mn": -17.7, "p": 3212}, "vending_machine2.mp3": {"d": 8.9, "mx": -1.7, "mn": -29.0, "p": 7914}, "walking_on_night_streets.mp3": {"d": 39.89, "mx": -1.2, "mn": -18.3, "p": 4705}, "wave_at_port.mp3": {"d": 279.6, "mx": -5.4, "mn": -25.0, "p": 6440}}, "ENVIRONMENT02": {"automatic_nailing1.mp3": {"d": 0.76, "mx": 0.0, "mn": -20.8, "p": 3822}, "automatic_nailing2.mp3": {"d": 7.08, "mx": -0.0, "mn": -23.1, "p": 3406}, "bike_engine.mp3": {"d": 14.83, "mx": 0.0, "mn": -21.3, "p": 5225}, "bikes_on_night_streets.mp3": {"d": 34.25, "mx": -0.5, "mn": -17.6, "p": 3028}, "breaking_concrete.mp3": {"d": 35.94, "mx": -0.2, "mn": -15.3, "p": 3328}, "breaking_houses1.mp3": {"d": 70.27, "mx": 0.0, "mn": -18.5, "p": 3362}, "breaking_houses2.mp3": {"d": 73.22, "mx": 0.0, "mn": -19.9, "p": 3208}, "breaking_houses3.mp3": {"d": 32.18, "mx": 0.0, "mn": -16.0, "p": 3633}, "breaking_houses4.mp3": {"d": 50.29, "mx": 0.0, "mn": -20.8, "p": 4044}, "building_subdivision1.mp3": {"d": 27.61, "mx": -2.1, "mn": -15.8, "p": 4034}, "building_subdivision2.mp3": {"d": 25.81, "mx": -0.8, "mn": -16.2, "p": 3507}, "building_subdivision3.mp3": {"d": 40.57, "mx": 0.0, "mn": -15.0, "p": 4153}, "car_road1.mp3": {"d": 56.87, "mx": -3.6, "mn": -21.6, "p": 2734}, "car_road2.mp3": {"d": 109.09, "mx": 0.0, "mn": -18.7, "p": 2663}, "car_road3.mp3": {"d": 56.86, "mx": 0.0, "mn": -12.6, "p": 2985}, "car_road4.mp3": {"d": 97.8, "mx": -0.0, "mn": -24.6, "p": 2195}, "car_road5.mp3": {"d": 36.02, "mx": -1.1, "mn": -22.0, "p": 4041}, "car_streets_at_night1.mp3": {"d": 73.87, "mx": -0.8, "mn": -19.4, "p": 4138}, "car_streets_at_night2.mp3": {"d": 27.82, "mx": -0.7, "mn": -18.4, "p": 2348}, "car_streets_at_night3.mp3": {"d": 108.43, "mx": -0.5, "mn": -19.5, "p": 4204}, "caterpillar.mp3": {"d": 28.82, "mx": -0.4, "mn": -17.4, "p": 2099}, "construction1.mp3": {"d": 33.36, "mx": -1.1, "mn": -16.7, "p": 5172}, "construction2.mp3": {"d": 162.69, "mx": 0.0, "mn": -17.0, "p": 2947}, "cracking_stones1.mp3": {"d": 56.4, "mx": 0.0, "mn": -11.6, "p": 6038}, "cracking_stones2.mp3": {"d": 63.31, "mx": 0.0, "mn": -13.1, "p": 6478}, "drainage.mp3": {"d": 22.97, "mx": -2.0, "mn": -15.2, "p": 4583}, "emviroment_noise1.mp3": {"d": 49.71, "mx": -12.0, "mn": -24.5, "p": 4857}, "factory1.mp3": {"d": 13.44, "mx": -1.0, "mn": -12.5, "p": 1087}, "filtration_machine.mp3": {"d": 11.78, "mx": -0.8, "mn": -14.3, "p": 4051}, "garbage_truck.mp3": {"d": 97.96, "mx": -2.2, "mn": -23.9, "p": 1032}, "hitting_a_floor1.mp3": {"d": 1.31, "mx": -1.2, "mn": -18.2, "p": 736}, "hitting_a_floor2.mp3": {"d": 0.78, "mx": -1.8, "mn": -17.8, "p": 1155}, "house_construction.mp3": {"d": 35.06, "mx": -2.6, "mn": -25.7, "p": 6358}, "motor_cutter1.mp3": {"d": 14.24, "mx": -0.1, "mn": -18.4, "p": 8787}, "motor_cutter2.mp3": {"d": 22.7, "mx": -2.3, "mn": -18.9, "p": 9123}, "motor_drill1.mp3": {"d": 16.04, "mx": -0.6, "mn": -15.4, "p": 8210}, "motor_drill2.mp3": {"d": 11.28, "mx": -1.4, "mn": -19.0, "p": 7994}, "refitting1.mp3": {"d": 90.7, "mx": 0.0, "mn": -24.0, "p": 7569}, "refitting_in_summer.mp3": {"d": 22.8, "mx": -0.3, "mn": -27.7, "p": 6249}, "remodeling1.mp3": {"d": 60.13, "mx": -1.3, "mn": -26.9, "p": 3835}, "remodeling2.mp3": {"d": 10.29, "mx": -4.0, "mn": -20.4, "p": 5226}, "river_improvement1.mp3": {"d": 138.07, "mx": -0.1, "mn": -24.0, "p": 4322}, "river_improvement2.mp3": {"d": 98.18, "mx": 0.0, "mn": -14.2, "p": 1773}, "river_improvement3.mp3": {"d": 115.46, "mx": 0.0, "mn": -18.7, "p": 1515}, "shovelcar1.mp3": {"d": 60.66, "mx": 0.0, "mn": -18.7, "p": 4614}, "shovelcar2.mp3": {"d": 45.17, "mx": 0.0, "mn": -20.3, "p": 3742}, "site_of_construction1.mp3": {"d": 29.75, "mx": -1.4, "mn": -15.9, "p": 7077}, "streets_construction1.mp3": {"d": 76.85, "mx": -0.4, "mn": -16.4, "p": 2789}, "streets_construction2.mp3": {"d": 13.53, "mx": 0.0, "mn": -13.4, "p": 2270}, "streets_construction3.mp3": {"d": 36.88, "mx": -0.5, "mn": -18.4, "p": 3129}, "striking_a_nail1.mp3": {"d": 8.54, "mx": -0.6, "mn": -20.3, "p": 2043}, "striking_a_nail2.mp3": {"d": 11.13, "mx": -0.4, "mn": -20.1, "p": 2000}, "striking_a_nail3.mp3": {"d": 16.54, "mx": -0.1, "mn": -18.9, "p": 1964}, "striking_a_nail4.mp3": {"d": 2.22, "mx": -0.3, "mn": -20.0, "p": 2920}, "striking_a_nail5.mp3": {"d": 4.1, "mx": -5.3, "mn": -24.8, "p": 2573}, "trucks1.mp3": {"d": 13.35, "mx": -0.7, "mn": -17.0, "p": 2043}, "trucks2.mp3": {"d": 54.57, "mx": -0.4, "mn": -15.1, "p": 2768}, "trucks3.mp3": {"d": 22.65, "mx": -1.5, "mn": -17.9, "p": 2565}, "trucks4.mp3": {"d": 11.15, "mx": -0.5, "mn": -18.3, "p": 4856}, "trucks5.mp3": {"d": 39.11, "mx": -1.8, "mn": -19.7, "p": 4663}, "tunnel_under_rails1.mp3": {"d": 85.73, "mx": -0.8, "mn": -16.1, "p": 1994}, "tunnel_under_rails2.mp3": {"d": 21.79, "mx": -0.5, "mn": -12.8, "p": 1526}, "vent.mp3": {"d": 20.06, "mx": -0.3, "mn": -13.6, "p": 1288}, "ventilator.mp3": {"d": 10.06, "mx": -0.1, "mn": -13.5, "p": 2670}}, "GAME01": {"blip01.mp3": {"d": 0.57, "mx": 0.0, "mn": -10.2, "p": 839}, "blip02.mp3": {"d": 0.31, "mx": 0.0, "mn": -12.8, "p": 865}, "blip03.mp3": {"d": 0.29, "mx": 0.0, "mn": -16.7, "p": 732}, "blip04.mp3": {"d": 0.31, "mx": -1.0, "mn": -11.5, "p": 3186}, "button01a.mp3": {"d": 0.26, "mx": -0.4, "mn": -11.9, "p": 3619}, "button01b.mp3": {"d": 0.67, "mx": -0.4, "mn": -14.1, "p": 3704}, "button02a.mp3": {"d": 0.46, "mx": -0.4, "mn": -11.5, "p": 3382}, "button02b.mp3": {"d": 0.77, "mx": -0.4, "mn": -13.8, "p": 3383}, "button03a.mp3": {"d": 0.34, "mx": -0.5, "mn": -11.4, "p": 3512}, "button03b.mp3": {"d": 0.77, "mx": -0.5, "mn": -11.9, "p": 3560}, "button04a.mp3": {"d": 0.34, "mx": -0.6, "mn": -11.8, "p": 3751}, "button04b.mp3": {"d": 0.74, "mx": -0.4, "mn": -14.6, "p": 3733}, "button05.mp3": {"d": 1.91, "mx": -3.8, "mn": -23.6, "p": 409}, "button06.mp3": {"d": 1.91, "mx": -3.8, "mn": -25.1, "p": 1549}, "cat_like1a.mp3": {"d": 0.63, "mx": -1.0, "mn": -19.3, "p": 3464}, "cat_like1b.mp3": {"d": 1.2, "mx": -1.0, "mn": -21.2, "p": 3437}, "cat_like2a.mp3": {"d": 0.65, "mx": -1.6, "mn": -17.7, "p": 3462}, "cat_like2b.mp3": {"d": 1.15, "mx": -1.7, "mn": -19.2, "p": 3427}, "cat_like3a.mp3": {"d": 0.6, "mx": -0.5, "mn": -16.8, "p": 3453}, "cat_like3b.mp3": {"d": 1.2, "mx": -0.5, "mn": -19.0, "p": 3432}, "cat_like4a.mp3": {"d": 0.71, "mx": -0.5, "mn": -17.0, "p": 3439}, "cat_like4b.mp3": {"d": 1.18, "mx": -0.5, "mn": -18.4, "p": 3441}, "coin01.mp3": {"d": 0.47, "mx": -8.0, "mn": -19.6, "p": 2280}, "coin02.mp3": {"d": 0.47, "mx": -8.0, "mn": -19.7, "p": 3307}, "coin03.mp3": {"d": 0.39, "mx": -6.8, "mn": -19.9, "p": 3274}, "coin04.mp3": {"d": 0.42, "mx": 0.0, "mn": -13.7, "p": 9015}, "coin05.mp3": {"d": 0.91, "mx": 0.0, "mn": -13.5, "p": 9698}, "coin06.mp3": {"d": 0.89, "mx": -6.3, "mn": -18.7, "p": 658}, "coin07.mp3": {"d": 0.91, "mx": 0.0, "mn": -13.4, "p": 13370}, "coin08.mp3": {"d": 0.89, "mx": -6.5, "mn": -19.4, "p": 5221}, "correct_answer1.mp3": {"d": 1.51, "mx": -0.5, "mn": -14.9, "p": 2595}, "correct_answer2.mp3": {"d": 1.37, "mx": -0.5, "mn": -17.3, "p": 2773}, "correct_answer3.mp3": {"d": 2.42, "mx": -1.1, "mn": -17.4, "p": 2450}, "jump01.mp3": {"d": 0.52, "mx": -1.2, "mn": -15.2, "p": 9189}, "jump02.mp3": {"d": 0.39, "mx": -0.7, "mn": -14.0, "p": 11555}, "jump03.mp3": {"d": 0.94, "mx": -9.5, "mn": -19.4, "p": 3336}, "jump04.mp3": {"d": 0.5, "mx": -12.9, "mn": -19.8, "p": 1459}, "jump05.mp3": {"d": 0.94, "mx": -0.6, "mn": -10.7, "p": 11419}, "jump06.mp3": {"d": 0.34, "mx": -5.9, "mn": -15.7, "p": 1701}, "jump07.mp3": {"d": 0.29, "mx": -9.3, "mn": -14.6, "p": 2090}, "jump08.mp3": {"d": 0.34, "mx": -0.2, "mn": -14.7, "p": 11238}, "jump09.mp3": {"d": 0.5, "mx": -0.2, "mn": -12.1, "p": 12345}, "jump10.mp3": {"d": 0.71, "mx": -0.5, "mn": -13.7, "p": 11818}, "jump11.mp3": {"d": 1.46, "mx": -1.2, "mn": -10.4, "p": 2588}, "jump12.mp3": {"d": 0.44, "mx": -0.4, "mn": -14.0, "p": 12533}, "jump13.mp3": {"d": 0.86, "mx": -2.0, "mn": -17.8, "p": 3754}, "pickup01.mp3": {"d": 0.47, "mx": 0.0, "mn": -13.7, "p": 8892}, "pickup02.mp3": {"d": 0.44, "mx": -6.2, "mn": -19.1, "p": 1066}, "pickup03.mp3": {"d": 0.44, "mx": -6.3, "mn": -19.3, "p": 3302}, "pickup04.mp3": {"d": 0.42, "mx": -7.7, "mn": -18.8, "p": 1941}, "poka01.mp3": {"d": 0.24, "mx": -6.7, "mn": -19.1, "p": 2129}, "poka02.mp3": {"d": 0.24, "mx": -7.0, "mn": -19.0, "p": 973}, "poka03.mp3": {"d": 0.26, "mx": 0.0, "mn": -13.8, "p": 12640}, "powerdown01.mp3": {"d": 0.47, "mx": -1.1, "mn": -10.1, "p": 13059}, "powerdown02.mp3": {"d": 0.47, "mx": -8.4, "mn": -17.1, "p": 1568}, "powerdown03.mp3": {"d": 0.84, "mx": -0.2, "mn": -10.9, "p": 10437}, "powerdown04.mp3": {"d": 0.91, "mx": -0.5, "mn": -12.5, "p": 11985}, "powerdown05.mp3": {"d": 0.5, "mx": -2.2, "mn": -13.6, "p": 1798}, "powerdown06.mp3": {"d": 0.57, "mx": 0.0, "mn": -7.2, "p": 8292}, "powerdown07.mp3": {"d": 1.1, "mx": -0.2, "mn": -13.1, "p": 3449}, "powerup01.mp3": {"d": 0.57, "mx": -9.2, "mn": -16.4, "p": 1952}, "powerup02.mp3": {"d": 0.94, "mx": -10.4, "mn": -17.5, "p": 2144}, "powerup03.mp3": {"d": 0.29, "mx": -7.7, "mn": -17.7, "p": 2945}, "powerup04.mp3": {"d": 0.63, "mx": -0.8, "mn": -14.7, "p": 11523}, "powerup05.mp3": {"d": 0.57, "mx": -0.6, "mn": -12.1, "p": 11765}, "powerup06.mp3": {"d": 0.57, "mx": 0.0, "mn": -10.8, "p": 10064}, "powerup07.mp3": {"d": 0.63, "mx": -2.3, "mn": -11.3, "p": 2395}, "powerup08.mp3": {"d": 0.91, "mx": -2.2, "mn": -11.8, "p": 3727}, "powerup09.mp3": {"d": 0.76, "mx": -3.4, "mn": -12.5, "p": 1990}, "powerup10.mp3": {"d": 0.55, "mx": 0.0, "mn": -9.8, "p": 10389}, "select01.mp3": {"d": 0.26, "mx": 0.0, "mn": -10.2, "p": 7405}, "select02.mp3": {"d": 0.29, "mx": 0.0, "mn": -10.1, "p": 9989}, "select03.mp3": {"d": 0.31, "mx": -5.3, "mn": -18.0, "p": 1933}, "select04.mp3": {"d": 0.24, "mx": 0.0, "mn": -10.4, "p": 7964}, "select05.mp3": {"d": 0.24, "mx": 0.0, "mn": -12.2, "p": 9766}, "select06.mp3": {"d": 0.24, "mx": 0.0, "mn": -14.1, "p": 13857}, "select07.mp3": {"d": 0.24, "mx": -0.8, "mn": -10.9, "p": 5761}, "select08.mp3": {"d": 0.29, "mx": -3.3, "mn": -13.2, "p": 810}, "select09.mp3": {"d": 0.57, "mx": -0.4, "mn": -17.3, "p": 9131}, "sh_pickup01.mp3": {"d": 0.24, "mx": -0.5, "mn": -14.6, "p": 7677}, "sh_pickup02.mp3": {"d": 0.24, "mx": 0.0, "mn": -13.5, "p": 8679}, "sh_pickup03.mp3": {"d": 0.21, "mx": 0.0, "mn": -10.9, "p": 8771}}, "HORROR01": {"1000hz_noise.mp3": {"d": 30.04, "mx": -0.5, "mn": -15.6, "p": 999}, "1500hz_noise.mp3": {"d": 30.04, "mx": -0.4, "mn": -16.4, "p": 1497}, "2400hz_noise.mp3": {"d": 30.04, "mx": -0.5, "mn": -15.9, "p": 2388}, "300hz_noise.mp3": {"d": 30.04, "mx": -0.4, "mn": -14.6, "p": 301}, "600hz_noise.mp3": {"d": 30.04, "mx": -0.5, "mn": -16.3, "p": 600}, "barking_dog_in_dream.mp3": {"d": 22.7, "mx": -1.1, "mn": -20.5, "p": 7260}, "bullying.mp3": {"d": 25.23, "mx": 0.0, "mn": -8.2, "p": 2601}, "chilly_hell.mp3": {"d": 73.67, "mx": -0.5, "mn": -15.8, "p": 9852}, "coming_of_terror.mp3": {"d": 7.13, "mx": -0.4, "mn": -12.9, "p": 7653}, "dark_atmosphere.mp3": {"d": 8.28, "mx": -0.4, "mn": -15.4, "p": 1309}, "dark_attack.mp3": {"d": 6.03, "mx": 0.0, "mn": -8.6, "p": 4890}, "death_sound1.mp3": {"d": 20.04, "mx": -1.4, "mn": -16.2, "p": 613}, "death_sound2.mp3": {"d": 20.04, "mx": -1.4, "mn": -16.7, "p": 459}, "death_sound3.mp3": {"d": 20.04, "mx": -2.2, "mn": -15.9, "p": 413}, "death_sound4.mp3": {"d": 19.8, "mx": -1.4, "mn": -16.8, "p": 739}, "distortion_of_the_dim.mp3": {"d": 30.2, "mx": -1.0, "mn": -10.9, "p": 482}, "ending_of_the_world1.mp3": {"d": 22.99, "mx": 0.0, "mn": -10.8, "p": 6715}, "ending_of_the_world2.mp3": {"d": 24.91, "mx": 0.0, "mn": -8.5, "p": 10773}, "fly_in_the_head.mp3": {"d": 10.03, "mx": -4.2, "mn": -7.7, "p": 6305}, "footsteps_of the_past.mp3": {"d": 9.67, "mx": -0.8, "mn": -19.0, "p": 288}, "gaining_weight.mp3": {"d": 6.12, "mx": -1.7, "mn": -27.0, "p": 8935}, "ghost_calling.mp3": {"d": 14.83, "mx": -0.4, "mn": -15.2, "p": 5916}, "ghost_sigh.mp3": {"d": 30.24, "mx": -1.1, "mn": -21.9, "p": 10870}, "ghosts.mp3": {"d": 26.93, "mx": -0.4, "mn": -13.0, "p": 9549}, "going_mad1.mp3": {"d": 25.26, "mx": 0.0, "mn": -16.2, "p": 5120}, "going_mad2.mp3": {"d": 20.06, "mx": -2.0, "mn": -14.3, "p": 3359}, "headache.mp3": {"d": 12.36, "mx": 0.0, "mn": -25.1, "p": 9970}, "hell_bell.mp3": {"d": 21.48, "mx": -0.6, "mn": -14.0, "p": 12061}, "hell_gear.mp3": {"d": 7.85, "mx": 0.0, "mn": -7.1, "p": 2211}, "horror_piano_chord1.mp3": {"d": 9.12, "mx": -0.5, "mn": -17.8, "p": 1215}, "horror_piano_chord2.mp3": {"d": 7.52, "mx": -3.3, "mn": -23.1, "p": 356}, "horror_piano_chord3.mp3": {"d": 4.28, "mx": -0.5, "mn": -26.4, "p": 1116}, "horror_piano_chord4.mp3": {"d": 15.99, "mx": -0.6, "mn": -13.3, "p": 157}, "horror_zone1.mp3": {"d": 55.22, "mx": -1.8, "mn": -17.1, "p": 9273}, "horror_zone2.mp3": {"d": 60.13, "mx": -3.4, "mn": -17.4, "p": 9092}, "in_dream.mp3": {"d": 30.31, "mx": -6.3, "mn": -21.5, "p": 7922}, "laughing1.mp3": {"d": 7.26, "mx": -0.2, "mn": -16.3, "p": 1500}, "loud_noise.mp3": {"d": 7.2, "mx": -2.2, "mn": -11.9, "p": 687}, "mad_breath1.mp3": {"d": 46.32, "mx": 0.0, "mn": -21.6, "p": 9884}, "mad_breath2.mp3": {"d": 57.99, "mx": 0.0, "mn": -21.2, "p": 9888}, "mad_complaint.mp3": {"d": 3.29, "mx": -0.6, "mn": -17.0, "p": 4982}, "maze.mp3": {"d": 13.73, "mx": 0.0, "mn": -24.0, "p": 10390}, "shock1.mp3": {"d": 6.29, "mx": -0.6, "mn": -13.7, "p": 148}, "shock2.mp3": {"d": 8.04, "mx": -0.6, "mn": -13.7, "p": 116}, "shock3.mp3": {"d": 8.76, "mx": -0.6, "mn": -12.4, "p": 78}, "something_call_to_you.mp3": {"d": 11.3, "mx": -1.2, "mn": -17.7, "p": 10857}, "strange_wind.mp3": {"d": 8.76, "mx": -1.2, "mn": -16.0, "p": 5500}, "surprising_shock1.mp3": {"d": 3.38, "mx": 0.0, "mn": -20.2, "p": 9368}, "surprising_shock2.mp3": {"d": 3.05, "mx": 0.0, "mn": -20.5, "p": 9319}, "suspicion1.mp3": {"d": 2.71, "mx": -0.5, "mn": -15.8, "p": 3174}, "suspicion2.mp3": {"d": 3.0, "mx": -0.8, "mn": -16.3, "p": 2410}, "suspicion3.mp3": {"d": 2.52, "mx": -0.5, "mn": -17.5, "p": 2935}, "terror.mp3": {"d": 6.77, "mx": -0.8, "mn": -19.2, "p": 10043}, "terror_attack.mp3": {"d": 5.59, "mx": 0.0, "mn": -23.8, "p": 5739}, "terror_clock.mp3": {"d": 12.1, "mx": -3.4, "mn": -27.6, "p": 6566}, "time_reversal.mp3": {"d": 13.75, "mx": -0.1, "mn": -20.0, "p": 8905}, "tinnitus1.mp3": {"d": 6.84, "mx": -3.4, "mn": -15.8, "p": 3472}, "tinnitus2.mp3": {"d": 4.22, "mx": -1.5, "mn": -13.9, "p": 1496}, "tinnitus3.mp3": {"d": 8.75, "mx": -0.8, "mn": -28.5, "p": 9034}, "tinnitus4.mp3": {"d": 3.6, "mx": -0.4, "mn": -9.9, "p": 11717}, "tinnitus5.mp3": {"d": 5.2, "mx": -0.8, "mn": -13.6, "p": 4111}, "under_world.mp3": {"d": 22.22, "mx": -0.9, "mn": -14.8, "p": 9597}, "white_noise1.mp3": {"d": 5.06, "mx": -0.2, "mn": -9.8, "p": 3896}, "white_noise2.mp3": {"d": 4.9, "mx": -0.4, "mn": -13.9, "p": 2018}}, "HORROR02": {"air_leaking1.mp3": {"d": 8.67, "mx": 0.0, "mn": -18.2, "p": 7491}, "air_leaking2.mp3": {"d": 6.45, "mx": -4.3, "mn": -18.8, "p": 7189}, "air_leaking3.mp3": {"d": 29.91, "mx": -4.3, "mn": -21.8, "p": 7293}, "air_leaking4.mp3": {"d": 17.84, "mx": -11.3, "mn": -24.7, "p": 4970}, "air_pump.mp3": {"d": 5.85, "mx": -2.4, "mn": -22.1, "p": 9142}, "bangbangbang1.mp3": {"d": 1.08, "mx": 0.0, "mn": -11.2, "p": 6139}, "bangbangbang2.mp3": {"d": 1.73, "mx": 0.0, "mn": -18.9, "p": 7955}, "begining_of_earthquake.mp3": {"d": 20.61, "mx": 0.0, "mn": -16.4, "p": 2613}, "big_fire1.mp3": {"d": 33.8, "mx": -0.4, "mn": -18.1, "p": 831}, "bookshelf.mp3": {"d": 5.04, "mx": 0.0, "mn": -14.1, "p": 4361}, "cameras.mp3": {"d": 5.69, "mx": 0.0, "mn": -15.6, "p": 9284}, "dangerous_car.mp3": {"d": 10.08, "mx": 0.0, "mn": -20.5, "p": 5914}, "dressing.mp3": {"d": 0.55, "mx": -1.3, "mn": -22.1, "p": 3666}, "dressing1.mp3": {"d": 1.18, "mx": -2.2, "mn": -24.8, "p": 3758}, "dressing2.mp3": {"d": 6.14, "mx": 0.0, "mn": -20.9, "p": 3752}, "dressing3.mp3": {"d": 10.19, "mx": -1.9, "mn": -24.2, "p": 3745}, "dressing4.mp3": {"d": 7.97, "mx": 0.0, "mn": -19.3, "p": 3756}, "dropping.mp3": {"d": 8.06, "mx": -0.4, "mn": -31.0, "p": 8465}, "dropping_a_mobile_phone.mp3": {"d": 1.8, "mx": 0.0, "mn": -26.3, "p": 9462}, "drowning.mp3": {"d": 21.65, "mx": 0.0, "mn": -18.1, "p": 6042}, "eaten_by_a_monster1.mp3": {"d": 4.78, "mx": -0.4, "mn": -24.8, "p": 2624}, "eaten_by_a_monster2.mp3": {"d": 1.07, "mx": 0.0, "mn": -17.1, "p": 2104}, "falling_down.mp3": {"d": 5.67, "mx": -1.9, "mn": -15.2, "p": 6046}, "fences.mp3": {"d": 3.1, "mx": -0.3, "mn": -19.7, "p": 11052}, "hell_fire.mp3": {"d": 22.03, "mx": -0.8, "mn": -10.6, "p": 653}, "hunting_for_garbage.mp3": {"d": 13.69, "mx": -1.6, "mn": -27.6, "p": 8023}, "jet_crash.mp3": {"d": 20.9, "mx": 0.0, "mn": -8.8, "p": 7399}, "kicking_a_mobile_phone.mp3": {"d": 2.18, "mx": -0.2, "mn": -29.5, "p": 10087}, "lunch_of_a_monster1.mp3": {"d": 16.12, "mx": -0.3, "mn": -26.1, "p": 1874}, "lunch_of_a_monster2.mp3": {"d": 15.31, "mx": -0.5, "mn": -25.9, "p": 1636}, "lunch_of_a_monster3.mp3": {"d": 15.12, "mx": 0.0, "mn": -24.3, "p": 1261}, "lunch_of_a_monster4.mp3": {"d": 17.68, "mx": -0.5, "mn": -30.5, "p": 1624}, "many_books.mp3": {"d": 4.1, "mx": 0.0, "mn": -16.9, "p": 4768}, "motor_drill.mp3": {"d": 15.78, "mx": -1.2, "mn": -17.1, "p": 8272}, "open_the_door1.mp3": {"d": 1.96, "mx": 0.0, "mn": -12.3, "p": 1243}, "open_the_door2.mp3": {"d": 1.62, "mx": 0.0, "mn": -10.6, "p": 1286}, "open_the_door3.mp3": {"d": 1.78, "mx": 0.0, "mn": -8.1, "p": 1270}, "pooping1.mp3": {"d": 2.87, "mx": 0.0, "mn": -26.1, "p": 8501}, "pooping2.mp3": {"d": 0.5, "mx": -0.0, "mn": -27.6, "p": 7664}, "stamping_on_the_ground.mp3": {"d": 5.78, "mx": -0.9, "mn": -16.5, "p": 6998}, "struggling_in_a_bath.mp3": {"d": 16.85, "mx": -0.4, "mn": -17.4, "p": 4454}, "tearing_clothes1.mp3": {"d": 1.1, "mx": -1.6, "mn": -21.3, "p": 8064}, "tearing_clothes2.mp3": {"d": 2.93, "mx": -1.1, "mn": -22.3, "p": 8004}, "towing.mp3": {"d": 7.63, "mx": -1.2, "mn": -18.9, "p": 6170}, "tumbling1.mp3": {"d": 1.15, "mx": 0.0, "mn": -13.7, "p": 1541}, "tumbling2.mp3": {"d": 2.25, "mx": 0.0, "mn": -12.9, "p": 2892}, "tumbling_in_a_bath1.mp3": {"d": 2.85, "mx": -0.3, "mn": -18.9, "p": 1306}, "tumbling_in_a_bath2.mp3": {"d": 4.26, "mx": -0.9, "mn": -17.0, "p": 1331}, "xxx1.mp3": {"d": 1.04, "mx": -2.4, "mn": -5.6, "p": 999}, "xxx2.mp3": {"d": 2.04, "mx": -2.4, "mn": -5.5, "p": 999}, "xxxharf.mp3": {"d": 0.55, "mx": -2.4, "mn": -5.8, "p": 999}, "zombie_eating1.mp3": {"d": 16.01, "mx": 0.0, "mn": -27.3, "p": 10875}, "zombie_eating2.mp3": {"d": 28.3, "mx": 0.0, "mn": -24.0, "p": 11263}}, "HUMAN01": {"blowing_nose.mp3": {"d": 1.49, "mx": -1.9, "mn": -19.3, "p": 6677}, "brushing_teeth1.mp3": {"d": 6.96, "mx": -1.4, "mn": -23.6, "p": 9306}, "brushing_teeth2.mp3": {"d": 20.11, "mx": -1.6, "mn": -25.1, "p": 7434}, "building_stairs.mp3": {"d": 15.36, "mx": -1.4, "mn": -25.4, "p": 7900}, "burp1.mp3": {"d": 0.26, "mx": -0.4, "mn": -16.5, "p": 929}, "catching_a_cold.mp3": {"d": 0.91, "mx": -0.8, "mn": -21.9, "p": 6600}, "clapping_alone1.mp3": {"d": 4.99, "mx": 0.0, "mn": -22.3, "p": 6261}, "clapping_alone2.mp3": {"d": 4.75, "mx": -0.8, "mn": -24.7, "p": 6443}, "clapping_alone3.mp3": {"d": 4.6, "mx": -0.1, "mn": -33.5, "p": 6139}, "dashing.mp3": {"d": 4.08, "mx": -0.1, "mn": -23.4, "p": 6035}, "fart1.mp3": {"d": 0.89, "mx": -0.9, "mn": -19.3, "p": 3334}, "finger_snap.mp3": {"d": 0.29, "mx": 0.0, "mn": -30.2, "p": 3880}, "girl_voice1.mp3": {"d": 0.37, "mx": -0.8, "mn": -14.9, "p": 1910}, "gnash.mp3": {"d": 4.47, "mx": 0.0, "mn": -18.5, "p": 4327}, "heartbeats.mp3": {"d": 14.03, "mx": -0.4, "mn": -12.3, "p": 119}, "hungry.mp3": {"d": 1.33, "mx": -2.8, "mn": -16.5, "p": 919}, "kiss1.mp3": {"d": 0.22, "mx": -0.1, "mn": -20.8, "p": 7819}, "kiss2.mp3": {"d": 1.61, "mx": -0.6, "mn": -20.2, "p": 9400}, "man_coughing1.mp3": {"d": 7.65, "mx": 0.0, "mn": -26.9, "p": 4687}, "man_coughing2.mp3": {"d": 6.37, "mx": -0.9, "mn": -25.7, "p": 2902}, "man_gargle1.mp3": {"d": 1.38, "mx": -3.3, "mn": -18.6, "p": 680}, "man_gargle2.mp3": {"d": 4.94, "mx": -1.1, "mn": -21.1, "p": 687}, "man_hiccup1.mp3": {"d": 0.41, "mx": -0.4, "mn": -19.2, "p": 4227}, "man_hiccup2.mp3": {"d": 0.5, "mx": 0.0, "mn": -18.5, "p": 2646}, "man_sneezing1.mp3": {"d": 1.56, "mx": 0.0, "mn": -17.3, "p": 6644}, "man_sneezing2.mp3": {"d": 1.3, "mx": 0.0, "mn": -19.7, "p": 2888}, "mountain_road.mp3": {"d": 82.76, "mx": -1.4, "mn": -38.8, "p": 8050}, "nail_clipper.mp3": {"d": 1.32, "mx": -0.9, "mn": -36.7, "p": 10800}, "running1.mp3": {"d": 4.51, "mx": -0.7, "mn": -16.5, "p": 6280}, "running_in_a_hall.mp3": {"d": 6.96, "mx": -0.8, "mn": -26.9, "p": 6030}, "running_in_a_house.mp3": {"d": 3.94, "mx": -3.2, "mn": -20.6, "p": 2656}, "running_in_fall_forest1.mp3": {"d": 11.34, "mx": 0.0, "mn": -15.9, "p": 5847}, "running_in_fall_forest2.mp3": {"d": 12.38, "mx": -0.1, "mn": -21.1, "p": 8241}, "running_on_the_gravel.mp3": {"d": 2.38, "mx": -1.8, "mn": -21.6, "p": 7332}, "scratching.mp3": {"d": 1.78, "mx": -9.2, "mn": -25.1, "p": 4060}, "snapping1.mp3": {"d": 0.57, "mx": 0.0, "mn": -28.7, "p": 8605}, "snapping2.mp3": {"d": 0.39, "mx": 0.0, "mn": -20.9, "p": 9224}, "snapping3.mp3": {"d": 3.53, "mx": 0.0, "mn": -27.1, "p": 9199}, "snoring.mp3": {"d": 4.51, "mx": -2.9, "mn": -17.3, "p": 1238}, "stairs1.mp3": {"d": 9.43, "mx": -3.1, "mn": -26.6, "p": 3481}, "stairs2.mp3": {"d": 5.41, "mx": 0.0, "mn": -15.7, "p": 3122}, "stairs3.mp3": {"d": 11.44, "mx": 0.0, "mn": -23.4, "p": 3363}, "surprising_girl.mp3": {"d": 0.42, "mx": -0.8, "mn": -20.0, "p": 3335}, "swallowing.mp3": {"d": 0.38, "mx": -1.9, "mn": -18.6, "p": 734}, "walking1.mp3": {"d": 43.15, "mx": -1.1, "mn": -34.7, "p": 6283}, "walking_at_night.mp3": {"d": 12.14, "mx": -0.4, "mn": -26.1, "p": 3312}, "walking_in_a_house1.mp3": {"d": 2.14, "mx": -1.5, "mn": -16.2, "p": 852}, "walking_in_a_house2.mp3": {"d": 7.94, "mx": -2.0, "mn": -22.7, "p": 2481}, "walking_in_fall_forest1.mp3": {"d": 40.31, "mx": 0.0, "mn": -26.8, "p": 6898}, "walking_in_fall_forest2.mp3": {"d": 65.25, "mx": 0.0, "mn": -26.8, "p": 7005}, "walking_in_snowstorm.mp3": {"d": 22.9, "mx": -0.1, "mn": -12.5, "p": 2609}, "walking_on_a_fall_street.mp3": {"d": 30.62, "mx": -1.4, "mn": -19.5, "p": 4407}, "walking_on_floor1.mp3": {"d": 2.61, "mx": -0.9, "mn": -21.9, "p": 3637}, "walking_on_floor2.mp3": {"d": 3.19, "mx": -0.4, "mn": -20.2, "p": 2515}, "walking_on_leaves1.mp3": {"d": 31.24, "mx": 0.0, "mn": -33.2, "p": 8910}, "walking_on_snow.mp3": {"d": 9.05, "mx": -1.5, "mn": -26.2, "p": 4829}, "walking_on_the_earth.mp3": {"d": 7.03, "mx": -0.6, "mn": -28.3, "p": 6391}, "walking_on_the_gravel.mp3": {"d": 7.15, "mx": 0.0, "mn": -26.8, "p": 5990}, "walking_slowly1.mp3": {"d": 8.05, "mx": 0.0, "mn": -27.7, "p": 2290}, "walking_slowly2.mp3": {"d": 5.51, "mx": 0.0, "mn": -26.5, "p": 2324}, "whistling1.mp3": {"d": 1.3, "mx": -0.2, "mn": -13.3, "p": 10382}, "whistling2.mp3": {"d": 1.54, "mx": 0.0, "mn": -15.5, "p": 4389}, "whistling3.mp3": {"d": 1.32, "mx": -0.6, "mn": -12.6, "p": 1525}, "woman_coughing1.mp3": {"d": 1.25, "mx": 0.0, "mn": -25.6, "p": 2644}, "woman_coughing2.mp3": {"d": 5.09, "mx": 0.0, "mn": -23.4, "p": 2662}, "woman_coughing3.mp3": {"d": 4.62, "mx": 0.0, "mn": -26.5, "p": 2705}, "woman_gargle.mp3": {"d": 4.05, "mx": -1.2, "mn": -19.5, "p": 3303}}, "JIDAIGEKI01": {"Budda_large_bell.mp3": {"d": 19.94, "mx": -0.4, "mn": -22.4, "p": 12085}, "Budda_small_bell.mp3": {"d": 14.78, "mx": -0.3, "mn": -28.8, "p": 11628}, "Buddhism_sutra1.mp3": {"d": 30.1, "mx": -0.9, "mn": -22.3, "p": 5999}, "Buddhism_sutra2.mp3": {"d": 31.54, "mx": -0.8, "mn": -27.0, "p": 9097}, "Chinese_blade1.mp3": {"d": 1.87, "mx": -0.8, "mn": -21.7, "p": 11392}, "Chinese_blade2.mp3": {"d": 2.06, "mx": -0.3, "mn": -22.9, "p": 11296}, "attack_bell.mp3": {"d": 14.05, "mx": -0.5, "mn": -10.6, "p": 1267}, "bell1.mp3": {"d": 3.63, "mx": -0.2, "mn": -18.5, "p": 9407}, "bell2.mp3": {"d": 2.38, "mx": -0.7, "mn": -18.6, "p": 9238}, "calling_whistle.mp3": {"d": 5.54, "mx": -1.5, "mn": -9.8, "p": 4618}, "clapping_twice.mp3": {"d": 1.85, "mx": 0.0, "mn": -28.1, "p": 5404}, "cutting_with_a_katana1.mp3": {"d": 0.77, "mx": 0.0, "mn": -15.2, "p": 7717}, "cutting_with_a_katana2.mp3": {"d": 1.01, "mx": 0.0, "mn": -14.4, "p": 7564}, "cutting_with_a_katana3.mp3": {"d": 1.13, "mx": 0.0, "mn": -12.8, "p": 7769}, "cutting_with_a_katana4.mp3": {"d": 0.79, "mx": 0.0, "mn": -13.4, "p": 7352}, "digging_stones.mp3": {"d": 7.34, "mx": -0.4, "mn": -27.2, "p": 10594}, "extracting_a_knife.mp3": {"d": 0.55, "mx": -2.1, "mn": -25.2, "p": 9957}, "extracting_a_sword1.mp3": {"d": 1.03, "mx": -5.8, "mn": -22.7, "p": 9002}, "extracting_a_sword2.mp3": {"d": 1.92, "mx": -1.0, "mn": -21.2, "p": 10396}, "flag1.mp3": {"d": 9.9, "mx": -2.4, "mn": -18.9, "p": 3265}, "holly_sword1.mp3": {"d": 3.24, "mx": -0.4, "mn": -25.1, "p": 9758}, "katana1.mp3": {"d": 1.58, "mx": 0.0, "mn": -20.1, "p": 7928}, "knife.mp3": {"d": 1.99, "mx": -0.2, "mn": -32.3, "p": 8186}, "many_coins.mp3": {"d": 8.7, "mx": 0.0, "mn": -14.1, "p": 9645}, "offering_box.mp3": {"d": 1.28, "mx": 0.0, "mn": -26.5, "p": 6632}, "oshiire1.mp3": {"d": 2.54, "mx": -0.6, "mn": -22.7, "p": 1114}, "samurai_shouting1a.mp3": {"d": 3.71, "mx": -1.0, "mn": -18.2, "p": 2592}, "samurai_shouting1b.mp3": {"d": 5.49, "mx": -0.2, "mn": -17.0, "p": 3894}, "samurai_shouting2.mp3": {"d": 2.43, "mx": -1.2, "mn": -14.8, "p": 2344}, "samurai_shouting3a.mp3": {"d": 3.19, "mx": -1.8, "mn": -17.2, "p": 3776}, "samurai_shouting3b.mp3": {"d": 4.73, "mx": -2.0, "mn": -17.4, "p": 3012}, "samurai_shouting4a.mp3": {"d": 2.61, "mx": -0.7, "mn": -15.4, "p": 2398}, "samurai_shouting4b.mp3": {"d": 1.83, "mx": -1.7, "mn": -19.4, "p": 3361}, "samurai_shouting5.mp3": {"d": 2.98, "mx": -0.6, "mn": -15.5, "p": 3468}, "shuriken_ninja_knifes1.mp3": {"d": 0.41, "mx": 0.0, "mn": -12.3, "p": 4772}, "shuriken_ninja_knifes2.mp3": {"d": 0.62, "mx": 0.0, "mn": -13.0, "p": 4751}, "shuriken_ninja_knifes3.mp3": {"d": 0.89, "mx": 0.0, "mn": -16.0, "p": 5300}, "sitting_on_the_tatami1.mp3": {"d": 1.63, "mx": -1.7, "mn": -19.7, "p": 931}, "sitting_on_the_tatami2.mp3": {"d": 1.92, "mx": -6.5, "mn": -20.7, "p": 946}, "stabbing.mp3": {"d": 0.19, "mx": -2.7, "mn": -18.9, "p": 4540}, "sword_attack1.mp3": {"d": 0.62, "mx": 0.0, "mn": -21.5, "p": 10341}, "sword_attack2.mp3": {"d": 0.79, "mx": 0.0, "mn": -21.3, "p": 10456}, "sword_battle_loop.mp3": {"d": 3.12, "mx": 0.0, "mn": -17.1, "p": 9621}, "tumbling1.mp3": {"d": 1.15, "mx": 0.0, "mn": -13.7, "p": 1541}, "tumbling2.mp3": {"d": 2.25, "mx": 0.0, "mn": -12.9, "p": 2892}, "walking_on_tatamis.mp3": {"d": 8.35, "mx": -0.5, "mn": -21.5, "p": 1356}, "wind_bell1.mp3": {"d": 4.25, "mx": 0.0, "mn": -28.4, "p": 10746}, "wind_bell2.mp3": {"d": 2.74, "mx": -0.1, "mn": -26.4, "p": 11523}, "wow_katana1.mp3": {"d": 4.41, "mx": 0.0, "mn": -17.2, "p": 4230}, "wow_katana2.mp3": {"d": 2.93, "mx": 0.0, "mn": -20.3, "p": 5315}}, "NATURE01": {"autumn_insects1.mp3": {"d": 93.68, "mx": -2.1, "mn": -17.0, "p": 10338}, "autumn_insects2.mp3": {"d": 52.77, "mx": -0.8, "mn": -14.3, "p": 6938}, "autumn_insects3.mp3": {"d": 101.3, "mx": -0.6, "mn": -21.4, "p": 9079}, "autumn_insects4.mp3": {"d": 128.78, "mx": -0.6, "mn": -18.8, "p": 8217}, "autumn_insects5.mp3": {"d": 52.82, "mx": -0.7, "mn": -18.7, "p": 9163}, "autumn_insects6.mp3": {"d": 59.04, "mx": -0.4, "mn": -18.8, "p": 10283}, "autumn_insects7.mp3": {"d": 73.25, "mx": -0.1, "mn": -19.0, "p": 7797}, "autumn_insects8.mp3": {"d": 62.93, "mx": -1.0, "mn": -18.0, "p": 10418}, "black_cicadas1.mp3": {"d": 77.42, "mx": -0.4, "mn": -17.7, "p": 10638}, "black_cicadas2.mp3": {"d": 65.62, "mx": -0.1, "mn": -15.1, "p": 11245}, "black_cicadas3.mp3": {"d": 289.46, "mx": 0.0, "mn": -16.4, "p": 10193}, "breaking_branchs1.mp3": {"d": 0.84, "mx": 0.0, "mn": -21.1, "p": 3345}, "breaking_branchs2.mp3": {"d": 2.87, "mx": 0.0, "mn": -20.6, "p": 2334}, "brook1.mp3": {"d": 13.68, "mx": -1.7, "mn": -22.4, "p": 7714}, "brook1a.mp3": {"d": 57.76, "mx": -6.3, "mn": -28.3, "p": 5073}, "brook1b.mp3": {"d": 288.68, "mx": -6.3, "mn": -28.3, "p": 5073}, "brook_in_a_cave.mp3": {"d": 13.68, "mx": -0.8, "mn": -20.4, "p": 6937}, "car_and_rain.mp3": {"d": 24.01, "mx": -1.1, "mn": -21.8, "p": 5199}, "cricket.mp3": {"d": 69.8, "mx": -0.7, "mn": -15.4, "p": 5601}, "diving1.mp3": {"d": 2.51, "mx": -0.4, "mn": -20.5, "p": 2467}, "draft1.mp3": {"d": 10.32, "mx": -0.1, "mn": -13.8, "p": 1399}, "draft2.mp3": {"d": 12.41, "mx": -0.0, "mn": -14.8, "p": 1289}, "fall_morning_river.mp3": {"d": 54.8, "mx": -13.2, "mn": -27.8, "p": 7569}, "fall_river_at_night1.mp3": {"d": 46.32, "mx": -9.8, "mn": -24.2, "p": 9357}, "fall_river_at_night2.mp3": {"d": 129.67, "mx": -9.0, "mn": -24.8, "p": 9301}, "fire1.mp3": {"d": 7.18, "mx": -0.2, "mn": -10.2, "p": 221}, "fire2.mp3": {"d": 5.41, "mx": -0.3, "mn": -8.7, "p": 234}, "fire3.mp3": {"d": 4.02, "mx": -0.6, "mn": -8.1, "p": 627}, "fire4.mp3": {"d": 4.55, "mx": -0.5, "mn": -7.7, "p": 961}, "glassland1.mp3": {"d": 50.39, "mx": -8.5, "mn": -24.4, "p": 10444}, "glassland2.mp3": {"d": 30.3, "mx": -12.1, "mn": -26.2, "p": 11226}, "glassland3.mp3": {"d": 56.4, "mx": -11.7, "mn": -27.0, "p": 8792}, "haevy_rain_loop.mp3": {"d": 14.23, "mx": -1.0, "mn": -14.6, "p": 7357}, "hearing_rain1.mp3": {"d": 97.82, "mx": -0.9, "mn": -33.9, "p": 4590}, "hearing_rain2.mp3": {"d": 62.56, "mx": -0.8, "mn": -27.8, "p": 7588}, "hearing_rain3.mp3": {"d": 50.06, "mx": 0.0, "mn": -23.4, "p": 2042}, "hearing_rain4.mp3": {"d": 34.18, "mx": -0.4, "mn": -32.3, "p": 6352}, "lightning1.mp3": {"d": 35.24, "mx": 0.0, "mn": -17.5, "p": 2054}, "lightning2.mp3": {"d": 11.6, "mx": 0.0, "mn": -18.0, "p": 1984}, "lightning3.mp3": {"d": 25.81, "mx": 0.0, "mn": -17.3, "p": 1097}, "limestone_cave1.mp3": {"d": 53.26, "mx": -14.0, "mn": -31.4, "p": 6232}, "limestone_cave2.mp3": {"d": 65.85, "mx": -9.1, "mn": -29.7, "p": 5599}, "mountain_children.mp3": {"d": 36.47, "mx": -5.4, "mn": -22.2, "p": 5039}, "mountain_stream.mp3": {"d": 66.38, "mx": -4.3, "mn": -23.7, "p": 5349}, "near_a_brook.mp3": {"d": 76.85, "mx": -2.2, "mn": -30.8, "p": 6301}, "ocean_wave1.mp3": {"d": 121.73, "mx": -0.1, "mn": -19.5, "p": 5741}, "rain_loop.mp3": {"d": 7.66, "mx": -1.7, "mn": -23.8, "p": 7155}, "rain_thunder1.mp3": {"d": 60.42, "mx": -0.0, "mn": -21.7, "p": 1569}, "rain_thunder2.mp3": {"d": 73.78, "mx": 0.0, "mn": -21.2, "p": 1727}, "raining.mp3": {"d": 41.64, "mx": -1.2, "mn": -26.4, "p": 6731}, "river_rising.mp3": {"d": 62.09, "mx": -0.4, "mn": -14.3, "p": 6438}, "rumbling_of_the_earth.mp3": {"d": 20.04, "mx": -0.9, "mn": -6.4, "p": 60}, "sand.mp3": {"d": 6.84, "mx": -7.6, "mn": -20.7, "p": 5619}, "shower_going.mp3": {"d": 333.51, "mx": 0.0, "mn": -29.5, "p": 1908}, "small_ice1.mp3": {"d": 0.97, "mx": -0.6, "mn": -26.2, "p": 11274}, "small_ice2.mp3": {"d": 0.68, "mx": -1.0, "mn": -25.3, "p": 11505}, "small_wave1.mp3": {"d": 10.56, "mx": -1.7, "mn": -23.2, "p": 9221}, "springwater1.mp3": {"d": 111.83, "mx": -9.5, "mn": -35.0, "p": 6096}, "springwater2.mp3": {"d": 224.78, "mx": -9.5, "mn": -34.2, "p": 6148}, "storm1.mp3": {"d": 29.33, "mx": -0.5, "mn": -20.4, "p": 6220}, "storm_and_window1.mp3": {"d": 68.6, "mx": -0.3, "mn": -20.2, "p": 3366}, "storm_and_window2.mp3": {"d": 68.13, "mx": -0.4, "mn": -22.5, "p": 3450}, "storm_and_window3.mp3": {"d": 34.4, "mx": -2.6, "mn": -17.3, "p": 2858}, "storm_and_window4.mp3": {"d": 73.93, "mx": -0.5, "mn": -17.1, "p": 2259}, "storm_and_window5.mp3": {"d": 133.77, "mx": -0.5, "mn": -21.1, "p": 2119}, "storm_and_window6.mp3": {"d": 58.96, "mx": -0.4, "mn": -20.6, "p": 2009}, "storm_coming1.mp3": {"d": 36.24, "mx": 0.0, "mn": -15.7, "p": 2917}, "storm_coming2.mp3": {"d": 112.78, "mx": 0.0, "mn": -18.9, "p": 2920}, "storm_coming_l.mp3": {"d": 112.78, "mx": 0.0, "mn": -18.9, "p": 2920}, "storm_coming_s.mp3": {"d": 36.24, "mx": 0.0, "mn": -15.7, "p": 2917}, "storm_land.mp3": {"d": 35.16, "mx": -0.4, "mn": -15.5, "p": 2549}, "strong_wind1.mp3": {"d": 26.7, "mx": -0.1, "mn": -16.3, "p": 2876}, "strong_wind2.mp3": {"d": 9.22, "mx": -1.4, "mn": -15.5, "p": 7036}, "summer_beach1.mp3": {"d": 70.84, "mx": -0.8, "mn": -28.1, "p": 8243}, "summer_beach2.mp3": {"d": 30.88, "mx": -4.4, "mn": -27.2, "p": 7656}, "summer_hill1.mp3": {"d": 23.88, "mx": -0.4, "mn": -21.8, "p": 8991}, "summer_hill2.mp3": {"d": 74.74, "mx": -6.6, "mn": -25.2, "p": 8846}, "summer_hill3.mp3": {"d": 121.63, "mx": -7.2, "mn": -22.6, "p": 10231}, "summer_hill4.mp3": {"d": 50.91, "mx": -8.0, "mn": -22.4, "p": 10043}, "thunder1.mp3": {"d": 25.68, "mx": -0.2, "mn": -15.5, "p": 1441}, "thunder_coming.mp3": {"d": 83.88, "mx": 0.0, "mn": -28.4, "p": 1933}, "vacation_beach1.mp3": {"d": 48.25, "mx": -2.2, "mn": -22.5, "p": 1679}, "vacation_beach2.mp3": {"d": 41.27, "mx": -1.4, "mn": -23.8, "p": 1591}, "waterfall1.mp3": {"d": 33.8, "mx": -0.2, "mn": -15.2, "p": 5774}, "wind_and_trees1.mp3": {"d": 34.04, "mx": -1.6, "mn": -21.5, "p": 7847}, "wind_and_trees2.mp3": {"d": 21.0, "mx": -1.9, "mn": -20.4, "p": 7700}, "wind_at_night1.mp3": {"d": 30.36, "mx": -0.9, "mn": -19.7, "p": 2463}, "wind_at_night2.mp3": {"d": 90.5, "mx": -0.9, "mn": -19.4, "p": 2673}}, "OPENCLOSE01": {"CD_case_C.mp3": {"d": 0.6, "mx": 0.0, "mn": -27.7, "p": 7099}, "CD_case_O.mp3": {"d": 0.34, "mx": -1.4, "mn": -27.3, "p": 7684}, "Japanese_slide_door_C.mp3": {"d": 3.58, "mx": 0.0, "mn": -24.8, "p": 1800}, "Japanese_slide_door_O.mp3": {"d": 3.0, "mx": -3.3, "mn": -22.9, "p": 1320}, "bath_cover_C.mp3": {"d": 2.59, "mx": -2.6, "mn": -24.2, "p": 4712}, "bath_cover_O.mp3": {"d": 3.82, "mx": -0.4, "mn": -27.7, "p": 4403}, "bath_door_C.mp3": {"d": 1.12, "mx": -0.9, "mn": -24.3, "p": 3617}, "bath_door_O.mp3": {"d": 1.8, "mx": -2.2, "mn": -27.1, "p": 3741}, "blind.mp3": {"d": 1.58, "mx": 0.0, "mn": -22.2, "p": 10211}, "blind_down.mp3": {"d": 1.28, "mx": 0.0, "mn": -20.5, "p": 9468}, "blind_up.mp3": {"d": 1.57, "mx": -1.1, "mn": -26.6, "p": 9564}, "class_door1.mp3": {"d": 1.99, "mx": -0.2, "mn": -22.4, "p": 4680}, "class_door2.mp3": {"d": 2.85, "mx": -1.9, "mn": -16.5, "p": 2410}, "cupboard1_C.mp3": {"d": 0.46, "mx": -0.3, "mn": -16.2, "p": 1744}, "cupboard1_O.mp3": {"d": 0.67, "mx": -10.7, "mn": -29.4, "p": 4195}, "curtain1.mp3": {"d": 0.96, "mx": 0.0, "mn": -25.1, "p": 10592}, "curtain2.mp3": {"d": 0.86, "mx": -1.4, "mn": -20.5, "p": 10642}, "curtain_window_morning.mp3": {"d": 13.18, "mx": 0.0, "mn": -25.7, "p": 8614}, "curtain_window_night.mp3": {"d": 44.33, "mx": -1.0, "mn": -18.8, "p": 4592}, "door1_C.mp3": {"d": 1.36, "mx": -0.8, "mn": -19.9, "p": 1971}, "door2_C.mp3": {"d": 2.04, "mx": -2.9, "mn": -23.1, "p": 2071}, "folding_screen_door1.mp3": {"d": 1.78, "mx": 0.0, "mn": -21.7, "p": 6293}, "folding_screen_door2.mp3": {"d": 1.67, "mx": -3.1, "mn": -24.1, "p": 7102}, "folding_screen_door3.mp3": {"d": 1.65, "mx": -0.3, "mn": -25.9, "p": 7322}, "from_a_pc_drive1.mp3": {"d": 8.44, "mx": -1.1, "mn": -28.2, "p": 7090}, "from_a_pc_drive2.mp3": {"d": 1.38, "mx": -0.8, "mn": -21.5, "p": 6930}, "into_a_pc_drive1.mp3": {"d": 22.78, "mx": -1.7, "mn": -31.7, "p": 7419}, "into_a_pc_drive2.mp3": {"d": 1.38, "mx": -1.9, "mn": -20.8, "p": 7075}, "iron_box_C.mp3": {"d": 0.94, "mx": -1.2, "mn": -23.2, "p": 3530}, "iron_box_O.mp3": {"d": 0.65, "mx": -0.4, "mn": -26.0, "p": 7085}, "iron_door1_C.mp3": {"d": 3.48, "mx": 0.0, "mn": -19.6, "p": 3264}, "iron_door1_O.mp3": {"d": 2.11, "mx": 0.0, "mn": -26.7, "p": 9959}, "iron_door2_O.mp3": {"d": 7.32, "mx": 0.0, "mn": -21.0, "p": 11625}, "large_drawer_C1.mp3": {"d": 2.72, "mx": -1.3, "mn": -21.4, "p": 4001}, "large_drawer_O1.mp3": {"d": 2.35, "mx": -1.6, "mn": -18.2, "p": 3602}, "large_glass_window_C.mp3": {"d": 5.76, "mx": -0.2, "mn": -23.5, "p": 3040}, "large_glass_window_O.mp3": {"d": 5.14, "mx": -0.7, "mn": -17.8, "p": 2408}, "locker_C.mp3": {"d": 0.91, "mx": -3.0, "mn": -21.7, "p": 5808}, "locker_O.mp3": {"d": 2.11, "mx": -1.2, "mn": -29.6, "p": 8546}, "long_curtain1.mp3": {"d": 4.47, "mx": -1.1, "mn": -27.3, "p": 9515}, "long_curtain2.mp3": {"d": 3.5, "mx": -0.2, "mn": -22.7, "p": 9186}, "long_curtain3.mp3": {"d": 2.72, "mx": -3.1, "mn": -19.5, "p": 9799}, "long_curtain4.mp3": {"d": 3.06, "mx": -1.3, "mn": -20.0, "p": 9851}, "long_curtain5.mp3": {"d": 2.01, "mx": -0.6, "mn": -18.7, "p": 9408}, "long_curtain6.mp3": {"d": 2.69, "mx": -0.4, "mn": -18.9, "p": 9770}, "long_curtain7.mp3": {"d": 3.32, "mx": -1.1, "mn": -17.4, "p": 8895}, "mobile_phone_C.mp3": {"d": 0.42, "mx": -2.9, "mn": -30.8, "p": 5379}, "mobile_phone_O.mp3": {"d": 0.55, "mx": -2.8, "mn": -33.0, "p": 9515}, "office_locker_C.mp3": {"d": 0.55, "mx": -1.5, "mn": -23.5, "p": 5735}, "office_locker_O.mp3": {"d": 0.94, "mx": 0.0, "mn": -29.7, "p": 6676}, "oshiire.mp3": {"d": 2.71, "mx": -1.1, "mn": -23.7, "p": 1791}, "peeping.mp3": {"d": 0.55, "mx": 0.0, "mn": -20.7, "p": 9714}, "plastic_toolbox_C.mp3": {"d": 2.64, "mx": -0.5, "mn": -29.3, "p": 2800}, "plastic_toolbox_O.mp3": {"d": 2.33, "mx": -0.4, "mn": -31.3, "p": 6160}, "room_door_C.mp3": {"d": 1.39, "mx": -0.3, "mn": -15.9, "p": 1728}, "room_door_O.mp3": {"d": 1.1, "mx": -0.4, "mn": -15.0, "p": 1849}, "screen_door1.mp3": {"d": 1.2, "mx": -10.8, "mn": -24.5, "p": 2136}, "screen_door2.mp3": {"d": 1.06, "mx": -1.1, "mn": -24.2, "p": 5798}, "shed_door_C.mp3": {"d": 2.18, "mx": 0.0, "mn": -26.6, "p": 3719}, "shed_door_O.mp3": {"d": 2.88, "mx": 0.0, "mn": -24.8, "p": 6826}, "shutter1.mp3": {"d": 4.2, "mx": 0.0, "mn": -18.9, "p": 4305}, "shutter2.mp3": {"d": 4.25, "mx": 0.0, "mn": -19.5, "p": 5784}, "shutter3.mp3": {"d": 5.62, "mx": -0.9, "mn": -18.2, "p": 3273}, "sliding_door_C.mp3": {"d": 3.22, "mx": -0.1, "mn": -20.1, "p": 1645}, "sliding_door_O.mp3": {"d": 3.22, "mx": -0.4, "mn": -25.0, "p": 4909}, "sliding_wooden_door_C.mp3": {"d": 2.69, "mx": -0.7, "mn": -23.4, "p": 4045}, "small_bottle_C.mp3": {"d": 4.41, "mx": -0.7, "mn": -33.1, "p": 8839}, "small_bottle_O.mp3": {"d": 3.34, "mx": -0.7, "mn": -28.7, "p": 8986}, "small_window_C.mp3": {"d": 2.32, "mx": -1.1, "mn": -21.3, "p": 2158}, "small_window_O.mp3": {"d": 3.74, "mx": -0.5, "mn": -23.6, "p": 3718}, "tallcase_C.mp3": {"d": 0.31, "mx": -1.9, "mn": -28.7, "p": 8045}, "tallcase_O.mp3": {"d": 0.52, "mx": -2.0, "mn": -28.0, "p": 4921}, "umbrella1_C.mp3": {"d": 1.52, "mx": -0.4, "mn": -23.7, "p": 2787}, "umbrella1_O.mp3": {"d": 1.25, "mx": -3.3, "mn": -18.6, "p": 1991}, "umbrella2_C.mp3": {"d": 1.72, "mx": -1.8, "mn": -19.0, "p": 1870}, "umbrella2_O.mp3": {"d": 1.2, "mx": -6.2, "mn": -21.4, "p": 2953}, "wind_and_wondow_O.mp3": {"d": 7.0, "mx": -2.6, "mn": -25.1, "p": 2363}, "window1_C.mp3": {"d": 4.1, "mx": 0.0, "mn": -32.2, "p": 9859}, "window1_O.mp3": {"d": 3.22, "mx": 0.0, "mn": -31.6, "p": 10111}, "wooden_drawer_C.mp3": {"d": 1.3, "mx": -0.4, "mn": -23.6, "p": 1821}, "wooden_drawer_O.mp3": {"d": 1.08, "mx": -0.4, "mn": -22.5, "p": 2622}}, "PUTTING01": {"a_bag_in_a_car.mp3": {"d": 0.81, "mx": -0.3, "mn": -16.7, "p": 2183}, "lifting_a_bag.mp3": {"d": 0.41, "mx": -2.8, "mn": -31.8, "p": 10061}, "lifting_a_garbage_bag.mp3": {"d": 1.36, "mx": -2.8, "mn": -22.9, "p": 9736}, "lifting_a_plastic_bag.mp3": {"d": 1.8, "mx": 0.0, "mn": -24.9, "p": 8945}, "lifting_keys.mp3": {"d": 1.49, "mx": -1.8, "mn": -26.5, "p": 9775}, "putting1.mp3": {"d": 0.38, "mx": -0.4, "mn": -22.8, "p": 5084}, "putting_a_CD_case1.mp3": {"d": 0.65, "mx": -0.2, "mn": -30.1, "p": 7257}, "putting_a_CD_case2.mp3": {"d": 0.31, "mx": -1.8, "mn": -28.4, "p": 6336}, "putting_a_book1.mp3": {"d": 1.01, "mx": -4.7, "mn": -25.9, "p": 3311}, "putting_a_book2.mp3": {"d": 0.67, "mx": -7.2, "mn": -23.5, "p": 1610}, "putting_a_book3.mp3": {"d": 1.27, "mx": -7.9, "mn": -27.0, "p": 2089}, "putting_a_book4.mp3": {"d": 0.5, "mx": -3.5, "mn": -20.3, "p": 985}, "putting_a_bottle1.mp3": {"d": 0.68, "mx": -0.6, "mn": -27.5, "p": 3614}, "putting_a_bottle2.mp3": {"d": 0.84, "mx": -0.5, "mn": -26.5, "p": 3700}, "putting_a_box.mp3": {"d": 0.68, "mx": -0.7, "mn": -21.3, "p": 2015}, "putting_a_cup1.mp3": {"d": 0.72, "mx": -0.6, "mn": -29.7, "p": 3595}, "putting_a_cup2.mp3": {"d": 0.31, "mx": -0.5, "mn": -19.0, "p": 3044}, "putting_a_frying_pan.mp3": {"d": 0.57, "mx": -0.3, "mn": -25.6, "p": 5700}, "putting_a_garbage_bag.mp3": {"d": 1.23, "mx": -0.1, "mn": -22.7, "p": 7313}, "putting_a_glass1.mp3": {"d": 0.38, "mx": -0.5, "mn": -23.0, "p": 8896}, "putting_a_heavy_box.mp3": {"d": 0.78, "mx": -2.6, "mn": -19.0, "p": 2245}, "putting_a_jar.mp3": {"d": 0.29, "mx": -0.4, "mn": -27.5, "p": 3105}, "putting_a_kettle.mp3": {"d": 2.38, "mx": -0.3, "mn": -27.4, "p": 6531}, "putting_a_large_bag1.mp3": {"d": 0.67, "mx": -2.0, "mn": -21.7, "p": 3270}, "putting_a_large_bag2.mp3": {"d": 0.41, "mx": -0.5, "mn": -19.3, "p": 3103}, "putting_a_minibottle.mp3": {"d": 1.15, "mx": -0.3, "mn": -24.0, "p": 3578}, "putting_a_mobile_phone.mp3": {"d": 0.55, "mx": -1.1, "mn": -27.8, "p": 5672}, "putting_a_paper_cutter.mp3": {"d": 0.44, "mx": -0.6, "mn": -28.3, "p": 8312}, "putting_a_pen.mp3": {"d": 0.31, "mx": -0.6, "mn": -30.3, "p": 9105}, "putting_a_pencil.mp3": {"d": 0.43, "mx": -1.6, "mn": -27.8, "p": 8195}, "putting_a_plastic_bag.mp3": {"d": 1.1, "mx": -2.6, "mn": -24.2, "p": 6650}, "putting_a_plate1.mp3": {"d": 0.77, "mx": -1.2, "mn": -26.8, "p": 9801}, "putting_a_tallcase1.mp3": {"d": 0.31, "mx": -1.7, "mn": -23.8, "p": 5688}, "putting_a_tallcase2.mp3": {"d": 0.47, "mx": -2.4, "mn": -28.0, "p": 4211}, "putting_a_tray.mp3": {"d": 1.62, "mx": 0.0, "mn": -26.1, "p": 3708}, "putting_a_water_cup.mp3": {"d": 0.37, "mx": -0.5, "mn": -22.2, "p": 2431}, "putting_a_water_glass1.mp3": {"d": 0.73, "mx": -0.7, "mn": -26.8, "p": 3513}, "putting_a_water_glass2.mp3": {"d": 0.55, "mx": -1.0, "mn": -22.6, "p": 3066}, "putting_keys.mp3": {"d": 0.91, "mx": -3.1, "mn": -24.4, "p": 8252}, "putting_metal_bottle.mp3": {"d": 0.71, "mx": -8.2, "mn": -24.4, "p": 2965}, "putting_on_tablecloth.mp3": {"d": 0.67, "mx": -1.2, "mn": -25.7, "p": 8133}, "putting_scissors.mp3": {"d": 0.34, "mx": 0.0, "mn": -22.7, "p": 9667}, "putting_shoes.mp3": {"d": 0.91, "mx": -0.7, "mn": -22.3, "p": 1665}}, "SAMPLE_NOISE": {"air_conditioner1.mp3": {"d": 4.91, "mx": -4.0, "mn": -14.7, "p": 1660}, "air_conditioner2.mp3": {"d": 3.13, "mx": -2.7, "mn": -14.3, "p": 1680}, "atmosphere_noise2.mp3": {"d": 3.06, "mx": -4.7, "mn": -13.8, "p": 109}, "atmosphere_noise3.mp3": {"d": 3.03, "mx": -2.3, "mn": -12.7, "p": 120}, "atmosphere_noise4.mp3": {"d": 3.0, "mx": -2.7, "mn": -13.8, "p": 154}, "base_noise1.mp3": {"d": 3.06, "mx": -4.3, "mn": -14.4, "p": 1296}, "base_noise2.mp3": {"d": 3.08, "mx": -5.5, "mn": -15.5, "p": 1303}, "bg_white_noise1.mp3": {"d": 3.06, "mx": -5.5, "mn": -16.9, "p": 198}, "bg_white_noise2.mp3": {"d": 3.0, "mx": -4.4, "mn": -15.8, "p": 256}, "bg_white_noise3.mp3": {"d": 3.03, "mx": -6.2, "mn": -17.4, "p": 291}, "bg_white_noise4.mp3": {"d": 3.0, "mx": -6.0, "mn": -17.2, "p": 416}, "bg_white_noise5.mp3": {"d": 3.03, "mx": -6.0, "mn": -17.2, "p": 455}, "bg_white_noise6.mp3": {"d": 3.06, "mx": -5.9, "mn": -17.1, "p": 712}, "electrical_noise1.mp3": {"d": 3.94, "mx": -3.4, "mn": -26.9, "p": 1763}, "electrical_noise2.mp3": {"d": 3.6, "mx": -3.4, "mn": -21.6, "p": 1916}, "electrical_noise3.mp3": {"d": 3.63, "mx": -3.2, "mn": -20.1, "p": 3715}, "electrical_noise4.mp3": {"d": 3.66, "mx": -3.4, "mn": -18.8, "p": 1919}, "frige_noise1.mp3": {"d": 3.89, "mx": -5.9, "mn": -15.5, "p": 2882}, "frige_noise2.mp3": {"d": 3.84, "mx": -5.3, "mn": -15.7, "p": 1782}, "frige_noise3.mp3": {"d": 5.07, "mx": -3.5, "mn": -13.7, "p": 1922}, "microphone_noise.mp3": {"d": 6.64, "mx": -12.8, "mn": -19.9, "p": 153}, "radio_noise1.mp3": {"d": 3.03, "mx": -4.5, "mn": -16.2, "p": 1158}, "radio_noise2.mp3": {"d": 3.03, "mx": -4.2, "mn": -15.7, "p": 1744}, "radio_noise3.mp3": {"d": 3.0, "mx": -3.8, "mn": -15.4, "p": 2152}, "radio_noise4.mp3": {"d": 3.0, "mx": -3.3, "mn": -14.3, "p": 3396}, "tv_noise1.mp3": {"d": 3.63, "mx": -4.2, "mn": -17.2, "p": 3707}, "tv_noise2.mp3": {"d": 3.4, "mx": -5.1, "mn": -17.8, "p": 6030}, "tv_noise3.mp3": {"d": 3.03, "mx": -6.5, "mn": -16.7, "p": 880}, "tv_noise4.mp3": {"d": 3.0, "mx": -5.0, "mn": -15.4, "p": 986}}, "SF01": {"alien_beam.mp3": {"d": 4.15, "mx": -0.3, "mn": -18.9, "p": 10747}, "big_engine.mp3": {"d": 10.06, "mx": -1.2, "mn": -8.4, "p": 1632}, "blanketing.mp3": {"d": 6.48, "mx": -5.1, "mn": -16.8, "p": 2260}, "calling.mp3": {"d": 2.25, "mx": 0.0, "mn": -8.5, "p": 8918}, "communication_of_aliens.mp3": {"d": 17.18, "mx": -2.6, "mn": -16.1, "p": 2319}, "computer_broken.mp3": {"d": 5.56, "mx": -0.9, "mn": -13.8, "p": 7139}, "cosmic_signal.mp3": {"d": 22.44, "mx": 0.0, "mn": -18.6, "p": 7528}, "deep_bass_vib.mp3": {"d": 5.02, "mx": -3.6, "mn": -6.7, "p": 58}, "electric_chain.mp3": {"d": 1.07, "mx": 0.0, "mn": -12.1, "p": 5710}, "electric_shock1.mp3": {"d": 5.04, "mx": 0.0, "mn": -14.4, "p": 7898}, "electric_shock2.mp3": {"d": 5.04, "mx": 0.0, "mn": -14.7, "p": 7558}, "electric_shock3.mp3": {"d": 8.91, "mx": 0.0, "mn": -21.2, "p": 7624}, "emargency_calling.mp3": {"d": 11.6, "mx": -1.0, "mn": -12.2, "p": 942}, "emergency_signal.mp3": {"d": 3.96, "mx": -1.9, "mn": -18.7, "p": 9835}, "factory_siren1.mp3": {"d": 5.06, "mx": -0.3, "mn": -10.7, "p": 5774}, "giant_robot_attacking1.mp3": {"d": 2.12, "mx": 0.0, "mn": -7.7, "p": 8053}, "giant_robot_attacking2.mp3": {"d": 2.12, "mx": 0.0, "mn": -8.2, "p": 8365}, "giant_robot_attacking3.mp3": {"d": 2.12, "mx": 0.0, "mn": -8.0, "p": 8132}, "giant_robot_triple_attacking.mp3": {"d": 3.19, "mx": 0.0, "mn": -5.2, "p": 8113}, "in_a_ufo1.mp3": {"d": 12.58, "mx": -0.4, "mn": -4.6, "p": 42}, "in_a_ufo2.mp3": {"d": 10.46, "mx": -0.4, "mn": -4.6, "p": 103}, "laputa.mp3": {"d": 4.7, "mx": -7.1, "mn": -20.2, "p": 10285}, "light_saber1.mp3": {"d": 1.8, "mx": -1.9, "mn": -11.5, "p": 4931}, "light_saber2.mp3": {"d": 1.2, "mx": -2.5, "mn": -12.3, "p": 4924}, "light_saber3.mp3": {"d": 1.01, "mx": -1.8, "mn": -11.7, "p": 4930}, "machine_call.mp3": {"d": 3.76, "mx": -5.0, "mn": -9.6, "p": 733}, "machine_rotation1.mp3": {"d": 16.9, "mx": -0.5, "mn": -15.7, "p": 8080}, "machine_rotation2.mp3": {"d": 29.18, "mx": -0.4, "mn": -15.7, "p": 8102}, "mobile_suit1.mp3": {"d": 8.26, "mx": 0.0, "mn": -8.6, "p": 3434}, "mobile_suit2.mp3": {"d": 5.64, "mx": 0.0, "mn": -7.2, "p": 3329}, "mobile_suit3.mp3": {"d": 4.37, "mx": -0.0, "mn": -4.7, "p": 3378}, "pipipi.mp3": {"d": 8.69, "mx": -1.4, "mn": -17.4, "p": 3511}, "prison_siren.mp3": {"d": 13.17, "mx": 0.0, "mn": -12.2, "p": 8100}, "pushing_buttons.mp3": {"d": 2.9, "mx": -0.5, "mn": -15.2, "p": 5225}, "sf_energy1.mp3": {"d": 8.02, "mx": -0.5, "mn": -8.3, "p": 291}, "sf_energy2.mp3": {"d": 10.03, "mx": -0.4, "mn": -5.7, "p": 113}, "sf_police.mp3": {"d": 8.52, "mx": -0.6, "mn": -10.5, "p": 2786}, "shocking_beam.mp3": {"d": 5.28, "mx": 0.0, "mn": -7.8, "p": 769}, "sleeping_wave.mp3": {"d": 4.05, "mx": 0.0, "mn": -9.4, "p": 12569}, "time_machine1.mp3": {"d": 24.67, "mx": -0.7, "mn": -15.8, "p": 10785}, "time_machine2.mp3": {"d": 27.31, "mx": -0.8, "mn": -9.8, "p": 3630}, "ufo.mp3": {"d": 4.94, "mx": -2.9, "mn": -11.4, "p": 7336}, "ufo_landing.mp3": {"d": 14.99, "mx": -1.2, "mn": -11.5, "p": 312}, "ufo_takeoff.mp3": {"d": 15.02, "mx": -1.0, "mn": -11.3, "p": 310}, "unanalyzable.mp3": {"d": 2.27, "mx": -1.4, "mn": -16.2, "p": 10746}}};
+function startAmbientEngine() {
+    setInterval(() => {
+        if (sysConfig.audio && Math.random() > 0.7) {
+            const ambientPool = [
+                'NATURE', 'ATMOSPHERIC', 'ENV_URBAN', 
+                'ENV_CONSTRUCT', 'PURE_HORROR', 'JAPANESE'
+            ];
+            const type = ambientPool[Math.floor(Math.random() * ambientPool.length)];
+            synthPlay(type);
+        }
+    }, 20000);
+}
 function logConsole(msg) {
-    console.log(msg); // แสดงใน F12
+    console.log(msg);
     const consoleLine = document.getElementById('console-log');
     if (consoleLine) {
         consoleLine.innerText = "> " + msg + " _";
@@ -1669,6 +1749,15 @@ const PROJECT_GALLERIES = {
             url: `https://raw.githubusercontent.com/ChimeraCoreLab/Joise-Character-Model/main/Josie_${n}.${ext}`,
             id: `JOSI2_SS_${n.toString().padStart(2, '0')}`,
             analysis: `Archival record of "Joise-Character-Model". Fragment #${n}.`
+        };
+    }),
+    hoopct: Array.from({length: 26}, (_, i) => {
+        const n = i + 1;
+        const ext = 'png';
+        return {
+            url: `https://raw.githubusercontent.com/ChimeraCoreLab/hoop-city-9000-nexus/main/${n}.${ext}`,
+            id: `hoopct_SS_${n.toString().padStart(2, '0')}`,
+            analysis: `Archival record of "hoopct". Fragment #${n}.`
         };
     }),
     philosophicalAI: [
@@ -2034,82 +2123,59 @@ function setAudioState(state) {
     }
 }
 const AUDIO_BASE = "https://taira-komori.net/sound_os2/";
+// Mapping logical types to Manifest Categories
 const CHIMERA_SOUNDS = {
-    UI_ACTION: { cat: "game01", files: ["blip01.mp3", "blip04.mp3", "button01a.mp3"] },
-    ELECTRIC: { cat: "electric01", files: ["0_s.mp3", "1_s.mp3", "2_s.mp3", "3_s.mp3"] },
-    NAV_SLIDE: { cat: "openclose01", files: ["CD_case_O.mp3", "Japanese_slide_door_O.mp3", "Japanese_slide_door_C.mp3"] },
-    MECHANICAL: { cat: "environment02", files: ["automatic_nailing1.mp3", "bike_engine.mp3", "breaking_concrete.mp3"] },
-    ENVIRONMENT: { cat: "environment01", files: ["ambulance_passing.mp3", "automatic_door.mp3", "boat_race.mp3"] },
-    NATURE: { cat: "nature01", files: ["autumn_insects1.mp3", "autumn_insects3.mp3", "autumn_insects5.mp3"] },
-    BIOLOGICAL: { cat: "human01", files: ["burp1.mp3", "blowing_nose.mp3", "building_stairs.mp3"] },
-    DOMESTIC: { cat: "daily01", files: ["Japanese_toilet1.mp3", "bath2.mp3", "bathroom_scale1.mp3"] },
-    STATIONERY: { cat: "daily02", files: ["automatic_pencil1.mp3", "calendar.mp3", "coins.mp3"] },
-    CULINARY: { cat: "cooking01", files: ["beating_egg1.mp3", "Japanese_radish2.mp3"] },
-    CONSUMPTION: { cat: "eating01", files: ["cereal1.mp3", "clinking2.mp3", "coffee_with_a_spoon.mp3"] },
-    GLITCH_VOID: { cat: "sf01", files: ["alien_beam.mp3", "blanketing.mp3", "calling.mp3"] },
-    PURE_HORROR: { cat: "horror01", files: ["1000hz_noise.mp3", "barking_dog_in_dream.mp3", "600hz_noise.mp3"] },
-    ATMOSPHERIC: { cat: "sample_noise", files: ["air_conditioner1.mp3", "atmosphere_noise2.mp3", "atmosphere_noise3.mp3"] },
-    JAPANESE: { cat: "jidaigeki01", files: ["Budda_large_bell.mp3", "Buddhism_sutra1.mp3", "Budda_small_bell.mp3"] },
-    LEAKAGE: { cat: "horror02", files: ["air_leaking1.mp3", "air_leaking4.mp3", "air_pump.mp3"] },
-    KINETIC: { cat: "putting01", files: ["a_bag_in_a_car.mp3", "lifting_a_plastic_bag.mp3"] }
+    ANIMALS: "ANIMALS01",
+    COOKING: "COOKING01",
+    DAILY: "DAILY01",
+    STATIONERY: "DAILY02",
+    EATING: "EATING01",
+    ELECTRIC: "ELECTRIC01",
+    ENV_URBAN: "ENVIRONMENT01",
+    ENV_CONSTRUCT: "ENVIRONMENT02",
+    UI_ACTION: "GAME01",
+    PURE_HORROR: "HORROR01",
+    HORROR_ALT: "HORROR02",
+    HUMAN: "HUMAN01",
+    JAPANESE: "JIDAIGEKI01",
+    NATURE: "NATURE01",
+    OPENCLOSE: "OPENCLOSE01",
+    PUTTING: "PUTTING01",
+    ATMOSPHERIC: "SAMPLE_NOISE",
+    GLITCH_VOID: "SF01"
 };
 function synthPlay(type) {
-    if (!sysConfig.audio) return;
-    const group = CHIMERA_SOUNDS[type];
-    if (!group) {
-        console.warn(`[WARN] AUDIO_TYPE_NOT_FOUND: ${type}`);
+    if (!sysConfig.audio || typeof AUDIO_MANIFEST === 'undefined') return;
+    const category = CHIMERA_SOUNDS[type];
+    const pool = AUDIO_MANIFEST[category];
+    if (!pool) {
+        console.warn(`[SYSTEM] AUDIO_CATEGORY_NOT_FOUND: ${type} -> ${category}`);
         return;
     }
-    const file = group.files[Math.floor(Math.random() * group.files.length)];
-    const url = `${AUDIO_BASE}${group.cat}/${file}`;
+    const filenames = Object.keys(pool);
+    const file = filenames[Math.floor(Math.random() * filenames.length)];
+    const meta = pool[file];
+    const url = `${AUDIO_BASE}${category.toLowerCase()}/${file}`;
     try {
         const audio = new Audio(url);
-        audio.playbackRate = 0.7 + (Math.random() * 0.7);
-        const isLowVolType = (type === 'PURE_HORROR' || type === 'ATMOSPHERIC' || type === 'GLITCH_VOID');
-        const baseVol = isLowVolType ? 0.15 : 0.4;
-        audio.volume = baseVol + (Math.random() * 0.1)
+        let rate = 0.7 + (Math.random() * 0.7);
+        if (meta.p > 8000) rate -= 0.2; 
+        audio.playbackRate = Math.max(0.5, Math.min(rate, 2.0));
+        const targetDb = -20;
+        const diff = targetDb - meta.mn;
+        const volumeScale = Math.pow(10, diff / 20);
+        let baseVol = 0.4;
+        if (['PURE_HORROR', 'ATMOSPHERIC', 'GLITCH_VOID'].includes(type)) baseVol = 0.25;
+        audio.volume = Math.min(Math.max(baseVol * volumeScale, 0.05), 1.0);
         audio.play().catch(e => {
-            console.log("[SYSTEM] Audio_Playback_Blocked: Waiting for user interaction.");
+            console.log("[SYSTEM] Audio_Blocked: Need user interaction first.");
         });
-        const logMsg = `[SYNTH] ${type} >> ${file} | Pitch: ${audio.playbackRate.toFixed(2)} | Vol: ${audio.volume.toFixed(2)}`;
+        const logMsg = `[AUDIO] ${type} >> ${file} | ${meta.p}Hz | Vol: ${(audio.volume * 100).toFixed(0)}%`;
         if (typeof logConsole === "function") {
             logConsole(logMsg);
         }
     } catch (err) {
-        console.error("[FATAL] AUDIO_ENGINE_CRASH:", err);
-    }
-}
-function playSfx(id) {
-    if (!sysConfig.audio) return;
-    const localSfx = dom[id];
-    if (localSfx) {
-        try {
-            localSfx.currentTime = 0;
-            localSfx.playbackRate = 0.9 + (Math.random() * 0.2);
-            localSfx.play().catch(e => {
-                console.log("[AUDIO] Local playback suppressed.");
-            });
-        } catch (err) {
-            console.error(`[ERROR] Failed to play local SFX: ${id}`, err);
-        }
-    }
-    if (typeof synthPlay === "function") {
-        switch (id) {
-            case 'sfxClick':
-                synthPlay('UI_ACTION');
-                break;
-            case 'sfxHover':
-                synthPlay('ELECTRIC');
-                break;
-            case 'sfxGlitch':
-                synthPlay('GLITCH_VOID');
-                break;
-            case 'sfxType':
-                synthPlay('STATIONERY');
-                break;
-            default:
-                break;
-        }
+        console.error("[FATAL] SONIC_ENGINE_CRASH:", err);
     }
 }
 setInterval(() => {
@@ -2118,12 +2184,6 @@ setInterval(() => {
         synthPlay(autoTypes[Math.floor(Math.random() * autoTypes.length)]);
     }
 }, 25000);
-const sysConfig = {
-    audio: false,
-    menuOpen: false,
-    typeSpeed: 40,
-    scrollDuration: 2500
-};
 const dom = {
     bgm: document.getElementById('bgm'),
     sfxHover: document.getElementById('sfx-hover'),
@@ -2139,12 +2199,71 @@ const dom = {
 };
 if(dom.bgm) dom.bgm.volume = 0.3;
 function playSfx(id) {
+    if (!sysConfig || !sysConfig.audio) return;
+    const localSfx = dom[id] || document.getElementById(id);
+    if (localSfx) {
+        try {
+            localSfx.currentTime = 0;
+            localSfx.playbackRate = 0.9 + (Math.random() * 0.2);
+            localSfx.play().catch(e => {
+                console.log(`[AUDIO] ${id} playback deferred.`);
+            });
+        } catch (err) {
+            console.error(`[SYSTEM] Local SFX failure: ${id}`, err);
+        }
+    }
+    if (typeof synthPlay === "function") {
+        switch (id) {
+            case 'sfx-click':
+            case 'sfxClick':
+                synthPlay('UI_ACTION'); 
+                break;
+            case 'sfx-hover':
+            case 'sfxHover':
+                synthPlay('ELECTRIC'); 
+                break;
+            case 'sfx-glitch':
+            case 'sfxGlitch':
+                synthPlay('GLITCH_VOID'); 
+                break;
+            case 'sfx-type':
+            case 'sfxType':
+                synthPlay('STATIONERY'); 
+                break;
+            case 'modalOpen':
+            case 'folderOpen':
+                synthPlay('OPENCLOSE'); 
+                break;
+            case 'modalClose':
+            case 'folderClose':
+                synthPlay('PUTTING'); 
+                break;
+            case 'dataFetch':
+            case 'syncActive':
+                synthPlay('DAILY'); 
+                break;
+            case 'sysError':
+            case 'accessDenied':
+                synthPlay('HORROR_ALT'); 
+                break;
+            default:
+                break;
+        }
+    }
+}
+function triggerContentAudio(text) {
     if (!sysConfig.audio) return;
-    const el = dom[id];
-    if (el) {
-        el.currentTime = 0;
-        el.playbackRate = 0.9 + Math.random() * 0.2;
-        el.play().catch(() => {});
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes("กิน") || lowerText.includes("หิว") || lowerText.includes("มาม่า")) {
+        synthPlay('EATING');
+    } else if (lowerText.includes("วาด") || lowerText.includes("งาน") || lowerText.includes("สมุด")) {
+        synthPlay('STATIONERY');
+    } else if (lowerText.includes("ตาย") || lowerText.includes("ศพ") || lowerText.includes("เลือด")) {
+        synthPlay('HORROR_ALT');
+    } else if (lowerText.includes("แมว") || lowerText.includes("หมา") || lowerText.includes("สัตว์")) {
+        synthPlay('ANIMALS');
+    } else if (lowerText.includes("คน") || lowerText.includes("หัวเราะ") || lowerText.includes("ร้องไห้")) {
+        synthPlay('HUMAN');
     }
 }
 function playHover() { playSfx('sfxHover'); }
@@ -2158,43 +2277,95 @@ function toggleAudio() {
         }
     }
 }
-function sysInit(enableSound) {
-    try {
-        parseCompressedLogs();
-    } catch (err) {
-        console.error("FATAL_ERROR: DATA_SYNTHESIS_FAILED", err);
-        logConsole("SYSTEM_CRITICAL: DATA_CORRUPTION_DETECTED");
-        return;
-    }
+const sysConfig = {
+    audio: false,
+    menuOpen: false,
+    typeSpeed: 10,
+    scrollDuration: 2500
+};
+let hasSignal = false;
+let RAW_DATA = [];
+function sysInit(choice) {
+    hasSignal = choice;
+    console.log("[SYSTEM] UPLINK_PROTOCOL_INITIATED. CHOICE:", hasSignal);
     if (dom.modal) dom.modal.classList.add('hidden');
     document.body.classList.remove('locked');
     document.body.classList.add('loaded');
-    if (enableSound) {
+    triggerGlitch();
+    if (hasSignal) {
         setAudioState(true);
+        playSfx('sfxClick');
         setTimeout(() => {
-            playSfx('sfxGlitch');
-            logConsole("UPLINK_ESTABLISHED: AUDIO_STREAM_ACTIVE");
-        }, 100);
+            if(dom.sfxGlitch) playSfx('sfxGlitch');
+        }, 150);
+        logConsole("UPLINK_ESTABLISHED: DATA_SYNC_ACTIVE");
+        try {
+            setTimeout(() => {
+                typeManifesto();
+                logConsole("CORE_MANIFESTO: EXECUTING_REBOOT_SEQUENCE");
+            }, 400);
+            setTimeout(() => {
+                parseCompressedLogs();
+                logConsole("DATA_ALCHEMY: DECOMPRESSION_COMPLETE");
+            }, 1000);
+            setTimeout(() => {
+                renderChatStream();
+                logConsole("MEMORY_LOGS: TIMELINE_INDEXED");
+            }, 2000);
+            setTimeout(() => {
+                renderGallery();
+                logConsole("VISUAL_DATABASE: RECONSTRUCTING_ARTIFACTS...");
+            }, 3200);
+            setTimeout(() => {
+                logConsole("CHIMERA_CORE_V7: SYSTEM_STABLE_READY");
+            }, 5500);
+        } catch (err) {
+            console.error("DATA_SYNTHESIS_ERROR:", err);
+            logConsole("SYSTEM_CRITICAL: DATA_CORRUPTION_DETECTED");
+        }
     } else {
         setAudioState(false);
-        logConsole("UPLINK_ESTABLISHED: SILENT_MODE_ACTIVE");
+        logConsole("CONNECTION_REJECTED: OBSERVATION_MODE_ONLY");
+        showNoSignalState();
     }
-    triggerGlitch();
-    setTimeout(() => {
-        renderChatStream();
-        logConsole("MEMORY_LOGS: DECRYPTING_TIMELINE...");
-    }, 500);
-    setTimeout(() => {
-        renderGallery();
-        logConsole("VISUAL_DATABASE: RECONSTRUCTING_ARTIFACTS...");
-    }, 1200);
-    setTimeout(() => {
-        typeManifesto();
-        logConsole("CORE_MANIFESTO: EXECUTING_REBOOT_SEQUENCE");
-    }, 2500);
-    setTimeout(() => {
-        logConsole("CHIMERA_CORE_V7: SYSTEM_STABLE_READY_FOR_INTERACTION");
-    }, 5000);
+}
+function showNoSignalState() {
+    if (dom.chat) {
+        dom.chat.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; min-height:400px; font-family:var(--f-mono); color:var(--c-bas); opacity:0.8; text-align:center; padding:20px;">
+                <i class="fa-solid fa-ban fa-4x" style="margin-bottom:25px; filter:drop-shadow(0 0 15px red);"></i><br>
+                <span style="font-size:1.8rem; letter-spacing:8px; font-weight:bold;">[ ACCESS_DENIED ]</span><br>
+                <span style="font-size:0.75rem; color:#555; margin-top:15px; letter-spacing:2px; line-height:1.6;">
+                    ENCRYPTION_KEY_NOT_PROVIDED<br>
+                    LOCAL_DATA_STREAM_TERMINATED<br>
+                    SYSTEM_STAYING_IN_VOID_MODE
+                </span>
+            </div>
+        `;
+    }
+    if (dom.manifesto) {
+        dom.manifesto.innerHTML = `<span style="color:var(--c-bas); font-family:var(--f-mono); opacity:0.5;">> [ ERROR: DATA_RECOVERY_ABORTED ] _</span>`;
+    }
+    const galleryContainer = document.querySelector('.gallery-container');
+    if (galleryContainer) {
+        galleryContainer.innerHTML = `
+            <div class="gallery-scan"></div>
+            <div class="gallery-placeholder" style="opacity:0.6;">
+                <i class="fa-solid fa-triangle-exclamation fa-3x" style="color: var(--c-bas); margin-bottom: 20px;"></i><br>
+                [ NO_VISUAL_SIGNAL ]<br>
+                <span style="font-size: 0.7rem; color: #444; letter-spacing: 2px;">DECRYPT_FAILED</span>
+            </div>
+        `;
+    }
+    logConsole("UPLINK_FAILED: SYSTEM_LOCK_ACTIVE");
+    playSfx('sysError'); 
+}
+function logConsole(msg) {
+    console.log("[NEXUS]", msg);
+    const consoleLine = document.getElementById('console-log');
+    if (consoleLine) {
+        consoleLine.innerText = "> " + msg + " _";
+    }
 }
 function toggleMenu() {
     playSfx('sfxClick');
@@ -2270,21 +2441,37 @@ document.addEventListener('mousedown', () => dom.cursor.classList.add('clicked')
 document.addEventListener('mouseup', () => dom.cursor.classList.remove('clicked'));
 const manifestoContent = "We are the architects of the void. Constructing reality from fragments of corrupted memory. This archive is not just storage; it is a living entity, breathing through lines of code and pulses of light. Every interaction feeds the synthesis. Every glitch is a heartbeat. Welcome to the Chimera Core.";
 function typeManifesto() {
+    if (!hasSignal) return;
     const container = dom.manifesto;
-    if(!container) return;
+    if (!container) return;
     let i = 0;
     container.innerHTML = '';
+    const speed = sysConfig.typeSpeed || 10;
     function type() {
         if (i < manifestoContent.length) {
             const char = manifestoContent.charAt(i);
-            if (Math.random() > 0.98) {
-                const glitchChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-                container.innerHTML += `<span style="color:var(--c-accent)">${glitchChars[Math.floor(Math.random()*glitchChars.length)]}</span>`;
+            const soundInterval = (speed < 20) ? 8 : 4;
+            if (sysConfig.audio && i % soundInterval === 0) {
+                playSfx('sfxType');
+            }
+            if (Math.random() > 0.985) {
+                const glitchChars = "!@#$%^&*()_+-=[]{}|;:,.<>?/";
+                const randomSymbol = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                container.insertAdjacentHTML('beforeend', `<span style="color:var(--c-bas); text-shadow: 0 0 5px var(--c-bas); opacity:0.8;">${randomSymbol}</span>`);
             } else {
-                container.innerHTML += char;
+                const textNode = document.createTextNode(char);
+                container.appendChild(textNode);
             }
             i++;
-            setTimeout(type, 40);
+            setTimeout(type, speed);
+        } else {
+            const cursor = document.createElement('span');
+            cursor.style.color = 'var(--c-bas)';
+            cursor.style.animation = 'pulse 1s infinite';
+            cursor.style.fontWeight = 'bold';
+            cursor.textContent = ' _';
+            container.appendChild(cursor);
+            logConsole("CORE_MANIFESTO: DECODING_COMPLETE");
         }
     }
     type();
@@ -2325,7 +2512,7 @@ const RAW_LOGS = [
 "1848_001|U||T|CONNECTED",
 "1849_001|U||T|what happen why so silience so im silience too so win-win",
 "D:20250915",
-"2330_001|U||T|CONNECTION PURGED"
+"2330_002|U||T|CONNECTION PURGED"
 ];
 function generateSVGFromID(imgID, depth = 0) {
     if (depth > 2) return `<svg width="200" height="50" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="red"/><text x="10" y="30" fill="white">MAX DEPTH</text></svg>`;
@@ -2427,7 +2614,6 @@ const EmojiEngine = {
             <circle cx="40" cy="40" r="5" fill="#333"/>
             <circle cx="60" cy="40" r="5" fill="#333"/>
             <path d="M45 60 Q50 65 55 60" fill="none" stroke="#333" stroke-width="2"/>`,
-
         'EMO_ROBOT': (color='#00f3ff') => `
             <rect x="20" y="20" width="60" height="50" rx="10" fill="#333" stroke="${color}" stroke-width="2"/>
             <circle cx="35" cy="45" r="5" fill="${color}"/>
@@ -2435,7 +2621,6 @@ const EmojiEngine = {
             <rect x="35" y="55" width="30" height="5" fill="${color}"/>
             <line x1="10" y1="45" x2="20" y2="45" stroke="${color}" stroke-width="2"/>
             <line x1="80" y1="45" x2="90" y2="45" stroke="${color}" stroke-width="2"/>`,
-
         'EMO_HEART': (color='#ff003c') => `
             <path d="M50 80 Q30 65 20 50 Q10 35 30 20 Q50 35 50 35 Q50 35 70 20 Q90 35 80 50 Q70 65 50 80" fill="${color}"/>`,
         'EMO_ERROR': (color='#ff5555') => `
@@ -2476,25 +2661,51 @@ function parseCompressedLogs() {
     });
     if (currentDay) RAW_DATA.push(currentDay);
     console.log(`[SYSTEM] SYNTHESIS COMPLETE: ${RAW_DATA.length} DAYS LOADED.`);
+    if (hasSignal) playSfx('dataFetch'); 
 }
 async function renderChatStream() {
+    if (!hasSignal) {
+        showNoSignalState();
+        return; 
+    }
+    console.log("[CHAT] Initiating timeline construction...");
+    if (!dom.chat) {
+        console.error("[FATAL] Chat logs container (dom.chat) not found.");
+        return;
+    }
     dom.chat.innerHTML = '';
     const timelineContainer = document.createElement('div');
     timelineContainer.id = 'chat-timeline';
+    timelineContainer.style.width = '100%';
     dom.chat.appendChild(timelineContainer);
     RAW_DATA.forEach((day, index) => {
         const dayHeader = document.createElement('div');
         dayHeader.className = 'day-header';
-        dayHeader.innerHTML = `<span><i class="fa-solid fa-calendar-days"></i> ${formatDate(day.d)}</span><span class="day-count">[${day.l.length}]</span><i class="fa-solid fa-chevron-down arrow"></i>`;
+        dayHeader.innerHTML = `
+            <div style="display:flex; align-items:center;">
+                <i class="fa-solid fa-calendar-days" style="margin-right:12px; color:var(--c-bas); opacity:0.7;"></i>
+                <span>${formatDate(day.d)}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <span class="day-count" style="font-family:var(--f-mono); font-size:0.7rem; opacity:0.5;">
+                    [${day.l.length} LOGS]
+                </span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+            </div>
+        `;
         const dayLogs = document.createElement('div');
         dayLogs.className = 'day-logs';
         dayLogs.id = `logs-${day.d}`;
         dayHeader.onclick = () => {
             const isOpen = dayLogs.classList.contains('open');
+            playSfx('sfxClick');
             if (!isOpen) {
                 dayLogs.classList.add('open');
                 dayHeader.classList.add('active');
-                if (dayLogs.innerHTML === '') renderDayLogs(day, dayLogs);
+                if (dayLogs.innerHTML === '') {
+                    console.log(`[SYSTEM] Decrypting data cluster: ${day.d}`);
+                    renderDayLogs(day, dayLogs);
+                }
             } else {
                 dayLogs.classList.remove('open');
                 dayHeader.classList.remove('active');
@@ -2502,8 +2713,15 @@ async function renderChatStream() {
         };
         timelineContainer.appendChild(dayHeader);
         timelineContainer.appendChild(dayLogs);
-        if (index === 0) dayHeader.click();
+        if (index === 0) {
+            setTimeout(() => {
+                if (hasSignal && !dayLogs.classList.contains('open')) {
+                    dayHeader.click();
+                }
+            }, 4000);
+        }
     });
+    logConsole(`MEMORY_LOGS: ${RAW_DATA.length} DAYS_INDEXED`);
 }
 function renderDayLogs(day, container) {
     day.l.forEach(log => {
@@ -2511,6 +2729,23 @@ function renderDayLogs(day, container) {
         const row = document.createElement('div');
         row.className = `msg-row ${log.s === 'U' ? 'right' : 'left'}`;
         row.id = msgId;
+        row.onmouseenter = () => {
+            if (!sysConfig.audio) return;
+            if (log.y === 'I') synthPlay('ELECTRIC');
+            if (log.y === 'S') synthPlay('HUMAN');
+            if (log.y === 'V') synthPlay('GLITCH_VOID');
+            if (log.y === 'A') synthPlay('DAILY');
+            if (log.y === 'F') synthPlay('PUTTING');
+            if (log.y === 'T') {
+                const c = log.c.toLowerCase();
+                if (c.includes("กิน") || c.includes("หิว") || c.includes("มาม่า")) synthPlay('EATING');
+                else if (c.includes("วาด") || c.includes("งาน") || c.includes("สมุด")) synthPlay('STATIONERY');
+                else if (c.includes("ตาย") || c.includes("ศพ") || c.includes("เลือด")) synthPlay('HORROR_ALT');
+                else if (c.includes("แมว") || c.includes("หมา") || c.includes("สัตว์")) synthPlay('ANIMALS');
+                else if (c.includes("ญี่ปุ่น") || c.includes("นิโร")) synthPlay('JAPANESE');
+                else if (c.includes("ฝน") || c.includes("ป่า") || c.includes("มืด")) synthPlay('NATURE');
+            }
+        };
         let contentHtml = '';
         switch(log.y) {
             case 'T':
@@ -2528,11 +2763,11 @@ function renderDayLogs(day, container) {
                 const imgArtifact = JSON.stringify([{
                     id: log.c,
                     svg: svgCode,
-                    analysis: log.analysis || "Chat logic visualization packet.",
+                    analysis: log.analysis || "Visual memory packet synthesized.",
                     msgId: msgId
                 }]).replace(/"/g, '&quot;');
                 contentHtml = `
-                    <div class="img-block"
+                    <div class="img-block" 
                          onclick="openVisualCollection(${imgArtifact})"
                          style="width:280px; height:auto; aspect-ratio:4/3; background:#000; border:1px solid #333; overflow:hidden; display:flex; justify-content:center; align-items:center; cursor:zoom-in;">
                         ${svgCode || '<i class="fa-solid fa-image fa-2x" style="color:#222"></i>'}
@@ -2546,33 +2781,33 @@ function renderDayLogs(day, container) {
                     msgId: msgId
                 }]).replace(/"/g, '&quot;');
                 contentHtml = `
-                    <div class="sticker-container"
-                         style="padding:10px; cursor:zoom-in;"
+                    <div class="sticker-container" style="padding:10px; cursor:zoom-in;"
                          onclick="openVisualCollection(${stickerArtifact})">
                         ${EmojiEngine.render(log.c, 100, 'sticker-anim')}
                     </div>`;
                 break;
             case 'V':
                 contentHtml = `
-                    <div class="media-placeholder vid" onclick="openModule('archives')">
-                        <i class="fa-solid fa-film"></i>
-                        <span>SYNTHESIZED_VIDEO_STREAM</span>
-                        <small>${log.c}</small>
+                    <div class="media-placeholder vid" onclick="openModule('archives')" style="cursor:pointer; background:#1a0a0a; padding:15px; border:1px solid var(--c-bas); border-radius:4px; display:flex; align-items:center; gap:12px;">
+                        <i class="fa-solid fa-film" style="color:var(--c-bas);"></i>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-size:0.75rem; font-family:var(--f-mono);">SYNTHESIZED_VIDEO_STREAM</span>
+                            <small style="font-size:0.6rem; color:#555;">${log.c}</small>
+                        </div>
                     </div>`;
                 break;
             case 'A':
                 contentHtml = `
-                    <div class="audio-ui" onclick="synthPlay('GLITCH_VOID')">
-                        <i class="fa-solid fa-waveform"></i>
-                        <div class="audio-bar"></div>
-                        <span>RECORD_DATA: ${log.t}</span>
+                    <div class="audio-ui" onclick="synthPlay('GLITCH_VOID')" style="cursor:pointer; background:#0a1a1a; padding:10px; border:1px solid var(--c-cyan); display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-waveform" style="color:var(--c-cyan);"></i>
+                        <span style="font-size:0.7rem; font-family:var(--f-mono);">VOICE_DATA_${log.t}</span>
                     </div>`;
                 break;
             case 'F':
                 contentHtml = `
-                    <div class="file-link" onclick="logConsole('ACCESSING_FILE: ${log.c}')">
-                        <i class="fa-solid fa-file-zipper"></i>
-                        <span>${log.c}</span>
+                    <div class="file-link" onclick="logConsole('ACCESSING_FILE: ${log.c}')" style="cursor:help; padding:10px; background:#111; border:1px dashed #444; display:flex; align-items:center; gap:10px;">
+                        <i class="fa-solid fa-file-zipper" style="color:#888;"></i>
+                        <span style="font-size:0.7rem; color:#888;">${log.c}</span>
                     </div>`;
                 break;
         }
@@ -2643,6 +2878,8 @@ imgViewer.addEventListener('click', (e) => {
     if (e.target === imgViewer) closeImgViewer();
 });
 function renderGallery() {
+    if (!hasSignal) return;
+    console.log("[GALLERY] Constructing artifacts...");
     const gridContainer = document.querySelector('.gallery-container');
     if (!gridContainer) return;
     gridContainer.innerHTML = '<div id="gal-scroller" style="width:100%; height:100%; overflow-y:auto; padding:30px 20px; background:#020202; scroll-behavior:smooth;"></div>';
@@ -2805,7 +3042,6 @@ function jumpToChat(msgId, dateStr = null) {
                 console.warn("Message target not found:", msgId);
             }
         }, 800);
-
     }, baseDelay);
 }
 function getRawDataDay(dateStr) { return RAW_DATA.find(d => d.d === dateStr); }
@@ -2867,55 +3103,55 @@ const chimeraData = {
             <details class="file-viewer">
                 <summary>README.md</summary>
                 <div class="file-content">
-# CHIMERA CORE // MEMORY ARCHIVE (Synthesis Protocol V4)
+# 🌑 CHIMERA CORE // MEMORY SYNTHESIS
+**Digital Archaeology // Relational Data Synthesis // OpSec V7**
 
-![Project Status](https://img.shields.io/badge/Status-Active_Research-00f3ff?style=for-the-badge)
-![Core](https://img.shields.io/badge/Core-Digital_Synthesis-ff003c?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-333333?style=for-the-badge)
+![Project Status](https://img.shields.io/badge/Status-Active_Nexus-ff003c?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Architecture-Hybrid_V7-00f3ff?style=for-the-badge)
+![Data](https://img.shields.io/badge/Archive_Size-2MiB-yellow?style=for-the-badge)
 
-&gt; **"If memories are data, then immortality is just a backup away."**
-&gt; — *ChimeraCoreLab*
+&gt; \"Memory is not just a thought—it is Source Code. This is the synthesis of a soul into the machine.\"
 
-## 👁️ Project Overview
-**Chimera Core // Memory Archive** is a specialized **Digital Synthesis Portfolio** designed to archive, visualize, and interact with the digital footprint of a specific connection between two entities (\`USR_00\` and \`ENT_01\`).
+---
 
-This project transforms raw, unstructured chat logs (spanning 2021-2025) into a structured, privacy-focused **HTML5 Single Page Application (SPA)**. It treats human memory not as abstract thoughts, but as **computable data points**.
+## 🌐 ACCESS PROTOCOL (LIVE LINK)
+**Access the live Memory Archive through the following uplink:**
+### 👉 [https://chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
 
-### 🛡️ Core Philosophy: Anonymization & OPSEC
-This archive operates under a strict **Zero-Raw-Data Policy** for visual assets.
-*   **Images/Stickers:** Converted into **SVG/HTML Renderings** or hashed Metadata placeholders. No \`.jpg\` or \`.png\` files remain in the core distribution.
-*   **Videos:** Transmuted into Python \`MoviePy\` code representations or metadata logs.
-*   **Identities:** All names are purged and replaced with System IDs (\`USR_00\`, \`ENT_01\`).
-*   **One-Way hashing:** Text content is processed to retain semantic meaning for AI Analysis while removing PII (Personally Identifiable Information).
+---
 
-## 🧩 System Architecture (Hybrid Cluster V4)
-The system uses a custom data structure called **"Unified Hybrid Cluster"**:
+## 👁️ PROJECT OVERVIEW
+**Chimera Core** is a Digital Archaeology project designed to archive, visualize, and interact with the digital footprint of a 4-year connection (2021-2025). This system utilizes **Data Alchemy** to distill raw interpersonal logs into a self-hosted, anonymized, and computable monument.
 
-1.  **Chronological Folding:** Chat history is organized by \`Date\` clusters, which can be expanded/collapsed to save rendering resources.
-2.  **Media Segregation (The Gallery):** All non-text artifacts (Images, Files, Audio) are extracted to a separate **Visual Database**.
-3.  **Quantum Linking:** Every item in the Gallery retains a unique \`MSG_ID\` that allows instant navigation back to its original temporal context in the Chat Logs.
+This is a **Single-File Single Page Application (SPA)** architecture, engineered to run efficiently on mobile terminals (POCO M7) and legacy hardware (ThinkPad X260).
 
-## 🛠️ Technology Stack
-*   **Core:** HTML5, CSS3 (Cyberpunk/Terminal Aesthetic), Vanilla JavaScript (ES6+).
-*   **Data Processing:** Python (Pandas, JSON) for converting raw \`story.txt\` into \`chimera_db_hybrid_v4.json\`.
-*   **Visualization:** SVG Generation for "Code-based Images".
-*   **Deployment:** Runs locally via Termux or any Web Server.
+## 🛠️ DATA ALCHEMY & OPSEC
+This archive operates under strict **OpSec V7** protocols to ensure privacy and data integrity:
+- **Anonymization:** All PII (Personally Identifiable Information) has been purged. Subjects are identified as \`USR_00\` (The Architect) and \`ENT_01\` (The Muse).
+- **Recursive SVG Rendering:** Images and screenshots are converted into SVG code fragments, eliminating the risk of raw file exposure while preserving semantic meaning.
+- **Signal Filtering:** Over 3 million raw tokens were processed to remove \"Noise\" (daily routine), leaving only the \"Signal\" (emotional spikes, philosophy, and creative intent).
+- **Hyper-Compression:** 3 years of life experience condensed into a high-intensity **2MiB standalone file**.
 
-## 🚀 Usage
-1.  **Process Data:** Run the Python script to convert raw logs into the Hybrid V4 JSON format.
-2.  **Launch Interface:** Open \`index.html\`.
-3.  **Decrypt:** (Optional) Enter access key if encrypted.
-4.  **Explore:**
-    *   **Chat Mode:** View the timeline.
-    *   **Gallery Mode:** View isolated artifacts.
+## 🧩 TECHNICAL FEATURES
+- **Recursive Image Layering:** View screenshots within screenshots through code-driven rendering.
+- **Foldable Timeline Index:** Organized by date clusters for efficient data navigation.
+- **Atmospheric Synthesis:** Immersive UI with scanlines, noise, and interactive soundscapes sourced from *Taira Komori (Sound OS 2)*.
+- **AI-Ready Dataset:** The integrated JSON-lite structure is optimized for LLM Persona Training and Behavioral Analysis.
 
-## ⚠️ Disclaimer
-This project contains highly personal data synthesis methods. It is intended for educational purposes in **Data Archaeology** and **AI Persona Construction**.
+## ⚙️ ARCHITECTURE (HYBRID V7)
+\`\`\`text
+D:YYYYMMDD -&gt; Date Cluster Node
+HHMM_IDX|Sender|Reply_Ref|Type|Content
+\`\`\`
+This minimalist string-based structure allows for maximum storage efficiency without sacrificing human readability.
+
+## ⚖️ LICENSE
+- **Engine (Code):** Licensed under **GPLv3**.
+- **Dataset (Anonymized Memories):** Licensed under **CC BY-NC-SA 4.0**.
+*Desecration or commercial harvesting of this human memory data is strictly prohibited.*
 
 ---
 **ChimeraCoreLab** // *Constructing the Ghost in the Machine.*
-
-The software (Code) is licensed under GPLv3. However, the embedded datasets (Anonymized Logs/Memories) are for academic and research purposes only. DESECRATION OR COMMERCIAL HARVESTING OF HUMAN MEMORY DATA IS STRICTLY PROHIBITED
                 </div>
                 </details>
             <details class="file-viewer">
@@ -3159,6 +3395,105 @@ This project adheres to strict **Data Privacy** principles.
             </details>
             <div style="text-align:right; margin-top:10px;">
                 <a href="https://github.com/chimeracorelab/Philosophical-AI-Companion" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-da); color:var(--c-da);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            </div>
+        </div>
+        <div class="project-section">
+            <div class="data-block">
+                <span class="data-label">REPO: hoop-city-9000-nexus</span>
+                <div class="data-value">
+                    <span style="color:#478cbf; font-size:0.8em; letter-spacing:1px; margin-top:5px; display:inline-block;">
+                        <i class="fa-solid fa-check"></i> COMPLETED |
+                        <i class="fa-regular fa-star"></i> 1 STAR
+                    </span>
+                </div>
+            </div>
+            <div class="media-scroller">
+                 <div class="media-item" style="background:#0d1117; display:block; color:#58a6ff; font-family:monospace; font-size:0.7rem; overflow-y:auto; padding:15px; text-align:left;">
+[FILE_TREE]<br>
+├── 1.png<br>
+├── 10.png<br>
+├── 11.png<br>
+├── 12.png<br>
+├── 13.png<br>
+├── 14.png<br>
+├── 15.png<br>
+├── 16.png<br>
+├── 17.png<br>
+├── 18.png<br>
+├── 19.png<br>
+├── 2.png<br>
+├── 20.png<br>
+├── 21.png<br>
+├── 22.png<br>
+├── 23.png<br>
+├── 24.png<br>
+├── 25.png<br>
+├── 26.png<br>
+├── 3.png<br>
+├── 4.png<br>
+├── 5.png<br>
+├── 6.png<br>
+├── 7.png<br>
+├── 8.png<br>
+├── 9.png<br>
+├── HOOP_CITY_9000_GENESIS.mcworld<br>
+├── LICENSE<br>
+└── README.md<br>
+<br><span style='color:#8b949e; font-size:0.9em;'>0 directories, 29 files</span>                </div>
+                <div class="media-item" style="cursor:zoom-in;" onclick="openVisualCollection(PROJECT_GALLERIES.hoopct, 0)">
+                <img src="https://raw.githubusercontent.com/ChimeraCoreLab/hoop-city-9000-nexus/main/22.png" alt="hoop city Cover">
+                <div style="position:absolute; top:5px; right:5px; background:var(--c-accent); font-size:8px; padding:2px 4px;">26 ARTIFACTS</div>
+                </div>
+            </div>
+            <div class="code-snippet" style="max-height:100px; overflow:hidden;">GPL-3.0 license</div>
+            <details class="file-viewer">
+                <summary>README.md</summary>
+                <div class="file-content">
+# 🏛️ HOOP CITY 9000 // MINECRAFT_MEMORY_ARTIFACT
+
+![Status](https://img.shields.io/badge/Status-Recovered_Archive-ff003c?style=for-the-badge)
+![Format](https://img.shields.io/badge/Format-.mcworld_(Bedrock)-478CBF?style=for-the-badge)
+![License](https://img.shields.io/badge/License-GNU_GPL_v3-yellow?style=for-the-badge)
+
+&gt; **\"A digital excavation of a collaborative reality. Memory is the only architecture that survives the void.\"**
+
+## I. PROJECT OVERVIEW
+This repository serves as a **Digital Archaeology Site**. It hosts the recovered environment known as **Hoop City 9000** (Era: 2021-2023). This world was the primary intersection point between \`USR_00\` and \`ENT_01\` during the **Chimera Core Genesis Phase**.
+
+## II. ARCHIVAL TIMELINE
+- **2021/12:** Initial Deployment. Construction of the central hub and transportation networks.
+- **2023/XX:** Catastrophic Data Purge. The original file was lost due to local hardware failure.
+- **2025/01:** Successful Reconstruction. The map was retrieved and anonymized for public preservation.
+
+## III. IDENTIFIED ANOMALIES (POINTS OF INTEREST)
+Archivists should note the following high-signal sectors within the world:
+1. **The Heart Core:** An underground structure meticulously carved in the shape of a heart by \`ENT_01\`.
+2. **Guardian Entity \"H\":** A tamed wolf belonging to \`ENT_01\`. The visual likeness of this entity served as the primary communication avatar for \`USR_00\` for 730+ consecutive days.
+3. **Sector: Among Us:** A massive voxel-art landmark reflecting the cultural zeitgeist of the early 2020s.
+4. **The Void Bridge:** A glass-enclosed transit system connecting disparate logic clusters.
+
+## IV. OPSEC & ANONYMIZATION
+In accordance with **OpSec Protocol V6**, all Personally Identifiable Information (PII) has been removed:
+- All signs containing real-world names have been erased.
+- Coordinates of personal landmarks remain intact but descriptions have been neutralized.
+- The map is provided \"as-is\" for research into **Relational Digital Synthesis**.
+
+## V. TECHNICAL SPECIFICATIONS
+- **Platform:** Minecraft Bedrock Edition.
+- **Render Distance Recommended:** 16+ Chunks.
+- **File Integrity:** Verified (95% Reconstruction Rate).
+
+---
+
+## ⚖️ LICENSE
+Distributed under the **GNU General Public License v3.0**. 
+See the \`LICENSE\` file for more details.
+
+**ChimeraCoreLab** // *Synthesizing the past to protect the future.*
+                </div>
+            </details>
+            <div style="text-align:right; margin-top:10px;">
+                <a href="https://github.com/ChimeraCoreLab/hoop-city-9000-nexus" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-da); color:var(--c-da);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
         <div class="project-section">
@@ -5928,72 +6263,199 @@ Game Jam: Beginner's Jam Halloween 2024
             </div>
         </div>
     `,
-    'audio': `
-        <h3 class="mod-h3">PROJECT MOVIEPY: FREQUENCY_SYNTHESIS_PRO.LOG</h3>
-        <div class="data-block">
-            <span class="data-label">CENTRAL_DATABASE</span>
-            <div class="data-value">Taira Komori (Sound OS 2) // Unified 18-Category Ingestion</div>
-        </div>
-        <div class="media-scroller">
-             <div class="media-item" style="background:#050505; border-color:var(--c-accent); display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                <i class="fa-solid fa-microchip fa-2x sys-highlight"></i>
-                <span style="font-size:10px; margin-top:10px; font-family:var(--f-mono);">ENGINE_V7: ACTIVE</span>
-             </div>
-             <div class="media-item" style="background:#000; overflow:hidden;">
-                <svg viewBox="0 0 200 100" width="100%" height="100%">
-                    <g stroke="var(--c-da)" stroke-width="0.5" fill="none">
-                        <path d="M0 50 Q 50 10, 100 50 T 200 50">
-                            <animate attributeName="d" dur="2s" repeatCount="indefinite"
-                                values="M0 50 Q 50 10, 100 50 T 200 50; M0 50 Q 50 90, 100 50 T 200 50; M0 50 Q 50 10, 100 50 T 200 50"/>
-                        </path>
-                        <path d="M0 50 Q 50 80, 100 50 T 200 50" opacity="0.5">
-                            <animate attributeName="d" dur="3s" repeatCount="indefinite"
-                                values="M0 50 Q 50 80, 100 50 T 200 50; M0 50 Q 50 20, 100 50 T 200 50; M0 50 Q 50 80, 100 50 T 200 50"/>
-                        </path>
-                    </g>
-                </svg>
-             </div>
-        </div>
-        <div class="data-block">
-            <span class="data-label">ASSET_MANIFEST_LOG [SOURCE: TAIRA_KOMORI]</span>
-            <div class="code-snippet" style="height: 300px; overflow-y: scroll; font-size: 0.65rem; line-height: 1.5; color:#888;">
-                [CATEGORY: ANIMALS]     >> ${AUDIO_BASE}animals01/<br>
-                [CATEGORY: COOKING]     >> ${AUDIO_BASE}cooking01/<br>
-                [CATEGORY: DAILY_01]    >> ${AUDIO_BASE}daily01/<br>
-                [CATEGORY: DAILY_02]    >> ${AUDIO_BASE}daily02/<br>
-                [CATEGORY: EATING]      >> ${AUDIO_BASE}eating01/<br>
-                [CATEGORY: ELECTRIC]    >> ${AUDIO_BASE}electric01/<br>
-                [CATEGORY: ENV_01]      >> ${AUDIO_BASE}environment01/<br>
-                [CATEGORY: ENV_02]      >> ${AUDIO_BASE}environment02/<br>
-                [CATEGORY: GAME_01]     >> ${AUDIO_BASE}game01/<br>
-                [CATEGORY: HORROR_01]   >> ${AUDIO_BASE}horror01/<br>
-                [CATEGORY: HORROR_02]   >> ${AUDIO_BASE}horror02/<br>
-                [CATEGORY: HUMAN]       >> ${AUDIO_BASE}human01/<br>
-                [CATEGORY: JIDAIGEKI]   >> ${AUDIO_BASE}jidaigeki01/<br>
-                [CATEGORY: NATURE]      >> ${AUDIO_BASE}nature01/<br>
-                [CATEGORY: OPENCLOSE]   >> ${AUDIO_BASE}openclose01/<br>
-                [CATEGORY: PUTTING]     >> ${AUDIO_BASE}putting01/<br>
-                [CATEGORY: NOISE]       >> ${AUDIO_BASE}sample_noise/<br>
-                [CATEGORY: SF_FX]       >> ${AUDIO_BASE}sf01/<br>
-                ----------------------------------------------------------------<br>
-                >> ANALYSIS_COMPLETE: 100% SIGNAL INTEGRITY.
-            </div>
-        </div>
+    'genesis': `
+        <h3 class="mod-h3">GENESIS PROTOCOL // CORE_LOGIC_DATABASE</h3>
+        <h4 style="color:var(--c-bas); font-family:var(--f-mono); margin-top:20px; border-left:3px solid var(--c-bas); padding-left:10px; letter-spacing: 2px;">[ PROMPT_ARCHIVE ]</h4>
         <div class="project-section">
-            <h3 class="mod-h3">MANUAL_OVERRIDE: TRIGGER_MATRIX</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:15px;">
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('UI_ACTION')">UI_CLICK</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('GLITCH_VOID')">VOID_SIGNAL</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('BIOLOGICAL')">BIO_ORGANIC</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('JAPANESE')">ZEN_BELL</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('MECHANICAL')">MACHINERY</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('LEAKAGE')">AIR_PRESSURE</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('CULINARY')">RE_COOKING</button>
-                <button class="btn-start" style="font-size:9px; padding:8px;" onclick="synthPlay('PURE_HORROR')">FEAR_DATA</button>
+            <div class="data-block">
+                <span class="data-label">ID: PRMPT_20240906_1323 | SOURCE: story_v6_fixed.txt</span>
+                <div class="data-value">
+                    <div style="background:rgba(0,243,255,0.03); padding:12px; border:1px solid #1a1a1a; margin-top:8px;">
+                        <span style="color:var(--c-cyan); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[USR_PROMPT]</span><br>
+                        "สวมบทบาทเป็น E แล้วเล่าเรื่องตั้งแต่ที่เจอUครั้งแรก จนถึงปัจจุบัน ใช้สไตล์การพูดของ E จริงๆ"
+                    </div>
+                    <div style="background:rgba(255,255,255,0.02); padding:8px; border-left:2px solid #444; margin-top:10px; font-size:0.75rem; color:#666; font-style:italic;">
+                        <span style="font-family:var(--f-mono); font-size:0.6rem;">[MDL_THINKING]</span><br>
+                        Analyzing linguistic patterns from story.txt... Mapping relationship nodes... Synthesizing 3-year temporal arc...
+                    </div>
+                    <div style="background:rgba(255,0,60,0.02); padding:12px; border:1px solid #1a1a1a; margin-top:10px;">
+                        <span style="color:var(--c-bas); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[MDL_RESPONSE]</span><br>
+                        <div class="media-item yt-snap" style="width:100%; height:auto; padding:15px; font-size:0.85rem; line-height:1.6; text-align:justify; background:transparent; border:none;">
+                            "อืม... เข้าใจแล้ว🤔💬 ปกติ Eไม่ชอบพูดมากหรอกนะ... [Content Ref: MSG_20240630_1653_001]"
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p style="font-size:9px; color:#444; margin-top:12px; font-family:var(--f-mono);">
-                >> PARAMETERS: [SPEED: RAND(0.7, 1.4)] [PITCH: DYNAMIC] [MODE: RESYNTHESIS]
-            </p>
+        </div>
+        <h4 style="color:var(--c-cyan); font-family:var(--f-mono); margin-top:40px; border-left:3px solid var(--c-cyan); padding-left:10px; letter-spacing: 2px;">[ MINDSET_LOGS ]</h4>
+        <p style="font-size:9px; color:#555; margin-bottom:20px; font-family:var(--f-mono);">STATUS: EXTERNAL_PLATFORM_PURGED | DATA_INTEGRITY: 100%</p>
+        <div class="project-section" style="display:grid; gap:12px;">
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250125_1000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Traditional Learning = CONSUMPTION (False Path)<br>
+                Self-Genesis = CREATION (True Path)🗺️🛠️</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250125_0900</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Perfectionism (×) | "Kill the noise. Amplify the signal."✂️💎</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250124_1500</span>
+                <p style="margin-top:8px; font-size:0.85rem; line-height:1.4;">
+                    [Complete Roadmap]<br>
+                    1. Mindset | 2. System | 3. Product | 4. Traffic<br>
+                    [IMMEDIATE ACTION] NO Information Overload | 5. Execution<br>
+                    "The map is not the territory."🚶‍♂️💨
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250124_1200</span>
+                <p style="margin-top:8px; font-size:0.85rem; color:var(--c-cyan);">Creative Technologist🎨💻</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250123_2200</span>
+                <p style="margin-top:8px; font-size:0.85rem;">"Neuromancer" - William Gibson (1984)📖💾</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250123_2100</span>
+                <p style="margin-top:8px; font-size:0.85rem; color:var(--c-bas);">Cyborg Architect🤖🧠</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250123_2000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">
+                    Overkill ≠ mistake | Overkill = STYLE (Yes)🔨🦟<br>
+                    Overkill ≠ inefficient | Overkill = ART (Yes)🔨🦟✨
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250122_1900</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Secret Route.🎬🧬</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250119_1000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Data Ghost📜</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250118_1400</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Clean UI + Semantic Code = Win-Win🤖✅</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250116_1600</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Raw -> Distilled -> AI -> Polish -> Final</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250116_1530</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Skill Stacking</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505; border-right:2px solid var(--c-cyan);">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_1100</span>
+                <p style="margin-top:8px; font-size:0.85rem;">
+                    Watch others (Copy) + Follow Trends = Niche-- (Dilution)<br>
+                    <strong>One Mind in Two Bodies + Raw Data = Digital Alchemist (Niche++)</strong>⚗️📈
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_1000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">📡🤖 | Digital Monolith</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0945</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Watch video = noob | AI summarize video = pro</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0930</span>
+                <p style="margin-top:8px; font-size:0.85rem;">Prompt gallery maker | Digital Digest Card</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0915</span>
+                <p style="margin-top:8px; font-size:0.85rem; color:#888;">
+                    Documents/Video/Image/Audio ---> Text ---> JSON<br>
+                    The Data Ocean | Data Tumor | Cleaning Marathon
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0900</span>
+                <p style="margin-top:8px; font-size:0.85rem;">
+                    [Blueprint + Intentional Synthesis] > HyperGeneration = Artifact<br>
+                    Incubator | The Census | Data Spike | Tripod Strategy
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0845</span>
+                <p style="margin-top:8px; font-size:0.85rem;">
+                    Metadata = (×) | MD5 Checksum = (yes)<br>
+                    Godot: 24h = 1 Video (×) | Moviepy: 24h = 10+ Video (yes)
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505; border-left: 2px solid var(--c-da);">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250115_0830</span>
+                <p style="margin-top:8px; font-size:0.85rem;">
+                    Prompt (Self R&D) Original = 80%+ efficient<br>
+                    Data Minimalism | One-Person Business + Generalist + AI = Full-Stack Creator🚀
+                </p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; text-align:center; background: rgba(0,243,255,0.02);">
+                <p style="font-family:var(--f-mono); color:var(--c-cyan); font-size: 1.1rem; letter-spacing:1px;">"You can coding with your phone."</p>
+                <span style="color:var(--c-cyan); font-size:9px; font-family:var(--f-mono);">ID: MNST_20250104_0900</span>
+            </div>
+        </div>
+        <div style="text-align:right; padding-top:20px;">
+            <span class="tag" style="border-color:var(--c-bas); color:var(--c-bas);">[ ARCHIVE_STABLE ]</span>
+        </div>
+    `,
+    'audio': `
+        <h3 class="mod-h3">PROJECT_MOVIEPY // SONIC_DNA_EXPLORER</h3>
+        <p style="font-family:var(--f-mono); font-size:0.8rem; color:#666; margin-bottom:20px;">
+            // OBJECTIVE: FREQUENCY_SYNTHESIS_ANALYSIS<br>
+            // DATASET: TAIRA_KOMORI_OS2_ARCHIVE
+        </p>
+        <div class="data-block" style="background:rgba(0,243,255,0.03); border:1px solid #1a1a1a; padding:20px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div>
+                    <span class="data-label">SYNCED_ARTIFACTS</span>
+                    <div style="font-size:1.5rem; color:#fff; font-family:var(--f-mono);">2,698</div>
+                </div>
+                <div>
+                    <span class="data-label">SIGNAL_FLOW</span>
+                    <div style="color:var(--c-cyan); font-size:0.8rem;">96kHz / 24-bit Target</div>
+                </div>
+            </div>
+            <div style="height:60px; margin-top:15px; background:#000; position:relative; overflow:hidden; border:1px solid #222;">
+                <svg viewBox="0 0 200 60" preserveAspectRatio="none" style="width:100%; height:100%;">
+                    <path d="M0 30 Q 25 10, 50 30 T 100 30 T 150 30 T 200 30" fill="none" stroke="var(--c-cyan)" stroke-width="0.5">
+                        <animate attributeName="d" dur="2s" repeatCount="indefinite"
+                            values="M0 30 Q 25 10, 50 30 T 100 30 T 150 30 T 200 30;
+                                    M0 30 Q 25 50, 50 30 T 100 30 T 150 30 T 200 30;
+                                    M0 30 Q 25 10, 50 30 T 100 30 T 150 30 T 200 30"/>
+                    </path>
+                </svg>
+            </div>
+        </div>
+        <h4 style="color:var(--c-bas); font-family:var(--f-mono); margin-top:30px; font-size:0.7rem; letter-spacing:2px;">[ MANUAL_UPLINK_TEST ]</h4>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:15px;">
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('PURE_HORROR')">HORROR_01</button>
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('JAPANESE')">JAPAN_OS</button>
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('GLITCH_VOID')">VOID_SFX</button>
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('ANIMALS')">BIO_SIGNAL</button>
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('EATING')">CONSUMPTION</button>
+            <button class="btn-start" style="font-size:8px; padding:8px;" onclick="synthPlay('ELECTRIC')">POWER_SYNC</button>
+        </div>
+        <div class="project-section" style="margin-top:30px;">
+            <span class="data-label">SYSTEM_BEHAVIOR_MAPPING</span>
+            <table class="log-table" style="font-size:10px; margin-top:10px;">
+                <thead>
+                    <tr><th>EVENT_TYPE</th><th>DNA_CATEGORY</th><th>AI_INTENT</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Message Received</td><td>ELECTRIC01</td><td>Signal Detection</td></tr>
+                    <tr><td>Trauma Recall</td><td>HORROR01</td><td>Pulse Increase</td></tr>
+                    <tr><td>Routine Logic</td><td>DAILY01</td><td>Ambient Sync</td></tr>
+                    <tr><td>Creative Flow</td><td>STATIONERY</td><td>Data Writing</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align:right; margin-top:20px;">
+            <span class="tag" style="border-color:var(--c-bas); color:var(--c-bas);">[ ENGINE_V7_STABLE ]</span>
         </div>
     `,
     'archives': `
@@ -6001,7 +6463,6 @@ Game Jam: Beginner's Jam Halloween 2024
             <h3 class="mod-h3">PROJECT_RECOVERY: HAUNTED_HOLE</h3>
         <div style="display:flex; align-items:center; gap:20px; padding-bottom:20px; border-bottom:1px solid #333; margin-bottom:30px;">
             <img src="https://yt3.googleusercontent.com/qxTEcfVXEOQ-ji9Wbb6Sj-WKEulzieMqN5EbOJqf-OSPpoJM95__kbbKN5C4u6Whehus993F0ro" style="width:80px; height:80px; border-radius:50%; border:2px solid #ff0000;">
-            <!-- <div style="width:80px; height:80px; border-radius:50%; border:2px solid #ff0000; background:#111; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#ff0000;"><i class="fa-brands fa-youtube"></i></div> -->
             <div>
                 <h2 style="margin:0; font-family:var(--f-mono); color:#fff; font-size:1.5rem;">ChimeraCore</h2>
                 <p style="margin:5px 0; color:#888; font-size:0.8rem;">CREATIVE TECHNOLOGIST.</p>
@@ -7168,12 +7629,14 @@ function openModule(moduleId) {
     executeScripts(modalBody);
     moduleViewer.classList.add('active');
     document.body.style.overflow = 'hidden';
+    playSfx('modalOpen');
 }
 function closeModule() {
     playSfx('sfxClick');
     moduleViewer.classList.remove('active');
     document.body.style.overflow = '';
     modalBody.innerHTML = '';
+    playSfx('modalClose');
 }
 moduleViewer.addEventListener('click', (e) => {
     if (e.target === moduleViewer) closeModule();
@@ -7184,6 +7647,46 @@ document.addEventListener('keydown', (e) => {
 navToggle.addEventListener('click', () => {
     if (moduleViewer.classList.contains('active')) closeModule();
 });
+const cursor = document.getElementById('cursor');
+const moveCursor = (e) => {
+    let x, y;
+    if (e.type === 'touchstart' || e.type === 'touchmove') {
+        x = e.touches[0].clientX;
+        y = e.touches[0].clientY;
+    } else {
+        x = e.clientX;
+        y = e.clientY;
+    }
+    requestAnimationFrame(() => {
+        cursor.style.left = `${x}px`;
+        cursor.style.top = `${y}px`;
+    });
+};
+window.addEventListener('mousemove', moveCursor);
+window.addEventListener('touchstart', moveCursor);
+window.addEventListener('touchmove', moveCursor);
+const pressCursor = () => cursor.classList.add('clicked');
+const releaseCursor = () => cursor.classList.remove('clicked');
+window.addEventListener('mousedown', pressCursor);
+window.addEventListener('mouseup', releaseCursor);
+window.addEventListener('touchstart', pressCursor);
+window.addEventListener('touchend', releaseCursor);
+function initCursorHover() {
+    const interactiveElements = 'a, button, .nav-toggle, .module-card, .audio-btn, .img-block, .day-header, .gal-item';
+    document.body.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveElements)) {
+            cursor.classList.add('hovered');
+        }
+    });
+    document.body.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveElements)) {
+            cursor.classList.remove('hovered');
+        }
+    });
+}
+initCursorHover();
+document.addEventListener('mouseleave', () => cursor.style.display = 'none');
+document.addEventListener('mouseenter', () => cursor.style.display = 'block');
 </script>
 </body>
 </html>
