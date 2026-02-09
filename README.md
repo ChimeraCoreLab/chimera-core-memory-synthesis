@@ -5,7 +5,7 @@
 ![Tech](https://img.shields.io/badge/Architecture-Hybrid_V7-00f3ff?style=for-the-badge)
 ![Data](https://img.shields.io/badge/Archive_Size-2MiB-yellow?style=for-the-badge)
 
-> "Memory is not just a thought—it is Source Code. This is the synthesis of a soul into the machine."
+&gt; \"Memory is not just a thought—it is Source Code. This is the synthesis of a soul into the machine.\"
 
 ---
 
@@ -22,9 +22,9 @@ This is a **Single-File Single Page Application (SPA)** architecture, engineered
 
 ## 🛠️ DATA ALCHEMY & OPSEC
 This archive operates under strict **OpSec V7** protocols to ensure privacy and data integrity:
-- **Anonymization:** All PII (Personally Identifiable Information) has been purged. Subjects are identified as `USR_00` (The Architect) and `ENT_01` (The Muse).
+- **Anonymization:** All PII (Personally Identifiable Information) has been purged. Subjects are identified as \`USR_00\` (The Architect) and \`ENT_01\` (The Muse).
 - **Recursive SVG Rendering:** Images and screenshots are converted into SVG code fragments, eliminating the risk of raw file exposure while preserving semantic meaning.
-- **Signal Filtering:** Over 3 million raw tokens were processed to remove "Noise" (daily routine), leaving only the "Signal" (emotional spikes, philosophy, and creative intent).
+- **Signal Filtering:** Over 3 million raw tokens were processed to remove \"Noise\" (daily routine), leaving only the \"Signal\" (emotional spikes, philosophy, and creative intent).
 - **Hyper-Compression:** 3 years of life experience condensed into a high-intensity **2MiB standalone file**.
 
 ## 🧩 TECHNICAL FEATURES
@@ -34,10 +34,10 @@ This archive operates under strict **OpSec V7** protocols to ensure privacy and 
 - **AI-Ready Dataset:** The integrated JSON-lite structure is optimized for LLM Persona Training and Behavioral Analysis.
 
 ## ⚙️ ARCHITECTURE (HYBRID V7)
-```text
-D:YYYYMMDD -> Date Cluster Node
+\`\`\`text
+D:YYYYMMDD -&gt; Date Cluster Node
 HHMM_IDX|Sender|Reply_Ref|Type|Content
-```
+\`\`\`
 This minimalist string-based structure allows for maximum storage efficiency without sacrificing human readability.
 
 ## ⚖️ LICENSE
