@@ -34,10 +34,10 @@ This archive operates under strict **OpSec V7** protocols to ensure privacy and 
 - **AI-Ready Dataset:** The integrated JSON-lite structure is optimized for LLM Persona Training and Behavioral Analysis.
 
 ## ⚙️ ARCHITECTURE (HYBRID V7)
-\`\`\`text
-D:YYYYMMDD -&gt; Date Cluster Node
+```text
+D:YYYYMMDD -> Date Cluster Node
 HHMM_IDX|Sender|Reply_Ref|Type|Content
-\`\`\`
+```
 This minimalist string-based structure allows for maximum storage efficiency without sacrificing human readability.
 
 ## ⚖️ LICENSE
