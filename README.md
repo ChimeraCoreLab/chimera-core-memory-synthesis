@@ -1,52 +1,49 @@
-# CHIMERA CORE // MEMORY ARCHIVE (Synthesis Protocol V4)
+# 🌑 CHIMERA CORE // MEMORY SYNTHESIS
+**Digital Archaeology // Relational Data Synthesis // OpSec V7**
 
-![Project Status](https://img.shields.io/badge/Status-Active_Research-00f3ff?style=for-the-badge)
-![Core](https://img.shields.io/badge/Core-Digital_Synthesis-ff003c?style=for-the-badge)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/Data_License-CC_BY--NC--SA_4.0-ff003c.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+![Project Status](https://img.shields.io/badge/Status-Active_Nexus-ff003c?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Architecture-Hybrid_V7-00f3ff?style=for-the-badge)
+![Data](https://img.shields.io/badge/Archive_Size-2MiB-yellow?style=for-the-badge)
 
-> **"Code is governed by GPLv3. Memory is governed by CC BY-NC-SA 4.0."**
+> "Memory is not just a thought—it is Source Code. This is the synthesis of a soul into the machine."
 
-> **"If memories are data, then immortality is just a backup away."**
-> — *ChimeraCoreLab*
+---
 
-## 👁️ Project Overview
-**Chimera Core // Memory Archive** is a specialized **Digital Synthesis Portfolio** designed to archive, visualize, and interact with the digital footprint of a specific connection between two entities (`USR_00` and `ENT_01`).
+## 🌐 ACCESS PROTOCOL (LIVE LINK)
+**Access the live Memory Archive through the following uplink:**
+### 👉 [https://chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
 
-This project transforms raw, unstructured chat logs (spanning 2021-2025) into a structured, privacy-focused **HTML5 Single Page Application (SPA)**. It treats human memory not as abstract thoughts, but as **computable data points**.
+---
 
-### 🛡️ Core Philosophy: Anonymization & OPSEC
-This archive operates under a strict **Zero-Raw-Data Policy** for visual assets.
-*   **Images/Stickers:** Converted into **SVG/HTML Renderings** or hashed Metadata placeholders. No `.jpg` or `.png` files remain in the core distribution.
-*   **Videos:** Transmuted into Python `MoviePy` code representations or metadata logs.
-*   **Identities:** All names are purged and replaced with System IDs (`USR_00`, `ENT_01`).
-*   **One-Way hashing:** Text content is processed to retain semantic meaning for AI Analysis while removing PII (Personally Identifiable Information).
+## 👁️ PROJECT OVERVIEW
+**Chimera Core** is a Digital Archaeology project designed to archive, visualize, and interact with the digital footprint of a 4-year connection (2021-2025). This system utilizes **Data Alchemy** to distill raw interpersonal logs into a self-hosted, anonymized, and computable monument.
 
-## 🧩 System Architecture (Hybrid Cluster V4)
-The system uses a custom data structure called **"Unified Hybrid Cluster"**:
+This is a **Single-File Single Page Application (SPA)** architecture, engineered to run efficiently on mobile terminals (POCO M7) and legacy hardware (ThinkPad X260).
 
-1.  **Chronological Folding:** Chat history is organized by `Date` clusters, which can be expanded/collapsed to save rendering resources.
-2.  **Media Segregation (The Gallery):** All non-text artifacts (Images, Files, Audio) are extracted to a separate **Visual Database**.
-3.  **Quantum Linking:** Every item in the Gallery retains a unique `MSG_ID` that allows instant navigation back to its original temporal context in the Chat Logs.
+## 🛠️ DATA ALCHEMY & OPSEC
+This archive operates under strict **OpSec V7** protocols to ensure privacy and data integrity:
+- **Anonymization:** All PII (Personally Identifiable Information) has been purged. Subjects are identified as `USR_00` (The Architect) and `ENT_01` (The Muse).
+- **Recursive SVG Rendering:** Images and screenshots are converted into SVG code fragments, eliminating the risk of raw file exposure while preserving semantic meaning.
+- **Signal Filtering:** Over 3 million raw tokens were processed to remove "Noise" (daily routine), leaving only the "Signal" (emotional spikes, philosophy, and creative intent).
+- **Hyper-Compression:** 3 years of life experience condensed into a high-intensity **2MiB standalone file**.
 
-## 🛠️ Technology Stack
-*   **Core:** HTML5, CSS3 (Cyberpunk/Terminal Aesthetic), Vanilla JavaScript (ES6+).
-*   **Data Processing:** Python (Pandas, JSON) for converting raw `story.txt` into `chimera_db_hybrid_v4.json`.
-*   **Visualization:** SVG Generation for "Code-based Images".
-*   **Deployment:** Runs locally via Termux or any Web Server.
+## 🧩 TECHNICAL FEATURES
+- **Recursive Image Layering:** View screenshots within screenshots through code-driven rendering.
+- **Foldable Timeline Index:** Organized by date clusters for efficient data navigation.
+- **Atmospheric Synthesis:** Immersive UI with scanlines, noise, and interactive soundscapes sourced from *Taira Komori (Sound OS 2)*.
+- **AI-Ready Dataset:** The integrated JSON-lite structure is optimized for LLM Persona Training and Behavioral Analysis.
 
-## 🚀 Usage
-1.  **Process Data:** Run the Python script to convert raw logs into the Hybrid V4 JSON format.
-2.  **Launch Interface:** Open `index.html`.
-3.  **Decrypt:** (Optional) Enter access key if encrypted.
-4.  **Explore:**
-    *   **Chat Mode:** View the timeline.
-    *   **Gallery Mode:** View isolated artifacts.
+## ⚙️ ARCHITECTURE (HYBRID V7)
+```text
+D:YYYYMMDD -> Date Cluster Node
+HHMM_IDX|Sender|Reply_Ref|Type|Content
+```
+This minimalist string-based structure allows for maximum storage efficiency without sacrificing human readability.
 
-## ⚠️ Disclaimer
-This project contains highly personal data synthesis methods. It is intended for educational purposes in **Data Archaeology** and **AI Persona Construction**.
+## ⚖️ LICENSE
+- **Engine (Code):** Licensed under **GPLv3**.
+- **Dataset (Anonymized Memories):** Licensed under **CC BY-NC-SA 4.0**.
+*Desecration or commercial harvesting of this human memory data is strictly prohibited.*
 
 ---
 **ChimeraCoreLab** // *Constructing the Ghost in the Machine.*
-
-The software (Code) is licensed under GPLv3. However, the embedded datasets (Anonymized Logs/Memories) are for academic and research purposes only. DESECRATION OR COMMERCIAL HARVESTING OF HUMAN MEMORY DATA IS STRICTLY PROHIBITED
