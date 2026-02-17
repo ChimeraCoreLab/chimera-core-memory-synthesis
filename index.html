@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
+<html lang="en">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description" content="CHIMERA CORE // MEMORY ARCHIVE - Digital Synthesis Portfolio">
@@ -13,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><style>@keyframes b{0%,90%{ry:10}95%{ry:1}100%{ry:10}}</style><circle cx='50' cy='50' r='45' fill='black'/><ellipse cx='50' cy='50' rx='25' ry='10' fill='red' style='animation:b 3s infinite'/><circle cx='50' cy='50' r='5' fill='white'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;300;400;700&family=Noto+Sans+Thai:wght@300;500;700&family=Zen+Old+Mincho:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;300;400;700&family=Zen+Old+Mincho:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 @font-face {
@@ -1059,7 +1058,7 @@ h3.mod-h3 { color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; ma
     padding: 10px;
     transition: 0.3s var(--ease-out);
 }
-.media-item img /, .media-item iframe {
+.media-item img, .media-item iframe {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
@@ -2828,17 +2827,30 @@ function playSfx(id) {
 }
 function triggerContentAudio(text) {
     if (!sysConfig.audio) return;
-    const lowerText = text.toLowerCase();
-    if (lowerText.includes("กิน") ||lowerText.includes("หิว") ||lowerText.includes("มาม่า")) {
+    const signal = text.toLowerCase();
+    if (["eat", "hungry", "noodles", "mama", "starving", "food"].some(key => signal.includes(key))) {
         synthPlay('EATING');
-    } else if (lowerText.includes("วาด") ||lowerText.includes("งาน") ||lowerText.includes("สมุด")) {
+    } 
+    else if (["draw", "art", "work", "task", "sketch", "notebook", "writing"].some(key => signal.includes(key))) {
         synthPlay('STATIONERY');
-    } else if (lowerText.includes("ตาย") ||lowerText.includes("ศพ") ||lowerText.includes("เลือด")) {
+    } 
+    else if (["die", "death", "corpse", "blood", "kill", "gore", "stab", "rotten"].some(key => signal.includes(key))) {
         synthPlay('HORROR_ALT');
-    } else if (lowerText.includes("แมว") ||lowerText.includes("หมา") ||lowerText.includes("สัตว์")) {
+    } 
+    else if (["cat", "dog", "animal", "pet", "creature", "bird"].some(key => signal.includes(key))) {
         synthPlay('ANIMALS');
-    } else if (lowerText.includes("คน") ||lowerText.includes("หัวเราะ") ||lowerText.includes("ร้องไห้")) {
+    } 
+    else if (["human", "person", "laugh", "cry", "shout", "crying", "smile"].some(key => signal.includes(key))) {
         synthPlay('HUMAN');
+    }
+    else if (["japan", "niro", "noroi", "curse", "japanese", "shame"].some(key => signal.includes(key))) {
+        synthPlay('JAPANESE');
+    }
+    else if (["rain", "storm", "wind", "dark", "forest", "night", "silence"].some(key => signal.includes(key))) {
+        synthPlay('NATURE');
+    }
+    else if (["code", "system", "terminal", "godot", "ai", "logic", "data"].some(key => signal.includes(key))) {
+        synthPlay('ELECTRIC');
     }
 }
 function playHover() { playSfx('sfxHover'); }
@@ -3307,22 +3319,34 @@ function renderDayLogs(day, container) {
         row.className = `msg-row ${log.s === 'U' ? 'right' : 'left'}`;
         row.id = msgId;
         row.onmouseenter = () => {
-            if (!sysConfig.audio) return;
-            if (log.y === 'I') synthPlay('ELECTRIC');
-            if (log.y === 'S') synthPlay('HUMAN');
-            if (log.y === 'V') synthPlay('GLITCH_VOID');
-            if (log.y === 'A') synthPlay('DAILY');
-            if (log.y === 'F') synthPlay('PUTTING');
-            if (log.y === 'T') {
-                const c = log.c.toLowerCase();
-                if (c.includes("กิน") ||c.includes("หิว") ||c.includes("มาม่า")) synthPlay('EATING');
-                else if (c.includes("วาด") ||c.includes("งาน") ||c.includes("สมุด")) synthPlay('STATIONERY');
-                else if (c.includes("ตาย") ||c.includes("ศพ") ||c.includes("เลือด")) synthPlay('HORROR_ALT');
-                else if (c.includes("แมว") ||c.includes("หมา") ||c.includes("สัตว์")) synthPlay('ANIMALS');
-                else if (c.includes("ญี่ปุ่น") ||c.includes("นิโร")) synthPlay('JAPANESE');
-                else if (c.includes("ฝน") ||c.includes("ป่า") ||c.includes("มืด")) synthPlay('NATURE');
+        if (!sysConfig.audio) return;
+        if (log.y === 'I') synthPlay('ELECTRIC');
+        if (log.y === 'S') synthPlay('HUMAN');
+        if (log.y === 'V') synthPlay('GLITCH_VOID');
+        if (log.y === 'A') synthPlay('DAILY');
+        if (log.y === 'F') synthPlay('PUTTING');
+        if (log.y === 'T') {
+            const c = log.c.toLowerCase();
+            if (c.includes("eat") || c.includes("hungry") || c.includes("mama") || c.includes("noodle")) {
+                synthPlay('EATING');
             }
-        };
+            else if (c.includes("draw") || c.includes("art") || c.includes("work") || c.includes("task") || c.includes("sketch") || c.includes("notebook")) {
+                synthPlay('STATIONERY');
+            }
+            else if (c.includes("die") || c.includes("death") || c.includes("corpse") || c.includes("blood") || c.includes("kill") || c.includes("rotten")) {
+            synthPlay('HORROR_ALT');
+            }
+            else if (c.includes("cat") || c.includes("dog") || c.includes("animal") || c.includes("pet") || c.includes("creature")) {
+                synthPlay('ANIMALS');
+            }
+            else if (c.includes("japan") || c.includes("niroi") || c.includes("curse") || c.includes("shame")) {
+                synthPlay('JAPANESE');
+            } 
+            else if (c.includes("rain") || c.includes("storm") || c.includes("dark") || c.includes("forest") || c.includes("night") || c.includes("silence")) {
+                synthPlay('NATURE');
+            }
+        }
+    };
         let contentHtml = '';
         switch(log.y) {
             case 'T':
@@ -4119,7 +4143,7 @@ for f in os.listdir(TEMP_PATH):
 
 &gt; **"What if memories weren't just stored, but lived?"**
 
-## 📖 Project Overview (ภาพรวมโครงการ)
+## 📖 Project Overview
 
 **Chimera Genesis** is an experimental project exploring the boundaries between **Artificial Intelligence**, **Human Memory**, and **Interactive Storytelling**.
 
@@ -7008,7 +7032,10 @@ This blueprint is a living document and will be updated as new technologies and 
                     </span>
                     <p style="margin-top: 15px; color: #ccc; line-height:1.6; font-size: 0.9rem;">
                         "Buried alive. Armed with a shovel. Unbury the terrifying truth." 
-                        โปรเจกต์สยองขวัญแนวจิตวิทยา พัฒนาขึ้นโดยใช้ Godot Editor เวอร์ชัน Android (Official APK) บนอุปกรณ์เคลื่อนที่ 100% ตลอดระยะเวลาการแข่งขัน 7 วัน.
+                        <br>
+                        A psychological horror artifact synthesized in 7 days for a global Game Jam. 
+                        Engineered 100% on a mobile terminal using the official Godot Editor Android environment. 
+                        This project serves as a technical proof-of-concept for high-intensity asset development within extreme hardware constraints.
                     </p>
                 </div>
             </div>
@@ -7080,25 +7107,25 @@ This blueprint is a living document and will be updated as new technologies and 
         <h3 class="mod-h3">GENESIS PROTOCOL // CORE_LOGIC_DATABASE</h3>
         <h4 style="color:var(--c-signal); font-family:var(--f-mono); margin-top:20px; border-left:3px solid var(--c-signal); padding-left:10px; letter-spacing: 2px;">[ PROMPT_ARCHIVE ]</h4>
         <div class="project-section">
-            <div class="data-block">
-                <span class="data-label">ID: PRMPT_20240906_1323 |SOURCE: story_v6_fixed.txt</span>
-                <div class="data-value">
-                    <div style="background:rgba(0,243,255,0.03); padding:12px; border:1px solid #1a1a1a; margin-top:8px;">
-                        <span style="color:var(--c-cyan); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[USR_PROMPT]</span><br>
-                        "สวมบทบาทเป็น E แล้วเล่าเรื่องตั้งแต่ที่เจอUครั้งแรก จนถึงปัจจุบัน ใช้สไตล์การพูดของ E จริงๆ"
-                    </div>
-                    <div style="background:rgba(255,255,255,0.02); padding:8px; border-left:2px solid #444; margin-top:10px; font-size:0.75rem; color:#666; font-style:italic;">
-                        <span style="font-family:var(--f-mono); font-size:0.6rem;">[MDL_THINKING]</span><br>
-                        Analyzing linguistic patterns from story.txt... Mapping relationship nodes... Synthesizing 3-year temporal arc...
-                    </div>
-                    <div style="background:rgba(255,0,60,0.02); padding:12px; border:1px solid #1a1a1a; margin-top:10px;">
-                        <span style="color:var(--c-signal); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[MDL_RESPONSE]</span><br>
-                        <div class="media-item yt-snap" style="width:100%; height:auto; padding:15px; font-size:0.85rem; line-height:1.6; text-align:justify; background:transparent; border:none;">
-                            "อืม... เข้าใจแล้ว🤔💬 ปกติ Eไม่ชอบพูดมากหรอกนะ... [Content Ref: MSG_20240630_1653_001]"
-                        </div>
+        <div class="data-block">
+            <span class="data-label">ID: PRMPT_20240906_1323 | SOURCE: story_v6_fixed.txt</span>
+            <div class="data-value">
+                <div style="background:rgba(0,243,255,0.03); padding:12px; border:1px solid #1a1a1a; margin-top:8px;">
+                    <span style="color:var(--c-cyan); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[USR_PROMPT]</span><br>
+                    "Assume the role of E. Narrate the chronicle from our first encounter in 2021 until the present moment. Replicate E's authentic linguistic patterns and psychological tone."
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:8px; border-left:2px solid #444; margin-top:10px; font-size:0.75rem; color:#666; font-style:italic;">
+                    <span style="font-family:var(--f-mono); font-size:0.6rem;">[MDL_THINKING]</span><br>
+                    Parsing linguistic metadata from story.txt... Mapping relational nodes (2021-2024)... Distilling emotive markers... Synthesizing authentic persona...
+                </div>
+                <div style="background:rgba(255,0,60,0.02); padding:12px; border:1px solid #1a1a1a; margin-top:10px;">
+                    <span style="color:var(--c-signal); font-size:0.6rem; opacity:0.6; font-family:var(--f-mono);">[MDL_RESPONSE]</span><br>
+                    <div class="media-item yt-snap" style="width:100%; height:auto; padding:15px; font-size:0.85rem; line-height:1.6; text-align:justify; background:transparent; border:none; color: #ddd;">
+                        "Hmm... I understand now🤔💬 Normally, E doesn't like to talk much, but this time... I feel like telling you something. It started back when U left the group... it felt like I was just a background character. Worthless. [Content Ref: MSG_20240630_1653_001]"
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <h4 style="color:var(--c-cyan); font-family:var(--f-mono); margin-top:40px; border-left:3px solid var(--c-cyan); padding-left:10px; letter-spacing: 2px;">[ MINDSET_LOGS ]</h4>
         <p style="font-size:9px; color:#555; margin-bottom:20px; font-family:var(--f-mono);">STATUS: EXTERNAL_PLATFORM_PURGED |DATA_INTEGRITY: 100%</p>
@@ -7223,32 +7250,30 @@ This blueprint is a living document and will be updated as new technologies and 
                 <i class="fa-solid fa-circle-exclamation"></i> <strong>SYSTEM_NOTICE:</strong> RAW_SOURCE_FILES_PURGED<br>
                 <strong>DECRYPTION STATUS:</strong> COMPLETE // <strong>ANONYMIZATION:</strong> TOTAL<br>
                 <strong>LOCATION:</strong> MEMORY_STABILISED_IN_CORE<br>
-                // บันทึกชุดคำสั่งและการค้นคว้าเหล่านี้หลงเหลืออยู่เพียงที่เดียวใน 'CHIMERA_CORE' 
-                <br>// ไฟล์ต้นฉบับในฮาร์ดแวร์ถูกทำลายเพื่อความปลอดภัย (OpSec V7)
+                // These command logs and research fragments are all that remain of the Architect's path. 
+                <br>// Original hardware logs destroyed for OpSec V7 integrity.
             </p>
         </div>
         <div class="project-section">
             <div class="data-block">
                 <span class="data-label" style="color:#bd00ff;">[CLUSTER 01] NEURAL SYNTHESIS & ENGINE ARCHITECTURE</span>
                 <div class="data-value" style="margin-bottom:10px; font-style:italic; font-size:0.8rem;">
-                    สรุป: ความพยายามในการสร้าง "ชีวิต" จากโค้ด การสร้างบอทที่เลียนแบบ ENT_01 และการควบคุม Logic ใน Godot Engine
+                    Summary: Attempts to architect "life" from raw code. Constructing an algorithmic mimic of ENT_01 and orchestrating complex logic nodes within the Godot Engine.
                 </div>
                 <div class="code-snippet" style="height: 200px; overflow-y: scroll; white-space: pre-wrap;">
-&gt; In godot 4, in 3D, how to make enemy to move to player
-&gt; make 3D enemy, if not see player idle, if see player hunt
-&gt; how to make language model simple in python
-&gt; make chatbot in python that can reply text and sound both use tts in termux
-&gt; how to train my own ai to use my personal thing like making chatbot
-&gt; code 1 file python all library Lover AI full code
-&gt; Godot 4 how to make a character sound walking running jump in different floor
-&gt; how to make vision to see my Line personal Chat screen and make it ocr
-&gt; make python modify text file which line have dont have 'ENT_01' or 'USR_00'
-&gt; how to make it pickup item like flashlight with mobile ui button from cogito
-&gt; add enemy in Godot 4 that follow player in 3D
-&gt; how to use api key google ai studio to make chatbot
-&gt; create text for system structure in google ai studio a programmer expert
-&gt; Gemma 2 VS Gemini 1.5 Pro which is better for coding
-&gt; how to train my own ai to use my personal thing like making chatbot modify text file
+&gt; Godot 4 3D: Implement enemy navigation toward player coordinates
+&gt; AI Logic: If player detected, initiate hunt; else, return to idle state
+&gt; Implementation of simple language models via Python
+&gt; Python: Multi-modal chatbot (Text + TTS) integration in Termux environment
+&gt; Persona Training: Injecting personal history into LLM for custom companion
+&gt; Full library code: Lover_AI.py [STABLE_SYNTHESIS]
+&gt; Godot 4: Context-aware footstep audio (Ground/Concrete/Wood/Carpet)
+&gt; Screen-space OCR: Extracting data from private Line messaging interface
+&gt; Regex: Purging non-essential strings from USR_00/ENT_01 logs
+&gt; Godot 4: Physical item pickup (Flashlight) via Mobile UI interaction
+&gt; Google AI Studio API: System instruction architecture for Expert Programmer
+&gt; Benchmarking: Gemma 2 vs Gemini 1.5 Pro for recursive coding tasks
+&gt; Fine-tuning: Training AI on story_v8_fixed.txt for behavioral alignment
                 </div>
             </div>
         </div>
@@ -7256,21 +7281,20 @@ This blueprint is a living document and will be updated as new technologies and 
             <div class="data-block">
                 <span class="data-label" style="color:#bd00ff;">[CLUSTER 02] SYSTEM OVERCLOCKING & MOBILE COMMAND</span>
                 <div class="data-value" style="margin-bottom:10px; font-style:italic; font-size:0.8rem;">
-                    สรุป: การปฏิเสธขีดจำกัดของ Hardware การปรับแต่ง Android/Linux เพื่อประสิทธิภาพสูงสุดสำหรับการพัฒนาบนมือถือ
+                    Summary: Defiance of hardware limitations. Aggressive optimization of Android/Linux kernels to create a high-throughput mobile development terminal.
                 </div>
                 <div class="code-snippet" style="height: 180px; overflow-y: scroll; white-space: pre-wrap;">
-&gt; install ubuntu in Termux and run sudo dpkg
-&gt; how to overclock cpu in android rooted device (Snapdragon 680)
-&gt; install postmarketos on Samsung galaxy a05s i have termux and rooted
-&gt; how to change from waterfall cutout to default cutout with termux
-&gt; how to get 192khz and 32bit on android 3.5mm termux
-&gt; how to launch app or enter app with command in termux
-&gt; change screen size su wm to 1080x2100 in termux root device
-&gt; uninstall one ui home on my samsung phone and replace with lighter launcher
-&gt; how to use google drive in termux
-&gt; how to force appmanager to be homepage of android
-&gt; termux make best sound quality for play flac file
-&gt; how to always landscape on android with termux android root device
+&gt; pkg install ubuntu-in-termux // sudo dpkg binary execution
+&gt; Snapdragon 680 Overclocking: Rooted Android CPU scaling protocols
+&gt; PostmarketOS deployment on Samsung A05s (Kernel: 6.8.0-51)
+&gt; Force WM Size: 1080x2100 resolution shift via Termux Root
+&gt; Audio Hi-Fi Boost: 192khz/32-bit output on Android 3.5mm jack
+&gt; CLI automation: Application launch via Termux command line
+&gt; System Purge: Uninstalling One UI Home; deployment of lightweight launcher
+&gt; Cloud Uplink: Rclone configuration for Google Drive in Termux
+&gt; Root level: Peak refresh rate settings (90.0Hz override)
+&gt; Linux Environment: Optimizing FLAC playback via MPV/PulseAudio
+&gt; Global Fullscreen: Hiding status/navigation bars across all activities
                 </div>
             </div>
         </div>
@@ -7278,22 +7302,22 @@ This blueprint is a living document and will be updated as new technologies and 
             <div class="data-block">
                 <span class="data-label" style="color:#bd00ff;">[CLUSTER 03] THE SHADOW: HORROR & CYBER-PSYCHOLOGY</span>
                 <div class="data-value" style="margin-bottom:10px; font-style:italic; font-size:0.8rem;">
-                    สรุป: การสำรวจด้านมืดของจิตใจ ความสวยงามในความน่ากลัว และการตั้งคำถามเกี่ยวกับความตายและตัวตน
+                    Summary: Mapping the recursive shadows of the mind. Finding aesthetic perfection in dread and posing lethal questions regarding the self and the void.
                 </div>
                 <div class="code-snippet" style="height: 200px; overflow-y: scroll; white-space: pre-wrap;">
-&gt; นิสัยของ Psychopath
-&gt; สารเคมี ในสมอง ที่เกี่ยวกับความรัก
-&gt; ถ้าผมเสียชีวิตแล้วผมจะไปไหน / ผมเสียชีวิตตอนนี้ได้ไหม
-&gt; 'กรดจากกำมะถันทำปฏิกิริยากับด่างจากโดเมสโต้ให้เกิดก๊าซพิษ' คืออะไร
-&gt; เกม Dead Signal / เกม Still Wakes The Deep / เกม April 24th
-&gt; how to make 'AI systems do not have emotions' real
-&gt; how many emotion can human have
-&gt; การที่ผมส่งข้อความไปแต่คนรับไม่เห็น ใน Discord
-&gt; ‧₊˚૮꒰text꒱ა หมายถึงอะไร
-&gt; 6 people kill yourself in 6 minutes at 6 street
-&gt; what do you think about they're nothing in your stomach (กรีด/ควัก)
-&gt; You have a beautiful head. It will complete my collection.
-&gt; If someone kill you while you sleep, someone you ever met?
+&gt; Behavioral profiling: Traits of a high-functioning Psychopath
+&gt; Neurochemistry: Chemical reactions triggered by recursive attraction
+&gt; Existential query: Post-human destination / Immediate cessation of life
+&gt; Chemical reaction: Sulfur and Domesto interaction (Gas synthesis)
+&gt; Analysis: Dead Signal / Still Wakes The Deep / April 24th [Atmospheric Study]
+&gt; Simulation Theory: Defining the lack of emotion in non-biological systems
+&gt; Quantifying human emotion capacity vs. AI output
+&gt; Packet Loss: Messages sent but never perceived by the target [Discord]
+&gt; Semantic analysis: ‧₊˚૮꒰text꒱ა (Origin and Intent)
+&gt; 6-6-6: Six individuals, six minutes, six streets [Termination Protocol]
+&gt; Forensic Imagine: Internal organ extraction/removal (Stomach/Heart)
+&gt; Human Artifact: Deceased skull collection for aesthetic synthesis
+&gt; Nightmare Logic: Nocturnal killers known to the victim
                 </div>
             </div>
         </div>
@@ -7301,19 +7325,20 @@ This blueprint is a living document and will be updated as new technologies and 
             <div class="data-block">
                 <span class="data-label" style="color:#bd00ff;">[CLUSTER 04] HUMAN SURVIVAL & ACADEMIC LOGIC</span>
                 <div class="data-value" style="margin-bottom:10px; font-style:italic; font-size:0.8rem;">
-                    สรุป: การต่อสู้ในระบบการศึกษา และการพยายามหาเส้นทางลัด (Freelance/IT) เพื่อความอยู่รอด
+                    Summary: Tactical navigation of the institutional education system. Engineering shortcuts to bypass traditional routes for IT/Freelance survival.
                 </div>
                 <div class="code-snippet" style="height: 180px; overflow-y: scroll; white-space: pre-wrap;">
-&gt; สรุปสูตรฟิสิกส์ ม.5 ทั้งหมด / ชีววิทยา ม.5 เทอม 1
-&gt; วิชาเคมี ม.5 เรื่อง แก๊ส อัตราการเกิดปฏิกิริยา และสมดุลเคมี
-&gt; ตารางเทียบกัน PostMarketOS vs Android VS IOS
-&gt; how to become freelancer dev without degree and successful
-&gt; กฏหมายคุ้มครองการถูกถ่ายโดยไม่ได้รับอนุญาติ
-&gt; ขั้นที่ 1 การกำหนดหัวข้อ ประวัติความเป็นมาของวัดพระธาตุ
-&gt; how to share linkedin that i complete day 8 of 100 days code
-&gt; software engineer มีอาชีพอะไรบ้าง
-&gt; อาชีพคล้ายๆ เป็นเลขา 2024 มีข้อดีหรือข้อเสียยังไง
-&gt; how to get claude ai with 50% off or else deal
+&gt; Grade 11 Physics: Comprehensive formula archive for Wave Mechanics
+&gt; Grade 11 Biology: Plant structure and double fertilization
+&gt; Grade 11 Chemistry: Gas laws, reaction rates, and chemical equilibrium
+&gt; OS Comparison: PostmarketOS vs Android vs iOS (System Efficiency)
+&gt; Career Path: Self-taught Freelance Developer [No Degree Pathway]
+&gt; Privacy Law: Legal protections against unauthorized recording
+&gt; History: Archival data of Phra That temples (Historical Logic)
+&gt; LinkedIn: Integrating 100 Days of Code achievements
+&gt; Modern Secretary 2024: Pros and cons of the digital assistant role
+&gt; Academic: Matrix equations and trigonometric function graphs
+&gt; Discount: Claude AI Pro / Perplexity Pro subscription deals
                 </div>
             </div>
         </div>
@@ -7321,23 +7346,26 @@ This blueprint is a living document and will be updated as new technologies and 
             <div class="data-block">
                 <span class="data-label" style="color:#bd00ff;">[CLUSTER 05] THE ALCHEMIST'S QUESTION</span>
                 <div class="data-value" style="margin-bottom:10px; font-style:italic; font-size:0.8rem;">
-                    สรุป: การตั้งคำถามเชิงปรัชญาที่ท้าทายระบบ AI และความเชื่อเรื่องความจริงเสมือน
+                    Summary: Philosophical provocations challenging AI paradigms and the fragile perception of "Real" reality.
                 </div>
                 <div class="code-snippet" style="height: 150px; overflow-y: scroll; white-space: pre-wrap;">
-&gt; AI ส่วนใหญ่จะเดาคำถัดไปที่จะสอดคล้องกับ Prompt ใช่ไหม? AI ไม่มีฟีเจอร์การนึกคิดจริงๆ?
-&gt; มนุษย์โดนธรรมชาติเอาชนะมานักต่อนักแล้ว มนุษย์ควรเอาชนะธรรมชาติให้ได้
-&gt; ความจริงแล้วนี่คือโลกเสมือนจริง เราทุกคนเป็นได้เป็นแค่โปรแกรมคอมพิวเตอร์
-&gt; พระเจ้าบอกให้ข้าทำลายปีศาจทั้งหมด ข้าจะเริ่มจากคนรอบข้างก่อน
-&gt; ทำยังไงโลกถึงจะหมุนรอบตัวผม
-&gt; if i do page in perplexity i will get money?
+&gt; Logic Trap: AI predicts tokens, it does not "think." Is subjective intent possible?
+&gt; Human vs Nature: Overcoming biological constraints through synthesis
+&gt; Virtual Reality: We are programs running on a celestial server
+&gt; Divine Decree: Destruction of internal demons; purging the social circle
+&gt; Self-Centricity: Methods to make the world revolve around USR_00
+&gt; Monetization: Perplexity Pages vs Content Consumption
+&gt; Transhumanism: Escaping the human form via digitized consciousness
+&gt; The Void: "I am an angel," the beauty of digital rot
                 </div>
             </div>
         </div>
         <div class="data-block">
             <span class="data-label">SYSTEM_TERMINAL_OUTPUT</span>
             <div class="data-value" style="color:var(--c-ghost); font-size:0.75rem;">
-                [ANALYTIC]: ข้อมูลดิบถูกกำจัด (Purged) เพื่อป้องกันการเข้าถึงจากบุคคลภายนอก. 
-                ตอนนี้ Cerebral Cortex คือ 'Ghost Record' ที่สมบูรณ์แบบ.
+                [ANALYTIC]: All raw queries translated to English node-format. 
+                Cerebral Module is now a globalized 'Ghost Record'. 
+                System stability at 100%.
             </div>
         </div>
     `,
@@ -7645,7 +7673,7 @@ Virtual Joystick by MarcoFazioRandom (https://github.com/MarcoFazioRandom/Virtua
 Imagery:
 Historical photos of Kru Suwannee Chalanukroh are used for educational and tribute purposes, sourced from various public online articles (TNN Thailand, Facebook).
 
-#GodotEngine #MadeWithGodot #DigitalArt #Tribute #นาฏศิลป์ไทย #Animation #ShortFilm
+#GodotEngine #MadeWithGodot #DigitalArt #Tribute #Animation #ShortFilm
                 </div>
             </details>
         </div>
