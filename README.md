@@ -1,6 +1,10 @@
 # 🌑 CHIMERA CORE // MEMORY SYNTHESIS
 **Digital Archaeology // Relational Data Synthesis // OpSec V7**
 
+<p align="center">
+  <img src="core_vessel_v7.jpg" width="100%" alt="Chimera Core Vessel">
+</p>
+
 ![Project Status](https://img.shields.io/badge/Status-Active_Nexus-ff003c?style=for-the-badge)
 ![Tech](https://img.shields.io/badge/Architecture-Hybrid_V7_SPA-00f3ff?style=for-the-badge)
 ![Data](https://img.shields.io/badge/Payload-Distilled_2MiB-yellow?style=for-the-badge)
