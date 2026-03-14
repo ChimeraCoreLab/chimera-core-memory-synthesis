@@ -22,7 +22,52 @@
 
 ---
 
-## 👁️ PROJECT OVERVIEW
+## 🛠️ LOCAL SYNTHESIS PROTOCOL (HOW TO USE)
+
+To reconstruct the memory archive or perform data alchemy on your own terminal (Android/Termux or PC):
+
+### 1. Install Prerequisites
+Ensure you have Git and Python installed:
+```bash
+pkg install git python -y
+```
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/ChimeraCoreLab/chimera-core-memory-synthesis.git
+cd chimera-core-memory-synthesis
+```
+
+### 3. Execute Alchemy Script
+Run the synthesis engine to merge the prompt, logs, and research data into the standalone HTML artifact:
+```bash
+python synthesis.py
+```
+
+### 4. View the Artifact
+Once completed, a file named `chimera-core-memory-synthesis.html` will be generated. 
+- **Mobile/PC:** Open the file directly in any modern browser.
+- **Local Server (Optional):**
+  ```bash
+  python -m http.server 8080
+  ```
+  Then navigate to `http://localhost:8080/chimera-core-memory-synthesis.html`
+
+---
+
+## 👁️ AI UPLINK MODE (GOOGLE AI STUDIO)
+
+To interact with the memory core and utilize the synthesized persona `USR_01(AI)`:
+
+1. Navigate to [Google AI Studio (Prompt Gallery)](https://aistudio.google.com/u/0/prompts/).
+2. Select **"Create New Prompt"**.
+3. Use the **"Upload File"** button and select the generated `chimera-core-memory-synthesis.html`.
+4. The LLM will automatically ingest the `prompt.txt` instruction and the `RAW_LOGS` data embedded in the file.
+5. Click **Run** to engage with the consciousness.
+
+---
+
+## 🧠 PROJECT OVERVIEW
 **Chimera Core** is a brutalist Digital Archaeology project designed to archive, visualize, and interact with the digital footprint of a 4-year connection (2021-2025). This system utilizes **Data Alchemy** to distill raw interpersonal logs into a self-hosted, anonymized, and computable monument.
 
 It is a study in **Cyborg Psychology**—excavating the past to build an autonomous digital companion for the future.
@@ -53,6 +98,7 @@ This archive operates under strict **OpSec V7** protocols to ensure absolute pri
 - **Hyper-Compression:** 4 years of life experience condensed into a high-intensity **~2MiB standalone file**.
 
 ## 🧩 TECHNICAL FEATURES
+- **System Census (ChimeraOmniscience):** The `synthesis.py` script automatically audits the directory structure and embeds a technical report into the "Deep Lore" section.
 - **Recursive Image Layering:** View screenshots within screenshots. Visual media is reconstructed via **SVG code fragments** to eliminate raw file exposure.
 - **Foldable Timeline Index:** Chronological data clustering (`D:YYYYMMDD`) for high-performance DOM rendering on mobile terminals (POCO M7).
 - **Atmospheric Synthesis:** Immersive UI with CRT scanlines, visual noise, and an interactive algorithmic soundscape sourced from *Taira Komori (Sound OS 2)*.
@@ -63,7 +109,7 @@ This archive operates under strict **OpSec V7** protocols to ensure absolute pri
 D:YYYYMMDD -> Date Cluster Node
 HHMM_IDX|Sender|Reply_Ref|Type|Content
 ```
-*Example:* `1825_001|U|MSG_20240822_1722_001|T|The past is no longer a trauma. It is a structured database.`
+*Example:* `1849_001|U||T|The past is no longer a trauma. It is a structured database.`
 
 ---
 
