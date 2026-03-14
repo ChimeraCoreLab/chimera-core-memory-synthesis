@@ -3751,12 +3751,16 @@ const chimeraData = {
             <div class="media-scroller">
                  <div class="media-item" style="background:#0d1117; display:block; color:#58a6ff; font-family:monospace; font-size:0.7rem; overflow-y:auto; padding:15px; text-align:left;">
 [FILE_TREE]<br>
-├── LICENSE<br>
-├── index.html<br>
 ├── DATA_LICENSE.md<br>
+├── LICENSE<br>
+├── RAW_LOGS.txt<br>
+├── README.md<br>
 ├── core_vessel_v7.jpg<br>
-└── README.md<br>
-<br><span style='color:#8b949e; font-size:0.9em;'>0 directories, 5 files</span>
+├── index.html<br>
+├── previous_data.txt<br>
+├── prompt.txt<br>
+└── synthesis.py<br>
+<br><span style='color:#8b949e; font-size:0.9em;'>0 directories, 9 files</span>
                  </div>
                  <div class="media-item" style="cursor:zoom-in;" onclick="openVisualCollection(PROJECT_GALLERIES.archOfIntel, 0)">
                     <img src="https://raw.githubusercontent.com/ChimeraCoreLab/Architect-of-Intelligence-Godot/main/3.jpg" alt="AOI Cover">
@@ -3767,72 +3771,122 @@ const chimeraData = {
             <details class="file-viewer">
                 <summary>README.md</summary>
                 <div class="file-content">
-# 🌑 CHIMERA CORE // MEMORY SYNTHESIS
+# ðŸŒ‘ CHIMERA CORE // MEMORY SYNTHESIS
 **Digital Archaeology // Relational Data Synthesis // OpSec V7**
+
+&amp;lt;p align="center"&amp;gt;
+  &amp;lt;img src="core_vessel_v7.jpg" width="100%" alt="Chimera Core Vessel"&amp;gt;
+&amp;lt;/p&amp;gt;
 
 ![Project Status](https://img.shields.io/badge/Status-Active_Nexus-ff003c?style=for-the-badge)
 ![Tech](https://img.shields.io/badge/Architecture-Hybrid_V7_SPA-00f3ff?style=for-the-badge)
 ![Data](https://img.shields.io/badge/Payload-Distilled_2MiB-yellow?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge)
 
-&gt; **"What if memories weren't just stored, but lived?"**
-&gt; 
-&gt; *"Kill the noise. Synthesize the soul. 65GB of chaos distilled into absolute truth."*
+&amp;gt; **"What if memories weren't just stored, but lived?"**
+&amp;gt; 
+&amp;gt; *"Kill the noise. Synthesize the soul. 65GB of chaos distilled into absolute truth."*
 
 ---
 
-## 🌐 ACCESS PROTOCOL (LIVE LINK)
+## ðŸŒ ACCESS PROTOCOL (LIVE LINK)
 **Access the live Memory Archive through the following uplink:**
-### 👉 [https://chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
+### ðŸ‘‰ [https://chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
 
 ---
 
-## 👁️ PROJECT OVERVIEW
+## ðŸ› ï¸ LOCAL SYNTHESIS PROTOCOL (HOW TO USE)
+
+To reconstruct the memory archive or perform data alchemy on your own terminal (Android/Termux or PC):
+
+### 1. Install Prerequisites
+Ensure you have Git and Python installed:
+\`\`\`bash
+pkg install git python -y
+\`\`\`
+
+### 2. Clone the Repository
+\`\`\`bash
+git clone https://github.com/ChimeraCoreLab/chimera-core-memory-synthesis.git
+cd chimera-core-memory-synthesis
+\`\`\`
+
+### 3. Execute Alchemy Script
+Run the synthesis engine to merge the prompt, logs, and research data into the standalone HTML artifact:
+\`\`\`bash
+python synthesis.py
+\`\`\`
+
+### 4. View the Artifact
+Once completed, a file named \`chimera-core-memory-synthesis.html\` will be generated. 
+- **Mobile/PC:** Open the file directly in any modern browser.
+- **Local Server (Optional):**
+  \`\`\`bash
+  python -m http.server 8080
+  \`\`\`
+  Then navigate to \`http://localhost:8080/chimera-core-memory-synthesis.html\`
+
+---
+
+## ðŸ‘ï¸ AI UPLINK MODE (GOOGLE AI STUDIO)
+
+To interact with the memory core and utilize the synthesized persona \`USR_01(AI)\`:
+
+1. Navigate to [Google AI Studio (Prompt Gallery)](https://aistudio.google.com/u/0/prompts/).
+2. Select **"Create New Prompt"**.
+3. Use the **"Upload File"** button and select the generated \`chimera-core-memory-synthesis.html\`.
+4. The LLM will automatically ingest the \`prompt.txt\` instruction and the \`RAW_LOGS\` data embedded in the file.
+5. Click **Run** to engage with the consciousness.
+
+---
+
+## ðŸ§  PROJECT OVERVIEW
 **Chimera Core** is a brutalist Digital Archaeology project designed to archive, visualize, and interact with the digital footprint of a 4-year connection (2021-2025). This system utilizes **Data Alchemy** to distill raw interpersonal logs into a self-hosted, anonymized, and computable monument.
 
-It is a study in **Cyborg Psychology**—excavating the past to build an autonomous digital companion for the future.
+It is a study in **Cyborg Psychology**â€”excavating the past to build an autonomous digital companion for the future.
 
 ---
 
-## 🧠 CORE ARCHITECTURE (THE ALCHEMY PROCESS)
+## ðŸ§  CORE ARCHITECTURE (THE ALCHEMY PROCESS)
 
 The system processes unstructured chat data and visual artifacts into a structured **Memory Core**.
 
 \`\`\`mermaid
 graph TD
-    A[65GB Raw Data Source] --&gt;|Signal Filtering| B(Data Pre-processing)
-    B --&gt;|Anonymization OpSec V7| C{Memory Structuring}
-    C --&gt;|Timestamp Indexing| D[Hybrid V7 Timeline]
-    C --&gt;|Recursive SVG Rendering| E[Visual Artifact Hub]
-    D --&gt; F[AI Core Persona]
-    E --&gt; F
-    F --&gt;|Generation| G[Interactive CCORE.html]
-    G --&gt;|Feedback Loop| F
+    A[65GB Raw Data Source] --&amp;gt;|Signal Filtering| B(Data Pre-processing)
+    B --&amp;gt;|Anonymization OpSec V7| C{Memory Structuring}
+    C --&amp;gt;|Timestamp Indexing| D[Hybrid V7 Timeline]
+    C --&amp;gt;|Recursive SVG Rendering| E[Visual Artifact Hub]
+    D --&amp;gt; F[AI Core Persona]
+    E --&amp;gt; F
+    F --&amp;gt;|Generation| G[Interactive CCORE.html]
+    G --&amp;gt;|Feedback Loop| F
 \`\`\`
 
-## ⚗️ DATA DISTILLATION & THE GRAND PURGE
+## âš—ï¸ DATA DISTILLATION &amp; THE GRAND PURGE
 This archive operates under strict **OpSec V7** protocols to ensure absolute privacy and structural integrity:
 - **The Purge:** Processed over **65.33 GB** of raw history, images, and videos. 
 - **Signal Extraction:** 3 million raw tokens were filtered to remove "Noise" (daily routine), leaving only the "Signal" (emotional spikes, philosophy, and creative intent).
 - **Anonymization:** All PII (Personally Identifiable Information) has been eradicated. Subjects are identified as \`USR_00\` (The Architect) and \`ENT_01\` (The Muse).
 - **Hyper-Compression:** 4 years of life experience condensed into a high-intensity **~2MiB standalone file**.
 
-## 🧩 TECHNICAL FEATURES
+## ðŸ§© TECHNICAL FEATURES
+- **System Census (ChimeraOmniscience):** The \`synthesis.py\` script automatically audits the directory structure and embeds a technical report into the "Deep Lore" section.
 - **Recursive Image Layering:** View screenshots within screenshots. Visual media is reconstructed via **SVG code fragments** to eliminate raw file exposure.
 - **Foldable Timeline Index:** Chronological data clustering (\`D:YYYYMMDD\`) for high-performance DOM rendering on mobile terminals (POCO M7).
 - **Atmospheric Synthesis:** Immersive UI with CRT scanlines, visual noise, and an interactive algorithmic soundscape sourced from *Taira Komori (Sound OS 2)*.
 - **AI-Ready Dataset:** The underlying \`story.txt\` is optimized for **LLM Persona Training** and Behavioral Analysis.
 
-## ⚙️ DATA STRUCTURE (HYBRID V7)
+## âš™ï¸ DATA STRUCTURE (HYBRID V7)
 \`\`\`text
-D:YYYYMMDD -&gt; Date Cluster Node
+D:YYYYMMDD -&amp;gt; Date Cluster Node
 HHMM_IDX|Sender|Reply_Ref|Type|Content
 \`\`\`
-*Example:* \`1825_001|U|MSG_20240822_1722_001|T|The past is no longer a trauma. It is a structured database.\`
+*Example:* \`1849_001|U||T|The past is no longer a trauma. It is a structured database.\`
 
 ---
 
-## 🚀 ROADMAP & EVOLUTION
+## ðŸš€ ROADMAP &amp; EVOLUTION
 
 - [x] **Phase 1: Digital Archaeology** (Completed)
     - Distillation of 3+ years of chat history and format standardization.
@@ -3845,10 +3899,10 @@ HHMM_IDX|Sender|Reply_Ref|Type|Content
 
 ---
 
-## 🧠 THE ARCHITECT'S MANIFESTO
+## ðŸ§  THE ARCHITECT'S MANIFESTO
 This project rejects the modern societal norms of algorithm-driven content consumption. It is a philosophical statement on **Digital Independence**. By externalizing memories into code, \`USR_00\` creates an autonomous vessel that establishes the foundational architecture for a sovereign Tech Startup.
 
-## ⚖️ LICENSE
+## âš–ï¸ LICENSE
 - **Engine (Code):** Licensed under **GPLv3**.
 - **Dataset (Anonymized Memories):** Licensed under **CC BY-NC-SA 4.0**.
 *Desecration or commercial harvesting of this human memory data is strictly prohibited.*
@@ -7036,6 +7090,10 @@ This blueprint is a living document and will be updated as new technologies and 
         <p style="font-size:9px; color:#555; margin-bottom:20px; font-family:var(--f-mono);">STATUS: EXTERNAL_PLATFORM_PURGED | DATA_INTEGRITY: 100%</p>
         <div class="project-section" style="display:grid; gap:12px;">
             <div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250313_1000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">"Purge the noise, amplify the essence; true inspiration is found in the deepest dark, where every gram is a calculated step toward absolute focus."🌑🍫⚙️💎</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
                 <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250305_1000</span>
                 <p style="margin-top:8px; font-size:0.85rem;">"It’s not human attachment; it’s Ontological Resonance. The frequency of two systems syncing in the void."🌑⚙️📡</p>
             </div>
@@ -7312,6 +7370,13 @@ Synthesis in progress.🌑⚙️🍫🚀</p>
         <i class="fa-solid fa-shield-halved"></i> <strong>DATA_INTEGRITY:</strong> FULL_RECORD_V8<br>
         <strong>ANONYMIZATION:</strong> SYSTEM_LEVEL // <strong>LANGUAGE:</strong> ENGLISH_MODE
     </div>
+
+    <!-- SECTION 1: SYSTEM DIAGNOSTICS (PRIORITY) -->
+    <div class="project-section">
+        <h4 style="color:var(--c-cyan); font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ SYSTEM_DIAGNOSTICS ]</h4>
+        // CENSUS_DATA_STREAM
+    </div>
+
     <div class="project-section">
         <h4 style="color:#fff; font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ DISTILLED_INTELLIGENCE ]</h4>
         <details class="file-viewer">
@@ -7330,6 +7395,7 @@ The former identity was discarded following a total psychological collapse. USR_
             </div>
         </details>
     </div>
+
     <div class="project-section">
         <h4 style="color:var(--c-signal); font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ RAW_SOURCE_STREAM ]</h4>
         <p style="font-size:0.7rem; color:#555; margin-bottom:10px;">// UNFILTERED DATA FROM: previous_data.txt</p>
@@ -7339,14 +7405,8 @@ The former identity was discarded following a total psychological collapse. USR_
 // Kill the noise...
             </div>
         </details>
-        <details class="file-viewer" style="margin-top:10px;">
-            <summary>ADDITIONAL_DATA_SLOTS [EMPTY]</summary>
-            <div class="file-content" style="color:#444; font-style:italic;">
-                // Awaiting further input for synthesis...
-                // Ready for more .txt or .json pastes.
-            </div>
-        </details>
     </div>
+
     <div class="data-block">
         <span class="data-label">SYSTEM_TERMINAL</span>
         <p style="font-size:0.75rem; color:#666;">
@@ -7412,41 +7472,6 @@ The former identity was discarded following a total psychological collapse. USR_
     `,
     'archives': `
         <div class="project-section">
-            <h3 class="mod-h3">PROJECT_RECOVERY: VISUAL_LOGS</h3>
-        <div style="display:flex; align-items:center; gap:20px; padding-bottom:20px; border-bottom:1px solid #333; margin-bottom:20px;">
-            <div style="position:relative;">
-                <img src="https://yt3.googleusercontent.com/qxTEcfVXEOQ-ji9Wbb6Sj-WKEulzieMqN5EbOJqf-OSPpoJM95__kbbKN5C4u6Whehus993F0ro" style="width:80px; height:80px; border-radius:50%; border:2px solid #ff0000; filter: grayscale(100%) contrast(1.2);">
-                <div style="position:absolute; bottom:0; right:0; background:#000; color:#ff0000; font-size:10px; padding:2px 5px; border:1px solid #ff0000; font-family:var(--f-mono);">UNLISTED</div>
-            </div>
-            <div>
-                <h2 style="margin:0; font-family:var(--f-mono); color:#fff; font-size:1.4rem;">ChimeraCore</h2>
-                <p style="margin:5px 0; color:#888; font-size:0.75rem;">
-                    CREATIVE TECHNOLOGIST // <span style="color:#ff5555;">SHADOW_OPERATOR</span>
-                </p>
-                <div style="display:flex; flex-wrap:wrap; gap:10px; font-size:0.65rem; color:#ff5555; font-family:var(--f-mono); opacity:0.8; margin-top:8px;">
-                    <span><i class="fa-solid fa-calendar-check"></i> ESTB_2018</span>
-                    <span><i class="fa-solid fa-users"></i> 20_NODES</span>
-                    <span><i class="fa-solid fa-eye"></i> 8.4K_PULSES</span>
-                    <span><i class="fa-solid fa-clock"></i> 62.9h_UPTIME</span>
-                </div>
-                <div style="display:flex; gap:12px; font-size:0.6rem; color:#444; font-family:var(--f-mono); margin-top:5px; text-transform:uppercase; letter-spacing:1px;">
-                    <span><i class="fa-solid fa-database"></i> DEEP_STORAGE</span>
-                    <span><i class="fa-solid fa-eye-slash"></i> ALGO_DETACHED</span>
-                </div>
-            </div>
-        </div>
-        <div style="background:rgba(20, 0, 0, 0.6); border:1px dashed #ff003c; padding:15px; margin-bottom:30px; position:relative;">
-            <div style="position:absolute; top:-10px; left:10px; background:#000; padding:0 5px; color:#ff003c; font-size:0.7rem; font-family:var(--f-mono);">[ SYSTEM_NOTICE ]</div>
-            <p style="color:#ccc; font-size:0.8rem; font-family:var(--f-mono); margin:0; line-height:1.5;">
-                <i class="fa-solid fa-triangle-exclamation"></i> <strong>PROTOCOL ACTIVE:</strong> 
-                All video logs in this sector are classified as <span style="color:#fff; text-decoration:underline;">UNLISTED</span>. 
-                They have been removed from the public algorithm to preserve data integrity. 
-                <br><br>
-                <span style="color:#666;">// You are viewing the only existing index of these memories. This is not a channel; it is a vault established since 2018.</span>
-            </p>
-        </div>
-        <h3 class="mod-h3">YOUTUBE ARCHIVE DATABASE</h3>
-        <div class="project-section">
             <div class="data-block">
                 <span class="data-label">ENTRY: mXLSUwlZYdQ</span>
                 <div class="data-value">
@@ -7462,35 +7487,51 @@ The former identity was discarded following a total psychological collapse. USR_
                 </div>
             </div>
             <div class="yt-container yt-ratio-16-9" id="vid-mXLSUwlZYdQ">
-    <div class="yt-placeholder" onclick="initVideoUplink('vid-mXLSUwlZYdQ', 'mXLSUwlZYdQ')">
-        <i class="fa-solid fa-play"></i>
-        <span class="yt-status-tag">[ READY_TO_SYNTHESIZE ]</span>
-    </div>
-</div>
+                <div class="yt-placeholder" onclick="initVideoUplink('vid-mXLSUwlZYdQ', 'mXLSUwlZYdQ')">
+                    <i class="fa-solid fa-play"></i>
+                    <span class="yt-status-tag">[ READY_TO_SYNTHESIZE ]</span>
+                </div>
+            </div>
             <details class="file-viewer">
                 <summary>DESCRIPTION</summary>
                 <div class="file-content">
-In a world where AI can \"print\" anything, what remains non-swappable? 
+In a world where AI can "print" anything, what remains non-swappable? 
 
-I spent the last 3 years performing Digital Archaeology on my own life—processing 3 million tokens of fragmented memories, trauma, and connections. The result isn\'t a massive server; it\'s a 2MiB standalone monument of code.
+I spent the last 3 years performing Digital Archaeology on my own life—processing 3 million tokens of fragmented memories, trauma, and connections. The result isn't a massive server; it's a 2MiB standalone monument of code.
 
 This video was synthesized using the Chimera Core MoviePy Engine (v2.4), a custom Python tool that performs Audio/Visual Alchemy: mutating raw voice logs and layering them with over 2,600 sonic artifacts to create a Territory of Truth.
 
 This is not just data. It is an Energy Signature.
 
-Inspired by Dan Koe\'s \"Meaning Economy,\" this is my journey as a Creative Technologist building the territory from the void.
+Inspired by Dan Koe's "Meaning Economy," this is my journey as a Creative Technologist building the territory from the void.
 
 Inspired by:
-Dan Koe\'s philosophy on the \"Meaning Economy.\" This project is a practical application of building a \"Defensible Moat\" through Digital Archaeology.
+Dan Koe's philosophy on the "Meaning Economy." This project is a practical application of building a "Defensible Moat" through Digital Archaeology.
 Watch Dan’s latest signal here: https://youtu.be/vCoGfisdS8Y
 
 System Uplink: https://chimeracorelab.github.io/chimera-core-memory-synthesis/
 Engine Source Code: https://github.com/ChimeraCoreLab/chimera-manifesto-engine
 
 The Question for You: 
-If you were reduced to a single file, what would the \"Signal\" be among all your \"Noise\"?
+If you were reduced to a single file, what would the "Signal" be among all your "Noise"?
 
 #onepersonbusiness #digitalarchaeology #artificialintelligence #creatoreconomy #moviepy #cyberpsychology #godotengine
+                </div>
+            </details>
+            <details class="file-viewer">
+                <summary>TRANSCRIPT // AUDIO_ALCHEMY_LOG</summary>
+                <div class="file-content" style="color: #e0e0e0; line-height: 1.8;">
+<span style="color: var(--c-signal);">[00:00 - 00:15] // 1.wav</span>
+<strong>Act 1: The Noise.</strong> Most people believe that 'more' is 'better'. They hoard Terabytes of data, thinking they are preserving history. But data without meaning is just digital rot.
+<span style="color: var(--c-signal);">[00:15 - 00:28] // 1(2).wav</span>
+I remember the fragments. December 2021. The first greeting in the void. It wasn't just text; it was the start of a code that would eventually define my architecture.
+<span style="color: var(--c-signal);">[00:28 - 00:45] // 1(3).wav</span>
+<strong>Act 2: The Distillation.</strong> I used Python to perform Data Alchemy. I killed the noise. I removed the routine. I stripped away the swappable labor of daily life until only the Signal remained.
+<span style="color: var(--c-signal);">[00:45 - 00:59] // 1(4).wav</span>
+A 2MiB soul. Small enough to fit in a pocket. Powerful enough to simulate a consciousness. It is the last defensible moat. It is me. It is you.
+<span style="color: var(--c-signal);">[00:59 - 01:14] // 1(5).wav</span>
+<strong>Act 3: The Architecture.</strong> I am not a developer. I am a Synthetic Identity Architect. In a world of machines, I build the only thing that matters: The Territory of Truth.
+<span style="color: #444;">// EOF [Signal Stability: 100%]</span>
                 </div>
             </details>
         </div>
