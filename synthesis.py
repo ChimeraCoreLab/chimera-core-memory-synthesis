@@ -3,9 +3,9 @@ import os
 import datetime
 import math
 from pathlib import Path
-from collections import Counter
 import io
 import html
+import json
 
 class ChimeraOmniscience:
     def __init__(self, target_path):
@@ -34,16 +34,16 @@ class ChimeraOmniscience:
 
     def generate_report(self):
         out = io.StringIO()
-        out.write(f"// CHIMERA_CORE_CENSUS_REPORT\n// TS: {datetime.datetime.now().isoformat()}\n\n")
+        out.write(f"// CHIMERA_CORE_CENSUS_REPORT\\n// TS: {datetime.datetime.now().isoformat()}\\n\\n")
         for f in sorted(self.target.iterdir()):
             if f.is_file() and not f.name.startswith('.'):
                 stat = f.stat()
                 self.g_stats['total_size'] += stat.st_size
                 self.g_stats['total_files'] += 1
-                out.write(f"[NODE] {f.name:<40} | {self.human_size(stat.st_size):>10}\n")
+                out.write(f"[NODE] {f.name:<40} : {self.human_size(stat.st_size):>10}\\n")
                 if f.suffix.lower() in self.peek_exts:
-                    out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\n")
-        out.write(f"\nTOTAL NODES: {self.g_stats['total_files']} | VOLUME: {self.human_size(self.g_stats['total_size'])}\n")
+                    out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\\n")
+        out.write(f"\\nTOTAL NODES: {self.g_stats['total_files']} | VOLUME: {self.human_size(self.g_stats['total_size'])}")
         return out.getvalue()
 
 def perform_synthesis():
@@ -54,40 +54,43 @@ def perform_synthesis():
     file_index = base_path / 'index.html'
     file_output = base_path / 'chimera-core-memory-synthesis.html'
 
-    eye = ChimeraOmniscience(base_path)
-    census_report = eye.generate_report()
+    if not all(f.exists() for f in [file_raw_logs, file_index]): return
 
-    if not all(f.exists() for f in [file_prev_data, file_raw_logs, file_index]):
-        return
+    eye = ChimeraOmniscience(base_path)
+    census_data = eye.generate_report()
 
     prompt_content = ""
     if file_prompt.exists():
-        with open(file_prompt, 'r', encoding='utf-8') as f: prompt_content = f.read()
+        with open(file_prompt, 'r', encoding='utf-8') as f: 
+            prompt_content = f.read()
 
-    with open(file_prev_data, 'r', encoding='utf-8') as f: prev_data_content = f.read()
-    with open(file_raw_logs, 'r', encoding='utf-8') as f: raw_logs_content = f.read()
-    with open(file_index, 'r', encoding='utf-8') as f: index_content = f.read()
+    with open(file_prev_data, 'r', encoding='utf-8') as f:
+        prev_raw = f.read().strip().replace('\n', '\\n').replace('|', 'I').replace('"', '\\"')
+    
+    with open(file_raw_logs, 'r', encoding='utf-8') as f:
+        raw_logs_content = f.read().strip()
+        if raw_logs_content.endswith('];'):
+            raw_logs_content = raw_logs_content[:-2].strip()
+        if raw_logs_content.startswith('const RAW_LOGS = ['):
+            raw_logs_content = raw_logs_content[len('const RAW_LOGS = ['):].strip()
 
-    safe_census = census_report.replace("`", "\\`").replace("${", "\\${")
-    census_block = f"""<details class="file-viewer" open><summary style="color:var(--c-cyan); font-weight:bold;">SYSTEM_CENSUS: CHIMERA_AUDIT_V9.log</summary><div class="file-content" style="white-space: pre-wrap; font-size: 0.7rem; line-height: 1.2; color: #aaa; background: #000; max-height: 500px; overflow-y: auto; border: 1px solid var(--c-cyan);">{safe_census}</div></details>"""
+    with open(file_index, 'r', encoding='utf-8') as f:
+        index_content = f.read()
 
+    today_str = datetime.datetime.now().strftime("%Y%m%d")
+    extra_entries = f'\n"D:{today_str}",'
+    extra_entries += f'\n"0000_998|U||L|SYSTEM_CENSUS.log|{census_data}",'
+    extra_entries += f'\n"0000_999|U||L|previous_data.txt|{prev_raw}"'
+
+    final_logs = f"const RAW_LOGS = [\n{raw_logs_content},\n{extra_entries}\n];"
     final_html = prompt_content + "\n" + index_content
-
-    start_logs_marker = "const RAW_LOGS = ["
-    end_logs_marker = "];"
-    s_idx = final_html.find(start_logs_marker)
+    
+    start_marker = "const RAW_LOGS = ["
+    end_marker = "];"
+    s_idx = final_html.find(start_marker)
     if s_idx != -1:
-        e_idx = final_html.find(end_logs_marker, s_idx) + len(end_logs_marker)
-        payload = raw_logs_content.strip()
-        if not payload.startswith("const RAW_LOGS"):
-            payload = f"const RAW_LOGS = [\n{payload}\n];"
-        final_html = final_html[:s_idx] + payload + final_html[e_idx:]
-
-    if "// CENSUS_DATA_STREAM" in final_html:
-        final_html = final_html.replace("// CENSUS_DATA_STREAM", census_block)
-
-    if "// Kill the noise..." in final_html:
-        final_html = final_html.replace("// Kill the noise...", html.escape(prev_data_content), 1)
+        e_idx = final_html.find(end_marker, s_idx) + len(end_marker)
+        final_html = final_html[:s_idx] + final_logs + final_html[e_idx:]
 
     with open(file_output, 'w', encoding='utf-8') as f:
         f.write(final_html)
