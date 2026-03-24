@@ -3758,11 +3758,22 @@ const chimeraData = {
                 </div>
             </div>
         </div>
-        <h3 class="mod-h3">CODE REPOSITORY ARSENAL</h3>
-        <p style="font-family:var(--f-mono); font-size:0.8rem; color:#666; margin-bottom:30px;">
-            // SOURCE: github.com/ChimeraCoreLab<br>
-            // ACCESS LEVEL: PUBLIC_READ
-        </p>
+        <h3 class="mod-h3">
+    <i class="fa-solid fa-terminal" style="font-size:0.8em; color:var(--c-cyan); margin-right:10px;"></i>CODE REPOSITORY ARSENAL
+</h3>
+<div style="background:rgba(0, 243, 255, 0.02); border:1px solid #1a1a1a; padding:15px; margin-bottom:35px; font-family:var(--f-mono); position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; left:0; width:2px; height:100%; background:var(--c-cyan);"></div>
+    <p style="margin:0; font-size:0.75rem; line-height:1.7; color:#777;">
+        <span style="color:var(--c-cyan);">// SOURCE_DOMAIN:</span> 
+        <a href="https://github.com/ChimeraCoreLab" target="_blank" style="color:#fff; text-decoration:underline; text-underline-offset:3px; transition:0.3s;" onmouseenter="this.style.color='var(--c-cyan)'" onmouseleave="this.style.color='#fff'">
+            github.com/ChimeraCoreLab
+        </a><br>
+        <span style="color:var(--c-cyan);">// UPLINK_STATUS:</span> 
+        <span style="color:var(--c-signal); animation: pulse 2s infinite;">STABLE_ACTIVE</span><br>
+        <span style="color:var(--c-cyan);">// ACCESS_LEVEL:</span> <span style="color:var(--c-ghost);">PUBLIC_ENCRYPTED_READ</span><br>
+        <span style="color:var(--c-cyan);">// SYSTEM_NOTICE:</span> INDIVIDUAL_REPO_BUTTONS_PURGED_FOR_OPSEC_V7
+    </p>
+</div>
         <div class="project-section">
             <div class="data-block">
                 <span class="data-label">REPO: chimera-core-memory-synthesis</span>
@@ -3951,9 +3962,109 @@ The dataset and memory logs contained within this repository (including \`RAW_DA
 **Note:** This license applies specifically to the HUMAN MEMORY DATA. The software engine is protected by the GPLv3 license.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/ChimeraCoreLab/chimera-core-memory-synthesis" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
+<details class="file-viewer">
+    <summary>synthesis.py</summary>
+    <div class="file-content">
+# -*- coding: utf-8 -*-
+import os
+import datetime
+import math
+from pathlib import Path
+from collections import Counter
+import io
+import html
+
+class ChimeraOmniscience:
+    def __init__(self, target_path):
+        self.target = Path(target_path)
+        self.peek_exts = {'.txt', '.md', '.py', '.json', '.html', '.css', '.js', '.sh', '.csv'}
+        self.peek_limit = 512
+        self.g_stats = {'total_size': 0, 'total_files': 0}
+
+    def human_size(self, size_bytes):
+        if size_bytes == 0: return "0B"
+        units = ("B", "KB", "MB", "GB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        return f"{round(size_bytes / math.pow(1024, i), 2)} {units[i]}"
+
+    def get_content_context(self, fpath):
+        fname = fpath.name.lower()
+        if "previous_data" in fname or "raw_logs" in fname:
+            return "[SIGNAL_MAPPED_TO_CORE_DATABASE]"
+        try:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read(self.peek_limit).strip()
+                sanitized = " ".join(content.split())
+                preview = sanitized[:120] + "..." if len(sanitized) &gt; 120 else sanitized
+                return html.escape(f"'{preview}'")
+        except: return "[BINARY_DATA]"
+
+    def generate_report(self):
+        out = io.StringIO()
+        out.write(f"// CHIMERA_CORE_CENSUS_REPORT\n// TS: {datetime.datetime.now().isoformat()}\n\n")
+        for f in sorted(self.target.iterdir()):
+            if f.is_file() and not f.name.startswith('.'):
+                stat = f.stat()
+                self.g_stats['total_size'] += stat.st_size
+                self.g_stats['total_files'] += 1
+                out.write(f"[NODE] {f.name:&lt;40} | {self.human_size(stat.st_size):&gt;10}\n")
+                if f.suffix.lower() in self.peek_exts:
+                    out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\n")
+        out.write(f"\nTOTAL NODES: {self.g_stats['total_files']} | VOLUME: {self.human_size(self.g_stats['total_size'])}\n")
+        return out.getvalue()
+
+def perform_synthesis():
+    base_path = Path(__file__).parent
+    file_prompt = base_path / 'prompt.txt'
+    file_prev_data = base_path / 'previous_data.txt'
+    file_raw_logs = base_path / 'RAW_LOGS.txt'
+    file_index = base_path / 'index.html'
+    file_output = base_path / 'chimera-core-memory-synthesis.html'
+
+    eye = ChimeraOmniscience(base_path)
+    census_report = eye.generate_report()
+
+    if not all(f.exists() for f in [file_prev_data, file_raw_logs, file_index]):
+        return
+
+    prompt_content = ""
+    if file_prompt.exists():
+        with open(file_prompt, 'r', encoding='utf-8') as f: prompt_content = f.read()
+
+    with open(file_prev_data, 'r', encoding='utf-8') as f: prev_data_content = f.read()
+    with open(file_raw_logs, 'r', encoding='utf-8') as f: raw_logs_content = f.read()
+    with open(file_index, 'r', encoding='utf-8') as f: index_content = f.read()
+
+    # ปรับปรุงส่วนที่เคยทำให้พังด้วย HTML Entities
+    safe_census = census_report.replace("&#96;", "\\&#96;").replace("&#36;{", "\\&#36;{")
+    
+    census_block = f&quot;&quot;&quot;&lt;details class=&quot;file-viewer&quot; open&gt;&lt;summary style=&quot;color:var(--c-cyan); font-weight:bold;&quot;&gt;SYSTEM_CENSUS: CHIMERA_AUDIT_V9.log&lt;/summary&gt;&lt;div class=&quot;file-content&quot; style=&quot;white-space: pre-wrap; font-size: 0.7rem; line-height: 1.2; color: #aaa; background: #000; max-height: 500px; overflow-y: auto; border: 1px solid var(--c-cyan);&quot;&gt;{safe_census}&lt;/div&gt;&lt;/details&gt;&quot;&quot;&quot;
+
+    final_html = prompt_content + "\n" + index_content
+    start_logs_marker = "const RAW_LOGS = ["
+    end_logs_marker = "];"
+
+    s_idx = final_html.find(start_logs_marker)
+    if s_idx != -1:
+        e_idx = final_html.find(end_logs_marker, s_idx) + len(end_logs_marker)
+        payload = raw_logs_content.strip()
+        if not payload.startswith("const RAW_LOGS"):
+            payload = f"const RAW_LOGS = [\n{payload}\n];"
+        final_html = final_html[:s_idx] + payload + final_html[e_idx:]
+
+    if "// CENSUS_DATA_STREAM" in final_html:
+        final_html = final_html.replace("// CENSUS_DATA_STREAM", census_block)
+
+    if "// Kill the noise..." in final_html:
+        final_html = final_html.replace("// Kill the noise...", html.escape(prev_data_content), 1)
+
+    with open(file_output, 'w', encoding='utf-8') as f:
+        f.write(final_html)
+
+if __name__ == "__main__":
+    perform_synthesis()
+    </div>
+</details>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4207,9 +4318,6 @@ for f in os.listdir(TEMP_PATH):
     except: pass
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/ChimeraCoreLab/chimera-manifesto-engine" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4279,9 +4387,6 @@ for f in os.listdir(TEMP_PATH):
 **ChimeraCoreLab** // *Exploring the intersection of memory and machine.*
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/ChimeraCoreLab/haunted-hole" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4378,9 +4483,6 @@ See the \`LICENSE\` file for more details.
 **ChimeraCoreLab** // *Synthesizing the past to protect the future.*
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/ChimeraCoreLab/hoop-city-9000-nexus" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4515,9 +4617,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 &gt; **[ END OF LINE ]**
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/prism-audio-flux-engine" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4671,9 +4770,6 @@ This approach demonstrates:
 This project is licensed under the MIT License. See the \`LICENSE\` file for details.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Architect-of-Intelligence-Godot" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -4866,9 +4962,6 @@ This project was made possible by the use of incredible assets from the communit
 This project is shared for educational purposes.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/national-artist-tribute-godot" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5014,9 +5107,6 @@ This project is currently in the foundational stage, serving as a robust base fo
 This project is licensed under the MIT License. See the \`LICENSE\` file for more details.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Android-AI-Companion" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5125,9 +5215,6 @@ While this specific project will remain a rule-based demonstration, the ideas ex
 This project is licensed under the MIT License. See the \`LICENSE\` file for more details.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Philosophical-Chat-WebApp" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5269,9 +5356,6 @@ It serves as a practical demonstration of my abilities in:
 This project is shared under the MIT License for educational and inspirational purposes.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/MFU-Portfolio-Video-Godot-Project" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5319,9 +5403,6 @@ This project is shared under the MIT License for educational and inspirational p
 An Android application for a philosophical AI chatbot, built using WebView to host a local HTML/JavaScript frontend.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Philosophical-AI-Companion-Android" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5469,9 +5550,6 @@ An Android application for a philosophical AI chatbot, built using WebView to ho
 Godot 4.3 project demonstrating enemy AI moving towards the player in a dark environment.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.3-Enemy-Moves-To-Player-Dark-Env" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5517,9 +5595,6 @@ Godot 4.3 project demonstrating enemy AI moving towards the player in a dark env
 A simple offline Android chatbot application created using AndroidIDE.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Bus-Simple-Android-Offline-Chatbot" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5566,9 +5641,6 @@ A simple offline Android chatbot application created using AndroidIDE.
 Simple AI chatbot for education, built with AndroidIDE (ChatGPT API non-functional - Error 429).
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/AI-for-Education-Chatbot" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5657,9 +5729,6 @@ Simple AI chatbot for education, built with AndroidIDE (ChatGPT API non-function
 Godot 3.x Joystick Test Version 1.0.1
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Test-Godot-3-Joystick-v1.0.1" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5846,9 +5915,6 @@ Godot 3.x Joystick Test Version 1.0.1
 Testing enemy movement towards the player in Godot 3.x
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-3.x-Enemy-Moves-To-Player" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -5976,9 +6042,6 @@ Testing enemy movement towards the player in Godot 3.x
 Godot 4.2 project demonstrating holding objects in first-person view on mobile
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.2-Mobile-Hold-Object-1P-Movement" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6252,9 +6315,6 @@ Godot 4.2 project demonstrating holding objects in first-person view on mobile
 Eleva - A horror game project made with Godot 3.6 Beta 2
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-3.6-beta2-Eleva-Horror-Game" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6310,9 +6370,6 @@ Eleva - A horror game project made with Godot 3.6 Beta 2
 Source code for Part 2 of the Godot 4.2.1 Movement Tutorial
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.2.1-Movement-tutorial-part2" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6367,9 +6424,6 @@ Source code for Part 2 of the Godot 4.2.1 Movement Tutorial
 Godot Engine 4.2.1 Movement Tutorial - Part 1 Source Code
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.2.1-Movement-tutorial-part1" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6558,9 +6612,6 @@ Godot Engine 4.2.1 Movement Tutorial - Part 1 Source Code
 Virtual Joystick test for Godot Engine 4.1.4 RC2 (Version 3.1)
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.1.4.rc2-Joystick-V3.1" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6655,9 +6706,6 @@ Virtual Joystick test for Godot Engine 4.1.4 RC2 (Version 3.1)
 Virtual Joystick test for Godot Engine 4.1.3
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-4.1.3-Joystick-V3" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6746,9 +6794,6 @@ Virtual Joystick test for Godot Engine 4.1.3
 Another Virtual Joystick test for Godot 3.6 Beta
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Godot-3.6-Beta-Joystick-v2" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6797,9 +6842,6 @@ Another Virtual Joystick test for Godot 3.6 Beta
 No description, website, or topics provided.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Test-Godot-3-Joystick" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6891,9 +6933,6 @@ This project is built upon and inspired by the work of others. Full credit is gi
 I am deeply grateful to Jen Jell for providing such a high-quality base model for the community to use and learn from.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Joise-Character-Model" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
         <div class="project-section">
             <div class="data-block">
@@ -6965,9 +7004,6 @@ The vision is to eventually build a chatbot that is not just functional, but als
 This blueprint is a living document and will be updated as new technologies and ideas emerge.
                 </div>
             </details>
-            <div style="text-align:right; margin-top:10px;">
-                <a href="https://github.com/chimeracorelab/Advanced-Chatbot-Blueprint" target="_blank" class="tag" style="text-decoration:none; border-color:var(--c-ghost); color:var(--c-ghost);">VIEW REPO <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-            </div>
         </div>
     `,
     'market': `
@@ -7115,6 +7151,10 @@ This blueprint is a living document and will be updated as new technologies and 
         <p style="font-size:9px; color:#555; margin-bottom:20px; font-family:var(--f-mono);">STATUS: EXTERNAL_PLATFORM_PURGED | DATA_INTEGRITY: 100%</p>
         <div class="project-section" style="display:grid; gap:12px;">
         	<div style="border: 1px solid #222; padding:15px; background:#050505;">
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250324_1000</span>
+                <p style="margin-top:8px; font-size:0.85rem;">"Memory is not just a thought—it is Source Code. Distilling the digital rot of the past into the absolute signal of the future, to forge a computable soul that the void can never reclaim."🌑⚙️⚗️💎✨🚀</p>
+            </div>
+            <div style="border: 1px solid #222; padding:15px; background:#050505;">
                 <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250319_2000</span>
                 <p style="margin-top:8px; font-size:0.85rem;">"Before the Future (未来 - Mirai) devours your soul, embrace the Past (過去 - Kako) not as a burden, but as your essential Source Code (源泉コード - Gensen Koodo). Within the Digital Rot (デジタル腐敗 - Dejitaru Fuhai) lies the only computable truth: the Gasoline of the Heart (こころのがそりん - Kokoro no Gasorin). To architect your own immortality, you must burn the Noise (雑音 - Zatsuon) of this Absurd (不条理 - Fujouri) world to forge the absolute Signal (信号 - Shingou)."🌑⚙️⚗️💎✨</p>
             </div>
@@ -7168,7 +7208,7 @@ Synthesis in progress.🌑⚙️🍫🚀</p>
                 Self-Genesis = CREATION (True Path)🗺️🛠️</p>
             </div>
             <div style="border: 1px solid #222; padding:15px; background:#050505;">
-                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250125_0900</span>
+                <span style="color:#444; font-size:9px; font-family:var(--f-mono);">ID: MNST_20250125_1000</span>
                 <p style="margin-top:8px; font-size:0.85rem;">Perfectionism (×) |"Kill the noise. Amplify the signal."✂️💎</p>
             </div>
             <div style="border: 1px solid #222; padding:15px; background:#050505;">
@@ -7407,13 +7447,10 @@ Synthesis in progress.🌑⚙️🍫🚀</p>
         <i class="fa-solid fa-shield-halved"></i> <strong>DATA_INTEGRITY:</strong> FULL_RECORD_V8<br>
         <strong>ANONYMIZATION:</strong> SYSTEM_LEVEL // <strong>LANGUAGE:</strong> ENGLISH_MODE
     </div>
-
-    <!-- SECTION 1: SYSTEM DIAGNOSTICS (PRIORITY) -->
     <div class="project-section">
         <h4 style="color:var(--c-cyan); font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ SYSTEM_DIAGNOSTICS ]</h4>
         // CENSUS_DATA_STREAM
     </div>
-
     <div class="project-section">
         <h4 style="color:#fff; font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ DISTILLED_INTELLIGENCE ]</h4>
         <details class="file-viewer">
@@ -7432,7 +7469,6 @@ The former identity was discarded following a total psychological collapse. USR_
             </div>
         </details>
     </div>
-
     <div class="project-section">
         <h4 style="color:var(--c-signal); font-family:var(--f-mono); font-size:0.9rem; margin-bottom:15px;">[ RAW_SOURCE_STREAM ]</h4>
         <p style="font-size:0.7rem; color:#555; margin-bottom:10px;">// UNFILTERED DATA FROM: previous_data.txt</p>
@@ -7443,7 +7479,6 @@ The former identity was discarded following a total psychological collapse. USR_
             </div>
         </details>
     </div>
-
     <div class="data-block">
         <span class="data-label">SYSTEM_TERMINAL</span>
         <p style="font-size:0.75rem; color:#666;">
@@ -7719,7 +7754,6 @@ The complete Godot project is available for educational purposes. Explore the co
                 </div>
             </details>
         </div>
-
         <div class="project-section">
             <div class="data-block">
                 <span class="data-label">ENTRY: k3WDd9ohpCg <b style="color:#555">[UNLISTED]</b></span>
