@@ -32,20 +32,21 @@ class ChimeraOmniscience:
 
     def generate_report(self):
         out = io.StringIO()
-        out.write(f"// CHIMERA_CORE_CENSUS_REPORT\n// TS: {datetime.datetime.now().isoformat()}\n\n")
+        out.write(f"// CHIMERA_CORE_CENSUS_REPORT\\n// TS: {datetime.datetime.now().isoformat()}\\n\\n")
         for f in sorted(self.target.iterdir()):
             if f.is_file() and not f.name.startswith('.'):
                 stat = f.stat()
                 self.g_stats['total_size'] += stat.st_size
                 self.g_stats['total_files'] += 1
-                out.write(f"[NODE] {f.name:<40} : {self.human_size(stat.st_size):>10}\n")
+                out.write(f"[NODE] {f.name:<40} : {self.human_size(stat.st_size):>10}\\n")
                 if f.suffix.lower() in self.peek_exts or f.name == 'README.md':
-                    out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\n")
-        out.write(f"\nTOTAL NODES: {self.g_stats['total_files']} | VOLUME: {self.human_size(self.g_stats['total_size'])}")
+                    out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\\n")
+        out.write(f"\\nTOTAL NODES: {self.g_stats['total_files']} | VOLUME: {self.human_size(self.g_stats['total_size'])}")
         return out.getvalue()
 
 def perform_synthesis():
     base_path = Path(__file__).parent
+    file_prompt = base_path / 'prompt.txt'
     file_prev_data = base_path / 'previous_data.txt'
     file_raw_logs = base_path / 'RAW_LOGS.txt'
     file_index = base_path / 'index.html'
@@ -53,6 +54,11 @@ def perform_synthesis():
 
     if not all(f.exists() for f in [file_raw_logs, file_index]):
         return
+
+    prompt_content = ""
+    if file_prompt.exists():
+        with open(file_prompt, 'r', encoding='utf-8') as f:
+            prompt_content = f.read().strip()
 
     eye = ChimeraOmniscience(base_path)
     census_data = eye.generate_report().replace('\n', '\\n').replace('"', '\\"')
@@ -99,8 +105,10 @@ def perform_synthesis():
                 e_idx += 2
                 index_content = index_content[:s_idx] + final_logs_block + index_content[e_idx:]
 
+    final_result = prompt_content + "\n" + index_content
+
     with open(file_output, 'w', encoding='utf-8') as f:
-        f.write(index_content)
+        f.write(final_result)
 
 if __name__ == "__main__":
     perform_synthesis()
