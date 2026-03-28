@@ -2566,6 +2566,15 @@ const PROJECT_GALLERIES = {
             analysis: `Archival record of "hoopct". Fragment #${n}.`
         };
     }),
+    pyramid: Array.from({length: 13}, (_, i) => {
+        const n = i + 1;
+        const ext = n <= 11 ? 'jpg' : 'png';
+        return {
+            url: `https://raw.githubusercontent.com/ChimeraCoreLab/noice-notice-nice-artifact/main/${n}.${ext}`,
+            id: `PYR_SS_${n.toString().padStart(2, '0')}`,
+            analysis: `Archival record of "NOICE NOTICE NICE" (Pyramid Artifact). Fragment #${n}. [FORMAT: ${ext.toUpperCase()}]`
+        };
+    }),
     philosophicalAI: [
         {
             url: 'https://raw.githubusercontent.com/ChimeraCoreLab/chimera-core-memory-synthesis/main/core_vessel_v7.jpg',
@@ -2589,7 +2598,7 @@ const PROJECT_GALLERIES = {
     ],
     AEC: [
         {
-            url: 'https://raw.githubusercontent.com/ChimeraCoreLab/AI-for-Education-Chatbot/blob/main/app/src/main/res/mipmap-xxxhdpi/aw1.png',
+            url: 'https://raw.githubusercontent.com/ChimeraCoreLab/AI-for-Education-Chatbot/main/app/src/main/res/mipmap-xxxhdpi/aw1.png',
             id: 'AEC_01',
             analysis: 'SHOW CASE THE VIBECODED A APP'
         }
@@ -4683,10 +4692,10 @@ function renderModuleContent(id, entries) {
                     if (galleryData && galleryData[thumbIdx]) {
                         const sanitizedData = JSON.stringify(galleryData).replace(/'/g, "&apos;");
                         vHtml += `
-                        <div class="media-item" style="cursor:zoom-in; flex-shrink:0; width:260px; height:160px; background:#000; border:1px solid #333; overflow:hidden; padding:12px; display:flex; justify-content:center; align-items:center; position:relative; box-sizing:border-box;" onclick='openVisualCollection(${sanitizedData})'>
+                        <div class="media-item" style="cursor:zoom-in; flex-shrink:0; width:260px; height:160px; background:#000; border:1px solid #333; overflow:hidden; padding:12px; display:flex; justify-content:center; align-items:center; position:relative; box-sizing:border-box;" onclick='openVisualCollection(${sanitizedData}, ${thumbIdx})'>
                             <img src="${galleryData[thumbIdx].url}" 
                                  alt="${key}" 
-                                 style="width:100%; height:100%; object-fit:contain; filter:contrast(1.1) brightness(0.9) blur(0.8px); image-rendering:pixelated; opacity:1;" 
+                                 style="width:100%; height:100%; object-fit:contain; filter:contrast(1.1) brightness(0.9) blur(1px); image-rendering:pixelated; opacity:1;" 
                                  loading="lazy" decoding="async">
                             <div style="position:absolute; top:8px; right:8px; background:rgba(255, 0, 60, 0.8); font-size:8px; padding:2px 5px; color:#000; font-family:var(--f-mono); font-weight:bold; letter-spacing:1px; border:1px solid rgba(0,0,0,0.2);">
                                 ${galleryData.length}_ARTIFACTS
@@ -4704,9 +4713,11 @@ function renderModuleContent(id, entries) {
                     const fContent = fParts.slice(1).join(':');
                     if (fName && fContent) {
                         oHtml += `
-                        <details class="file-viewer" style="margin-top:8px;">
-                            <summary style="font-size:0.75rem; color:#888; cursor:pointer;">${fName}</summary>
-                            <div class="file-content" style="font-size:0.7rem; color:#58a6ff;">${fContent.replace(/\\n/g, '\n')}</div>
+                        <details class="file-viewer" style="margin-top:10px;">
+                            <summary style="font-size:0.75rem; color:#888; cursor:pointer; padding:8px;">
+                                <i class="fa-solid fa-file-code" style="margin-right:8px; color:var(--c-cyan);"></i>${fName}
+                            </summary>
+                            <div class="file-content" style="font-size:0.7rem; color:#58a6ff; background:#020202; max-height:350px; overflow-y:auto;">${fContent.replace(/\\n/g, '\n')}</div>
                         </details>`;
                     }
                 });
@@ -4725,9 +4736,11 @@ function renderModuleContent(id, entries) {
                     </div>
                     <div style="color:var(--c-ghost); font-size:0.7rem; margin-top:5px; font-family:var(--f-mono);">[STATUS: ${status}] // [LICENSE: ${lic}]</div>
                 </div>
-                <div class="media-scroller" style="margin:20px 0; display:flex; gap:12px; overflow-x:auto; padding-bottom:15px; align-items: flex-start;">
-                    <div class="media-item" style="background:#0d1117; color:#58a6ff; font-family:var(--f-mono); font-size:0.65rem; padding:15px; overflow:auto; text-align:left; flex-shrink:0; width:300px; height:160px; border:1px solid #222; box-sizing:border-box; white-space:pre-wrap; line-height:1.4; display:block;">
-                        <div style="color:var(--c-ghost); margin-bottom:8px; border-bottom:1px solid #222; padding-bottom:4px; font-size:0.6rem; font-weight:bold;">[FILE_TREE]</div>${cleanTree}</div>
+                <div class="media-scroller" style="margin:20px 0; display:flex; gap:15px; overflow-x:auto; padding-bottom:15px; align-items: flex-start;">
+                    <div class="media-item" style="background:#0d1117; color:#58a6ff; font-family:var(--f-mono); font-size:0.65rem; padding:25px 20px; overflow:auto; text-align:left; flex-shrink:0; width:300px; height:180px; border:1px solid #222; box-sizing:border-box; white-space:pre-wrap; line-height:1.5; display:block;">
+                        <div style="color:var(--c-ghost); margin-bottom:10px; border-bottom:1px solid #222; padding-bottom:5px; font-size:0.6rem; font-weight:bold;">[FILE_TREE]</div>
+                        ${cleanTree}
+                    </div>
                     ${vHtml}
                 </div>
                 <details class="file-viewer" style="border-color:#333;">
