@@ -7,7 +7,7 @@ import time
 from collections import defaultdict
 
 GITHUB_USER = "ChimeraCoreLab"
-GITHUB_TOKEN = ""
+GITHUB_TOKEN = "" 
 
 REPO_MAP = {
     "chimera-core-memory-synthesis": {
@@ -70,51 +70,6 @@ REPO_MAP = {
         "gallery": "PROJECT_GALLERIES.CBP",
         "thumb": 0
     },
-    "Test-Godot-3-Joystick": {
-        "tree_style": 1,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-3.6-Beta-Joystick-v2": {
-        "tree_style": 1,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-4.1.3-Joystick-V3": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-4.1.4.rc2-Joystick-V3.1": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-4.2.1-Movement-tutorial-part1": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-4.2.1-Movement-tutorial-part2": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-4.2-Mobile-Hold-Object-1P-Movement": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Godot-3.x-Enemy-Moves-To-Player": {
-        "tree_style": 2,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
-    "Test-Godot-3-Joystick-v1.0.1": {
-        "tree_style": 1,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
-        "thumb": 0
-    },
     "AI-for-Education-Chatbot": {
         "tree_style": 2,
         "gallery": "PROJECT_GALLERIES.AEC",
@@ -128,11 +83,6 @@ REPO_MAP = {
     "Philosophical-AI-Companion-Android": {
         "tree_style": 2,
         "gallery": "PROJECT_GALLERIES.AIC",
-        "thumb": 0
-    },
-    "prism-audio-flux-engine": {
-        "tree_style": 1,
-        "gallery": "PROJECT_GALLERIES.philosophicalAI",
         "thumb": 0
     },
     "Android-AI-Companion": {
@@ -213,7 +163,7 @@ def get_file_content(owner, repo, path):
     try:
         r = requests.get(url, headers=HEADERS, timeout=10)
         if r.status_code == 200:
-            return base64.b64decode(r.json()['content']).decode('utf-8')
+            return base64.b64decode(r.json()['content']).decode('utf-8', errors='ignore')
     except: pass
     return None
 
@@ -248,8 +198,10 @@ def sync_arsenal():
             tree_str = format_tree_condensed(tree_items)
 
         readme = get_file_content(GITHUB_USER, name, "README.md") or "No README documentation found."
+        
         other_files = []
-        for extra in ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py"]:
+        extra_targets = ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py"]
+        for extra in extra_targets:
             content = get_file_content(GITHUB_USER, name, extra)
             if content:
                 other_files.append(f"{extra}:{clean_js_string(content)}")
@@ -257,9 +209,15 @@ def sync_arsenal():
         v_ref = "NULL"
         if config['gallery'] != "NULL":
             v_ref = f"{config['gallery']}:{config['thumb']}"
-        
+        else:
+            desc = r.get('description', '')
+            if desc and "PROJECT_GALLERIES" in desc:
+                match = re.search(r'PROJECT_GALLERIES\.([a-zA-Z0-9_]+)(?::\d+)?', desc)
+                if match: v_ref = match.group(0)
+
         status = "COMPLETED" if r.get('archived') else "ACTIVE_RESEARCH"
         lic = r.get('license', {}).get('spdx_id', 'MIT') if r.get('license') else "MIT"
+        
         log_entry = (
             f'"{time_index:04d}_001|U||G|REPO|'
             f'{clean_js_string(name)}|{status}|{r.get("stargazers_count", 0)}|'
