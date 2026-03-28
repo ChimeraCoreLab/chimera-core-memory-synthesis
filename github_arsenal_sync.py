@@ -200,11 +200,12 @@ def sync_arsenal():
         readme = get_file_content(GITHUB_USER, name, "README.md") or "No README documentation found."
         
         other_files = []
-        extra_targets = ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py"]
+        extra_targets = ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py", "youtube_archives_sync.py"]
         for extra in extra_targets:
             content = get_file_content(GITHUB_USER, name, extra)
             if content:
-                other_files.append(f"{extra}:{clean_js_string(content)}")
+                safe_content = clean_js_string(content).replace(";;", ";&#59;")
+                other_files.append(f"{extra}:{safe_content}")
 
         v_ref = "NULL"
         if config['gallery'] != "NULL":
