@@ -139,13 +139,74 @@ img {
     z-index: 9003;
 }
 .glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    position: absolute;
     background: var(--c-accent);
     opacity: 0;
     mix-blend-mode: hard-light;
-    z-index: 9004;
+    z-index: 9999;
+    pointer-events: none;
+    will-change: opacity;
+}
+
+body.glitching #main-content {
+    animation: shake 0.15s cubic-bezier(.36,.07,.19,.97) both;
+    will-change: transform;
+}
+
+body.glitching .vfx-container {
+    transform: scale(1.01) translateX(4px);
+    filter: hue-rotate(10deg) contrast(120%);
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(3px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+    40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.96);
+    z-index: 11000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-out);
+    pointer-events: auto;
+}
+
+.modal-window {
+    width: 100%;
+    max-width: 900px;
+    height: 80vh;
+    background: #050505;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    transform: scale(0.9);
+    transition: transform 0.3s var(--ease-sfs);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+.modal-overlay.active .modal-window {
+    transform: scale(1);
 }
 body.glitching .glitch-overlay {
     animation: flashRed 0.1s steps(1) 2;
@@ -903,7 +964,6 @@ footer {
 @keyframes float { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(15px); } }
 @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes flashRed { 0% { opacity: 0; } 50% { opacity: 0.3; background: red; } 100% { opacity: 0; } }
-@keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 @keyframes glitchSkew { 0% { transform: skew(0deg); } 20% { transform: skew(-2deg); } 40% { transform: skew(2deg); } 60% { transform: skew(-1deg); } 80% { transform: skew(1deg); } 100% { transform: skew(0deg); } }
 @keyframes glitch-anim-1{0%{clip-path:polygon(0 2%,100% 2%,100% 5%,0 5%)}20%{clip-path:polygon(0 15%,100% 15%,100% 15%,0 15%)}40%{clip-path:polygon(0 10%,100% 10%,100% 20%,0 20%)}60%{clip-path:polygon(0 1%,100% 1%,100% 2%,0 2%)}80%{clip-path:polygon(0 33%,100% 33%,100% 33%,0 33%)}100%{clip-path:polygon(0 44%,100% 44%,100% 44%,0 44%)}}
 @keyframes glitch-anim-2{0%{clip-path:polygon(0 25%,100% 25%,100% 30%,0 30%)}20%{clip-path:polygon(0 35%,100% 35%,100% 35%,0 35%)}40%{clip-path:polygon(0 50%,100% 50%,100% 55%,0 55%)}60%{clip-path:polygon(0 15%,100% 15%,100% 20%,0 20%)}80%{clip-path:polygon(0 80%,100% 80%,100% 85%,0 85%)}100%{clip-path:polygon(0 90%,100% 90%,100% 95%,0 95%)}}
@@ -917,43 +977,6 @@ footer {
     .audio-btn { bottom: 20px; right: 20px; }
     section { padding: 80px 20px; }
     .module-card { height: auto; min-height: 300px; }
-}
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 11000;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    transition: opacity 0.3s var(--ease-out);
-}
-.modal-overlay.active {
-    display: flex;
-    opacity: 1;
-}
-.modal-window {
-    width: 100%;
-    max-width: 900px;
-    height: 80vh;
-    background: #050505;
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    transform: scale(0.9);
-    transition: transform 0.3s var(--ease-sfs);
-    position: relative;
-    overflow: hidden;
-}
-.modal-overlay.active .modal-window {
-    transform: scale(1);
 }
 .modal-header {
     background: #111;
@@ -3049,13 +3072,14 @@ setInterval(() => {
 
     const entropyRoll = Math.random();
     if (entropyRoll > 0.5) {
-        const categories = [
-            'ELECTRIC', 'DAILY', 'STATIONERY', 'JAPANESE', 
-            'GLITCH_VOID', 'ANIMALS', 'NATURE', 'ENV_URBAN', 
-            'ENV_CONSTRUCT', 'PURE_HORROR', 'HORROR_ALT', 'ATMOSPHERIC'
+        const allCategories = [
+            'ANIMALS', 'COOKING', 'DAILY', 'STATIONERY', 'EATING', 
+            'ELECTRIC', 'ENV_URBAN', 'ENV_CONSTRUCT', 'UI_ACTION', 
+            'PURE_HORROR', 'HORROR_ALT', 'HUMAN', 'JAPANESE', 
+            'NATURE', 'OPENCLOSE', 'PUTTING', 'ATMOSPHERIC', 'GLITCH_VOID'
         ];
         
-        const selectedType = categories[Math.floor(Math.random() * categories.length)];
+        const selectedType = allCategories[Math.floor(Math.random() * allCategories.length)];
         
         if (entropyRoll > 0.92 && typeof ghostSynthPlay === "function") {
             ghostSynthPlay(selectedType, 2);
@@ -3063,11 +3087,15 @@ setInterval(() => {
             synthPlay(selectedType);
         }
     }
-}, 20000);
+}, 25000);
 
 setInterval(() => {
     if (sysConfig.audio && hasSignal && Math.random() > 0.85) {
-        const focusPool = ['ATMOSPHERIC', 'NATURE', 'PURE_HORROR', 'JAPANESE', 'GLITCH_VOID', 'HORROR_ALT'];
+        const focusPool = [
+            'ATMOSPHERIC', 'NATURE', 'PURE_HORROR', 
+            'JAPANESE', 'GLITCH_VOID', 'HORROR_ALT', 
+            'ENV_URBAN', 'ENV_CONSTRUCT'
+        ];
         const target = focusPool[Math.floor(Math.random() * focusPool.length)];
         if (typeof synthPlay === "function") synthPlay(target);
     }
@@ -3492,8 +3520,20 @@ function smoothNav(targetId) {
     requestAnimationFrame(animation);
 }
 function triggerGlitch() {
+    const isModalOpen = moduleViewer.classList.contains('active');
+    const flashLayer = document.getElementById('glitch-screen');
+    
+    if (flashLayer) {
+        flashLayer.style.opacity = isModalOpen ? "0.08" : "0.25";
+    }
+
     document.body.classList.add('glitching');
-    setTimeout(() => document.body.classList.remove('glitching'), 100 + Math.random() * 200);
+    
+    setTimeout(() => {
+        document.body.classList.remove('glitching');
+        if (flashLayer) flashLayer.style.opacity = "0";
+        if (typeof updateVisualAtmosphere === "function") updateVisualAtmosphere();
+    }, 120);
 }
 document.addEventListener('mousemove', (e) => {
     dom.cursor.style.left = e.clientX + 'px';
