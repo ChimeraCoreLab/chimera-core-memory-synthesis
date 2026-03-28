@@ -260,12 +260,11 @@ def sync_arsenal():
         
         status = "COMPLETED" if r.get('archived') else "ACTIVE_RESEARCH"
         lic = r.get('license', {}).get('spdx_id', 'MIT') if r.get('license') else "MIT"
-        
         log_entry = (
             f'"{time_index:04d}_001|U||G|REPO|'
             f'{clean_js_string(name)}|{status}|{r.get("stargazers_count", 0)}|'
             f'{clean_js_string(tree_str)}|{v_ref}|{lic}|'
-            f'{clean_js_string(readme)}|{";".join(other_files)}",'
+            f'{clean_js_string(readme)}|{";;".join(other_files)}",'
         )
         raw_logs.append(log_entry)
         time_index += 5
