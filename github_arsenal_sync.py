@@ -182,7 +182,7 @@ def sync_arsenal():
     total_stars = sum(r.get('stargazers_count', 0) for r in repos)
     raw_logs = []
     domain = f"github.com/{GITHUB_USER}"
-    raw_logs.append(f'"1400_001|U||G|PROFILE|{repos_count}|{total_stars}|{domain}|STABLE_ACTIVE|PUBLIC_ENCRYPTED_READ",')
+    raw_logs.append(f'"1400_1|U||G|PROFILE|{repos_count}|{total_stars}|{domain}|STABLE_ACTIVE|PUBLIC_ENCRYPTED_READ",')
 
     time_index = 1405
     for r in repos:
