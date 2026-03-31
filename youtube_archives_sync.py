@@ -137,8 +137,8 @@ def sync_archives():
                         'desc': v['snippet']['description']
                     })
         raw_logs = []
-        raw_logs.append(f'"1500_001|U||Y|CHANNEL|{clean_js_string(ch_name)}|ESTB_2018|{len(archives_data)}_NODES|{total_views}_PULSES|62.9h_UPTIME",')
-        raw_logs.append(f'"1500_002|U||Y|NOTICE|Data stream fully anonymized (OpSec V7).\\nSignal detected from matrix node: {clean_js_string(ch_name)}.\\nBypassing the public algorithm.",')
+        raw_logs.append(f'"1500_1|U||Y|CHANNEL|{clean_js_string(ch_name)}|ESTB_2018|{len(archives_data)}_NODES|{total_views}_PULSES|62.9h_UPTIME",')
+        raw_logs.append(f'"1500_2|U||Y|NOTICE|Data stream fully anonymized (OpSec V7).\\nSignal detected from matrix node: {clean_js_string(ch_name)}.\\nBypassing the public algorithm.",')
         time_index = 1505
         for data in sorted(archives_data, key=lambda x: x['date'], reverse=True):
             print(f"[DISTILLING_ARCHIVE] {data['id']} (ANONYMIZING...)")
@@ -146,7 +146,7 @@ def sync_archives():
             transcript = get_transcript(data['id'])
             community_feed = get_comments(youtube, data['id'])
             log_entry = (
-                f'"{time_index:04d}_001|U||Y|ENTRY|'
+                f'"{time_index:04d}_1|U||Y|ENTRY|'
                 f'{data["id"]}|{clean_js_string(data["title"])}|{data["date"]}|'
                 f'{data["duration"]}|{data["type"]}|{data["status"]}|'
                 f'{data["views"]}|{data["likes"]}|100|'
