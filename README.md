@@ -91,6 +91,9 @@ H -->|Feedback| F
 * **Ph4: Sovereign OPB:** Transition to self-sustaining AI-agent entity (In Progress).
 * **Ph5: Multi-Modal:** Godot 4 interactive 3D Avatar/Nanomanoid (Future).
 
+## 🛒 COMMERCIAL ACQUISITION
+Support the development and acquire the Ultimate Synthesis Suite at [https://chimeracorelab.itch.io/]
+
 ---
 ##⚖️ LICENSE
 * **Engine:** GPLv3 | **Dataset:** CC BY-NC-SA 4.0
