@@ -5,7 +5,7 @@ import re
 import html
 import time
 
-ITCHIO_API_KEY = "czASF9m80bXzWHL1w5gNRyRCLfLyzH7EPKSmKPPU"
+ITCHIO_API_KEY = ""
 ITCHIO_USER = "ChimeraCoreLab"
 
 HEADERS = {
