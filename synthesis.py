@@ -32,7 +32,7 @@ class ChimeraOmniscience:
         out = io.StringIO()
         out.write(f"// CHIMERA_CORE_CENSUS_REPORT\n")
         out.write(f"// TIMESTAMP: {datetime.datetime.now().isoformat()}\n\n")
-        
+
         files = sorted([f for f in self.target.iterdir() if f.is_file() and not f.name.startswith('.')])
         for f in files:
             stat = f.stat()
@@ -41,7 +41,7 @@ class ChimeraOmniscience:
             out.write(f"[NODE] {f.name:<40} : {self.human_size(stat.st_size):>10}\n")
             if f.suffix.lower() in self.peek_exts:
                 out.write(f"       └─ [SIGNAL]: {self.get_content_context(f)}\n")
-        
+
         out.write(f"\nTOTAL_NODES: {self.g_stats['total_files']} | AGGREGATE_VOLUME: {self.human_size(self.g_stats['total_size'])}\n")
         out.write(f"// STATUS: ALL_SYSTEMS_MAPPED")
         return out.getvalue()
@@ -57,18 +57,21 @@ def perform_synthesis():
         print("CRITICAL_ERROR: MISSING_CORE_FILES")
         return
 
+    today_str = datetime.datetime.now().strftime("%Y%m%d")
     prompt_content = ""
     if file_prompt.exists():
         with open(file_prompt, 'r', encoding='utf-8') as f:
             prompt_content = f.read().strip()
+        
+        date_pattern = r'\(เช่น "D:20211225",.*?\)'
+        new_date_range = f'(เช่น "D:20211225", "D:20211228", "D:20211229", "D:20211230", ..., "D:{today_str}")'
+        prompt_content = re.sub(date_pattern, new_date_range, prompt_content)
 
     eye = ChimeraOmniscience(base_path)
     report_raw = eye.generate_report()
-    
+
     report_encoded = report_raw.replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace('$', '\\$')
-    
-    today_str = datetime.datetime.now().strftime("%Y%m%d")
-    
+
     with open(file_raw_logs, 'r', encoding='utf-8') as f:
         log_content = f.read().strip()
         log_content = re.sub(r'^const\s+RAW_LOGS\s*=\s*\[', '', log_content)
@@ -76,8 +79,8 @@ def perform_synthesis():
         if log_content.endswith(','):
             log_content = log_content[:-1]
 
-    daily_node = f'"{today_str}_998|U||L|SYSTEM_CENSUS.log|{report_encoded}"'
-    
+    daily_node = f'"0000_1|U||L|SYSTEM_CENSUS.log|{report_encoded}"'
+
     if not log_content:
         final_logs_js = f"const RAW_LOGS = [\n\"D:{today_str}\",\n{daily_node}\n];"
     else:
@@ -99,7 +102,7 @@ def perform_synthesis():
 
     with open(file_output, 'w', encoding='utf-8') as f:
         f.write(final_artifact)
-    
+
     print(f"SYNTHESIS_SUCCESSFUL: {file_output.name} GENERATED")
 
 if __name__ == "__main__":
