@@ -62,7 +62,7 @@ def perform_synthesis():
     if file_prompt.exists():
         with open(file_prompt, 'r', encoding='utf-8') as f:
             prompt_content = f.read().strip()
-        
+
         date_pattern = r'\(เช่น "D:20211225",.*?\)'
         new_date_range = f'(เช่น "D:20211225", "D:20211228", "D:20211229", "D:20211230", ..., "D:{today_str}")'
         prompt_content = re.sub(date_pattern, new_date_range, prompt_content)
@@ -74,17 +74,18 @@ def perform_synthesis():
 
     with open(file_raw_logs, 'r', encoding='utf-8') as f:
         log_content = f.read().strip()
-        log_content = re.sub(r'^const\s+RAW_LOGS\s*=\s*\[', '', log_content)
-        log_content = re.sub(r'\];?$', '', log_content).strip()
+        log_content = re.sub(r'^const\s+RAW_LOGS\s*=\s*\[\s*', '', log_content)
+        log_content = re.sub(r'\s*\];?$', '', log_content).strip()
         if log_content.endswith(','):
             log_content = log_content[:-1]
+        log_content = "".join([line.strip() for line in log_content.splitlines() if line.strip()])
 
     daily_node = f'"0000_1|U||L|SYSTEM_CENSUS.log|{report_encoded}"'
 
     if not log_content:
-        final_logs_js = f"const RAW_LOGS = [\n\"D:{today_str}\",\n{daily_node}\n];"
+        final_logs_js = f'const RAW_LOGS=["D:{today_str}",{daily_node}];'
     else:
-        final_logs_js = f"const RAW_LOGS = [\n{log_content},\n\"D:{today_str}\",\n{daily_node}\n];"
+        final_logs_js = f'const RAW_LOGS=[{log_content},"D:{today_str}",{daily_node}];'
 
     with open(file_index, 'r', encoding='utf-8') as f:
         html_markup = f.read()
