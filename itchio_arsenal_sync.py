@@ -26,10 +26,17 @@ def scrape_web_data(url):
         noun_match = re.search(r'<td>Genre</td>\s*<td>\s*<a[^>]+>([^<]+)</a>', r.text)
         if not noun_match:
             noun_match = re.search(r'<td>Noun</td>\s*<td>([^<]+)</td>', r.text)
+        
+        yt_match = re.search(r'youtube\.com/embed/([^?"]+)', r.text)
+        if not yt_match:
+            yt_match = re.search(r'youtube\.com/watch\?v=([^?"]+)', r.text)
+        video_id = yt_match.group(1) if yt_match else "NULL"
+        
         return {
             "desc": description.strip(),
             "tags": ", ".join(tags) if tags else "NULL",
-            "noun": noun_match.group(1).strip() if noun_match else "artifact"
+            "noun": noun_match.group(1).strip() if noun_match else "artifact",
+            "video_id": video_id
         }
     except: return {}
 
@@ -50,19 +57,27 @@ def sync_market():
             f_r = requests.get(f"https://itch.io/api/1/key/game/{g_id}/uploads", headers=api_headers)
             f_data = f_r.json().get('uploads', []) if f_r.status_code == 200 else []
             f_list = [f"{u['filename']} ({u['size']//1048576}mb) - {u.get('downloads_count', 0)} DLs" for u in f_data]
-            v_link = "https://www.youtube.com/watch?v=rmLcxxDK5MU" if "ENGINE" in g['title'].upper() else "https://www.youtube.com/watch?v=suNZLquZLgM"
+            
+            p_val = g.get('min_price', 0)
+            try:
+                price_display = "${:.2f}".format(float(p_val)) if float(p_val) > 0 else "$0.00 or donate"
+            except:
+                price_display = f"${p_val}" if p_val else "$0.00 or donate"
+                
+            v_link = f"https://www.youtube.com/watch?v={web_data['video_id']}" if web_data.get('video_id') != "NULL" else "NULL"
+            
             entry = [
                 clean_js(g['title']),
                 clean_js(g.get('short_text', 'NULL')),
                 clean_js(g.get('classification', 'Other')),
                 "Downloadable" if g.get('type') != 'html' else "HTML",
                 "RELEASED" if g.get('published') else "DRAFT",
-                "$0 or donate" if g.get('min_price', 0) == 0 else f"${g['min_price']}",
+                price_display,
                 "2.00",
                 "; ".join(f_list) if f_list else "NULL",
                 clean_js(web_data.get('desc', 'NULL')),
                 clean_js(web_data.get('tags', 'NULL')),
-                "Yes (AI Assisted)" if "ai" in web_data.get('tags', '').lower() else "No",
+                "Yes (AI Assisted)" if "ai" in web_data.get('tags', "").lower() else "No",
                 clean_js(web_data.get('noun', 'artifact')),
                 "Instruction merged with description node.",
                 "Comments Enabled",
@@ -73,12 +88,13 @@ def sync_market():
                 g.get('purchases_count', 0),
                 g.get('views_count', 0),
                 g.get('downloads_count', 0),
-                "★ 5.0",
+                "NULL",
                 g.get('collections_count', 0),
                 "0", "0"
             ]
             logs.append(f'"{idx:04d}_1|U||K|ENTRY|{"|".join(map(str, entry))}",')
             idx += 5
+            time.sleep(0.1)
         script_dir = os.path.dirname(os.path.abspath(__file__))
         output_path = os.path.join(script_dir, 'extracted_market_logs.txt')
         with open(output_path, 'w', encoding='utf-8') as f:
