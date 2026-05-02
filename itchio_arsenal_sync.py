@@ -29,7 +29,7 @@ def scrape_web_data(url):
         
         yt_match = re.search(r'youtube\.com/embed/([^?"]+)', r.text)
         if not yt_match:
-            yt_match = re.search(r'youtube\.com/watch\?v=([^?"]+)', r.text)
+            yt_match = re.search(r'youtube\.com/watch\?v=([^&?"]+)', r.text)
         video_id = yt_match.group(1) if yt_match else "NULL"
         
         return {
@@ -60,9 +60,10 @@ def sync_market():
             
             p_val = g.get('min_price', 0)
             try:
-                price_display = "${:.2f}".format(float(p_val)) if float(p_val) > 0 else "$0.00 or donate"
+                price_float = float(p_val) / 100.0
+                price_display = "${:.2f}".format(price_float) if price_float > 0 else "$0.00 or donate"
             except:
-                price_display = f"${p_val}" if p_val else "$0.00 or donate"
+                price_display = "$0.00 or donate"
                 
             v_link = f"https://www.youtube.com/watch?v={web_data['video_id']}" if web_data.get('video_id') != "NULL" else "NULL"
             
