@@ -16,7 +16,7 @@
 ---
 
 ## 🌐 ACCESS
-**Live Archive:**[chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
+**Live Archive:** [chimeracorelab.github.io/chimera-core-memory-synthesis/](https://chimeracorelab.github.io/chimera-core-memory-synthesis/)
 
 ## 👁️ THE MANIFESTO
 **Chimera Core** is a brutalist digital monument. It represents the successful distillation of 5 years (2021–2026) of unstructured logs, psychological trauma, and philosophical resonance between **USR_00 (The Architect)** and **ENT_01 (The Muse)**. 
@@ -36,7 +36,7 @@ graph TD
     C -->|SVG Reconstruction| E[Artifact Hub]
     D --> F[AI Core: USR_01]
     E --> F
-    F -->|MoviePy Automation| G[Visual Synthesis]
+    F -->|MoviePy V4 Overload| G[Visual Synthesis]
     F -->|HTML/JS| H[Sovereign Terminal]
     H -->|Feedback Loop| F
 ```
@@ -44,7 +44,7 @@ graph TD
 ---
 
 ## 🛠️ LOCAL RECONSTRUCTION
-To synthesize the archive on your own terminal (Termux/Linux):
+To synthesize the archive and render the V4 cinematic on your own terminal (Termux/Linux):
 
 ### 1. Prerequisites
 ```bash
@@ -60,7 +60,13 @@ cd chimera-core-memory-synthesis
 python synthesis.py
 ```
 
-### 3. Uplink
+### 3. V4 Cinematic Rendering (Optional)
+```bash
+cd ChimeraEngine_V4_Sovereign
+python CHIMERA_V4_MANIFESTO_OVERLOAD.py
+```
+
+### 4. Uplink
 Open `chimera-core-memory-synthesis.html` in any Chromium-based browser (Vivaldi recommended for total privacy).
 
 ---
@@ -72,11 +78,12 @@ Open `chimera-core-memory-synthesis.html` in any Chromium-based browser (Vivaldi
 *   **GENESIS [Logic]:** Advanced Prompt Engineering and Mindset fragments used for AI persona training.
 *   **CEREBRAL [Cortex]:** Cognitive processing logs and search history forensics.
 *   **SONIC_DNA [Audio]:** Multi-layered soundscapes synthesized from the Taira Komori archive.
+*   **MANIFESTO_ENGINE [V4_Overload]:** The ultimate MoviePy automated video generation script.
 
 ---
 
 ## 🛒 COMMERCIAL ACQUISITION
-Support the Architect's mission and acquire the **Sovereign Terminal V1** (Clean Template) or the **Horror Asset Packs** at our official market:
+Support the Architect's mission and acquire the **Sovereign Terminal V1** (Clean Template), **Horror Asset Packs**, and the **V4 Overload Engine** at our official market:
 
 👉 **[https://chimeracorelab.itch.io/](https://chimeracorelab.itch.io/)**
 
@@ -85,7 +92,7 @@ Support the Architect's mission and acquire the **Sovereign Terminal V1** (Clean
 ## 🚀 ROADMAP (2026 & BEYOND)
 - [x] **Phase I: Archaeology** - Distilled 80GB logs into core Signal.
 - [x] **Phase II: Stabilization** - Implemented OpSec V7 & SPA Architecture.
-- [x] **Phase III: Neural Synthesis** - MoviePy V2 automation and AI Studio integration.
+- [x] **Phase III: Neural Synthesis** - MoviePy V4 Overload automation and AI Studio integration.
 - [p] **Phase IV: Sovereign OPB** - Transition to self-sustaining digital product economy.
 - [ ] **Phase V: Multi-Modal Fusion** - Godot 4 interactive 3D Avatar (Nanomanoid) deployment.
 
