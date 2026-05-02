@@ -98,7 +98,7 @@ def sync_arsenal():
     raw_logs = [f'"1400_1|U||G|PROFILE|{user_data.get("public_repos", 0)}|{sum(r.get("stargazers_count", 0) for r in repos)}|github.com/{GITHUB_USER}|STABLE_ACTIVE|PUBLIC_ENCRYPTED_READ",']
 
     time_index = 1405
-    extra_targets = ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py", "youtube_archives_sync.py", "wav_audit.py", "render_manifesto_v1_genesis.py", "render_manifesto_v2_ultimate.py", "render_manifesto_v3_atomic.py", "transcript.txt", "itchio_arsenal_sync.py", "artifact_audit.py", "render_podcast_v4.py", "scene_1_genesis.tscn.txt"]
+    extra_targets = ["synthesis.py", "DATA_LICENSE.md", "render_manifesto.py", "requirements.txt", "github_arsenal_sync.py", "youtube_archives_sync.py", "wav_audit.py", "render_manifesto_v1_genesis.py", "render_manifesto_v2_ultimate.py", "render_manifesto_v3_atomic.py", "transcript.txt", "itchio_arsenal_sync.py", "artifact_audit.py", "render_podcast_v4.py", "scene_1_genesis.tscn.txt", "terminal_v1.py"]
 
     for r in repos:
         name = r['name']
