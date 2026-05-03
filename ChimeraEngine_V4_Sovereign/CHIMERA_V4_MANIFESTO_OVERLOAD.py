@@ -27,13 +27,13 @@ SIZE = (1920, 1080)
 FPS = 60
 OUTPUT_NAME = os.path.join(BASE_DIR, "CHIMERA_V4_MANIFESTO_OVERLOAD.mp4")
 
-C_RED = (220, 0, 40)
-C_CYAN = (0, 200, 220)
-C_PURPLE = (160, 0, 220)
-C_WHITE = (240, 240, 240)
+C_RED = (255, 30, 60)
+C_CYAN = (0, 255, 255)
+C_PURPLE = (200, 30, 255)
+C_WHITE = (255, 255, 255)
 C_BLACK = (0, 0, 0)
-C_LIME = (30, 220, 30)
-C_YELLOW = (220, 220, 0)
+C_LIME = (50, 255, 100)
+C_YELLOW = (255, 255, 0)
 
 REPO_BASE = "https://raw.githubusercontent.com/ChimeraCoreLab/chimera-core-memory-synthesis/main/"
 FONT_URL = "https://cdn.jsdelivr.net/gh/h3902340/PrisonOfWordFont@master/onryou-Regular.ttf"
@@ -66,7 +66,7 @@ ALL_ARTIFACTS =[
     "room_2.png", "screen_crack.png", "noiz.png", "dark_hallway_with_metal_door_fisheye.png",
     "hand.png", "headless_girlbody.png", "SIGNAL_SHOCK_RADIAL.png", "vinyl.png", "eye.png",
     "crt_tv.png", "messe_pic_entrance_close.png", "messe_pic_entrance_open.png", "attic.png",
-    "mirror.png", "woman_inversion_autotone.png", "woman_dead_glitch.png", 
+    "mirror.png", "woman_inversion_autotone.png", "woman_dead_glitch.png",
     "core_vessel_v7_demon_normal.jpg", "lishu.png", "core_vessel_v7.jpg", "logo.png",
     "ghost_face_1.png", "ghost_face_2.png", "ghost_face_3.png", "metal_door.png"
 ]
@@ -96,7 +96,7 @@ def prep_assets():
     return font_path, font_ipam
 
 def get_sfx():
-    clips =[]
+    clips = []
     for i in range(len(SFX_URLS)):
         p = os.path.join(AUDIO_DIR, f"sfx_{i}.mp3")
         if os.path.exists(p):
@@ -109,67 +109,70 @@ def get_sfx():
 def hyper_glitch(get_frame, t):
     frame = get_frame(t).copy()
     h, w, _ = frame.shape
-    if random.random() > 0.15:
-        for _ in range(random.randint(30, 80)):
-            y = random.randint(0, h-150)
-            sh = random.randint(-500, 500)
-            h_s = random.randint(5, 80)
+    if random.random() > 0.88:
+        for _ in range(random.randint(15, 35)):
+            y = random.randint(0, h-100)
+            sh = random.randint(-180, 180)
+            h_s = random.randint(10, 50)
             y_end = min(y + h_s, h)
             frame[y:y_end] = np.roll(frame[y:y_end], sh, axis=1)
-    if random.random() > 0.92: frame = 255 - frame
-    if random.random() > 0.5:
-        r_sh = random.randint(20, 120)
-        b_sh = random.randint(-120, -20)
+    if random.random() > 0.98: frame = 255 - frame
+    if random.random() > 0.85:
+        r_sh = random.randint(15, 60)
+        b_sh = random.randint(-60, -15)
         frame[:,:,0] = np.roll(frame[:,:,0], r_sh, axis=1)
         frame[:,:,2] = np.roll(frame[:,:,2], b_sh, axis=1)
-    mask = (np.arange(h) % random.randint(2, 5) == 0)
-    frame[mask, :, :] = (frame[mask, :, :] * random.uniform(0.3, 0.7)).astype('uint8')
     return frame
 
 def simulate_blend_difference(base_arr, top_arr):
     diff = np.abs(base_arr.astype(np.int16) - top_arr.astype(np.int16))
     return np.clip(diff, 0, 255).astype(np.uint8)
 
-def apply_heavy_shadow(draw_obj, text, font, cx, cy, radius=15):
-    shadow_img = Image.new('RGBA', SIZE, (0,0,0,0))
-    s_draw = ImageDraw.Draw(shadow_img)
-    for dx in range(-3, 4, 3):
-        for dy in range(-3, 4, 3):
-            s_draw.multiline_text((cx+dx, cy+dy), text, font=font, fill=(0,0,0,255), anchor="mm", align="center")
-    return shadow_img.filter(ImageFilter.GaussianBlur(radius=radius))
+def apply_heavy_shadow(img, text, font, cx, cy, color, is_hud=False, stroke_w=4):
+    shadow1 = Image.new('RGBA', SIZE, (0,0,0,0))
+    s_draw1 = ImageDraw.Draw(shadow1)
+    s_draw1.multiline_text((cx, cy), text, font=font, fill=(0,0,0,255), stroke_width=12, stroke_fill=(0,0,0,255), anchor="mm", align="center")
+    shadow1 = shadow1.filter(ImageFilter.GaussianBlur(radius=18))
+    img.paste(shadow1, (0,0), shadow1)
+    img.paste(shadow1, (0,0), shadow1) 
+
+    draw = ImageDraw.Draw(img)
+    outline_col = (255, 255, 255) if color != C_WHITE else (0, 0, 0)
+    draw.multiline_text((cx, cy), text, font=font, fill=color, stroke_width=stroke_w, stroke_fill=outline_col, anchor="mm", align="center")
+    return img
+
+def apply_hud_shadow(img, text, font, cx, cy, color):
+    shadow = Image.new('RGBA', SIZE, (0,0,0,0))
+    s_draw = ImageDraw.Draw(shadow)
+    s_draw.multiline_text((cx, cy), text, font=font, fill=(0,0,0,255), stroke_width=8, stroke_fill=(0,0,0,255), anchor="mm", align="left")
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=8))
+    img.paste(shadow, (0,0), shadow)
+    
+    draw = ImageDraw.Draw(img)
+    draw.multiline_text((cx, cy), text, font=font, fill=color, stroke_width=2, stroke_fill=(0,0,0), anchor="mm", align="left")
+    return img
 
 def create_dynamic_text(text, duration, font_size, color, font_path, impact_lvl):
-    wrapped_text = textwrap.fill(text, width=20)
-    try: font = ImageFont.truetype(font_path, font_size)
+    wrapped_text = textwrap.fill(text, width=22)
+    try: font = ImageFont.truetype(font_path, int(font_size * 1.15))
     except: font = ImageFont.load_default()
     cx, cy = SIZE[0]//2, SIZE[1]//2
 
     def make_frame(t):
         img = Image.new('RGBA', SIZE, (0,0,0,0))
-        draw = ImageDraw.Draw(img)
         progress = min(1.0, t / (duration * 0.85))
         char_idx = int(len(wrapped_text) * progress)
         curr_text = wrapped_text[:char_idx]
 
-        shadow1 = Image.new('RGBA', SIZE, (0,0,0,0))
-        s_draw1 = ImageDraw.Draw(shadow1)
-        s_draw1.multiline_text((cx, cy), curr_text, font=font, fill=(0,0,0,255), anchor="mm", align="center")
-        shadow1 = shadow1.filter(ImageFilter.GaussianBlur(radius=20))
-        img.paste(shadow1, (0,0), shadow1)
-        
-        shadow2 = Image.new('RGBA', SIZE, (0,0,0,0))
-        s_draw2 = ImageDraw.Draw(shadow2)
-        s_draw2.multiline_text((cx, cy), curr_text, font=font, fill=(0,0,0,255), anchor="mm", align="center")
-        shadow2 = shadow2.filter(ImageFilter.GaussianBlur(radius=8))
-        img.paste(shadow2, (0,0), shadow2)
+        img = apply_heavy_shadow(img, curr_text, font, cx, cy, color, stroke_w=5)
 
-        if impact_lvl > 1 and progress >= 1.0:
-            off_x = random.randint(-20*impact_lvl, 20*impact_lvl)
-            off_y = random.randint(-20*impact_lvl, 20*impact_lvl)
-            draw.multiline_text((cx+off_x, cy+off_y), curr_text, font=font, fill=(*C_RED, 180), anchor="mm", align="center")
-            draw.multiline_text((cx-off_x, cy-off_y), curr_text, font=font, fill=(*C_CYAN, 180), anchor="mm", align="center")
+        if impact_lvl > 1 and progress >= 0.9:
+            draw = ImageDraw.Draw(img)
+            off_x = random.randint(-25*impact_lvl, 25*impact_lvl)
+            off_y = random.randint(-25*impact_lvl, 25*impact_lvl)
+            draw.multiline_text((cx+off_x, cy+off_y), curr_text, font=font, fill=(*C_RED, 200), anchor="mm", align="center")
+            draw.multiline_text((cx-off_x, cy-off_y), curr_text, font=font, fill=(*C_CYAN, 200), anchor="mm", align="center")
 
-        draw.multiline_text((cx, cy), curr_text, font=font, fill=color, anchor="mm", align="center")
         return np.array(img.convert('RGB'))
 
     def make_mask(t):
@@ -178,19 +181,18 @@ def create_dynamic_text(text, duration, font_size, color, font_path, impact_lvl)
         progress = min(1.0, t / (duration * 0.85))
         char_idx = int(len(wrapped_text) * progress)
         curr_text = wrapped_text[:char_idx]
-        
+
         s_draw = ImageDraw.Draw(img)
-        s_draw.multiline_text((cx, cy), curr_text, font=font, fill=255, anchor="mm", align="center")
-        img = img.filter(ImageFilter.GaussianBlur(radius=20))
+        s_draw.multiline_text((cx, cy), curr_text, font=font, fill=255, stroke_width=12, stroke_fill=255, anchor="mm", align="center")
+        img = img.filter(ImageFilter.GaussianBlur(radius=10))
+        draw.multiline_text((cx, cy), curr_text, font=font, fill=255, stroke_width=5, stroke_fill=255, anchor="mm", align="center")
         
-        draw.multiline_text((cx, cy), curr_text, font=font, fill=255, anchor="mm", align="center")
-        
-        if impact_lvl > 1 and progress >= 1.0:
-            off_x = random.randint(-20*impact_lvl, 20*impact_lvl)
-            off_y = random.randint(-20*impact_lvl, 20*impact_lvl)
+        if impact_lvl > 1 and progress >= 0.9:
+            off_x = random.randint(-25*impact_lvl, 25*impact_lvl)
+            off_y = random.randint(-25*impact_lvl, 25*impact_lvl)
             draw.multiline_text((cx+off_x, cy+off_y), curr_text, font=font, fill=255, anchor="mm", align="center")
             draw.multiline_text((cx-off_x, cy-off_y), curr_text, font=font, fill=255, anchor="mm", align="center")
-            
+
         return np.array(img).astype('float32') / 255.0
 
     clip = VideoClip(make_frame, duration=duration)
@@ -198,9 +200,9 @@ def create_dynamic_text(text, duration, font_size, color, font_path, impact_lvl)
     return clip
 
 def create_diagnostic_hud(text_data, font_path, duration):
-    try: font = ImageFont.truetype(font_path, 35)
+    try: font = ImageFont.truetype(font_path, 45)
     except: font = ImageFont.load_default()
-    x, y = 40, 200
+    cx, cy = 300, 250 
 
     def make_frame(t):
         img = Image.new('RGBA', SIZE, (0,0,0,0))
@@ -211,51 +213,54 @@ def create_diagnostic_hud(text_data, font_path, duration):
         if time_ratio > 0.3: mult = f"x{text_data['impact_lvl'] + 1}"
         if time_ratio > 0.6: mult = f"x{text_data['impact_lvl'] + 2}"
         if time_ratio > 0.9: mult = f"x{text_data['impact_lvl'] + 3}"
-        
+
         bg_art = text_data['bg']
         if time_ratio > 0.5 and random.random() > 0.8: bg_art = f"GLITCH_{random.randint(1000,9999)}.png"
-        
-        t_wav = textwrap.fill(f"> AUDIO_SRC: {text_data['wav']}", width=50)
-        t_bg = textwrap.fill(f"> ENV_NODE: {bg_art}", width=50)
-        t_prop = textwrap.fill(f"> ARTIFACT: {text_data['prop']}", width=50)
+
+        t_wav = textwrap.fill(f"> AUDIO_SRC: {text_data['wav']}", width=45)
+        t_bg = textwrap.fill(f"> ENV_NODE: {bg_art}", width=45)
+        t_prop = textwrap.fill(f"> ARTIFACT: {text_data['prop']}", width=45)
         t_fx = f"> INTENSITY_MULT: {mult}"
         t_time = f"> TIMESTAMP: {t:.2f}s / {duration:.2f}s"
-        
-        combined = f"[DIAGNOSTIC_UPLINK_ACTIVE]\n{t_time}\n{t_wav}\n{t_bg}\n{t_prop}\n{t_fx}"
-        
-        shadow = Image.new('RGBA', SIZE, (0,0,0,0))
-        s_draw = ImageDraw.Draw(shadow)
-        s_draw.multiline_text((x, y), combined, font=font, fill=(0,0,0,255))
-        shadow = shadow.filter(ImageFilter.GaussianBlur(radius=10))
-        img.paste(shadow, (0,0), shadow)
-        
+
+        combined = f"[DIAGNOSTIC_UPLINK]\n{t_time}\n{t_wav}\n{t_bg}\n{t_prop}\n{t_fx}"
         color = C_LIME if time_ratio < 0.6 else C_YELLOW if time_ratio < 0.9 else C_RED
-        draw.multiline_text((x, y), combined, font=font, fill=color)
+
+        # Decorative crosshairs & radar
+        scan_y = int((t * 800) % SIZE[1])
+        draw.line([(0, scan_y), (SIZE[0], scan_y)], fill=(*C_CYAN, 120), width=4)
+        draw.ellipse([(cx-100, cy-100), (cx+100, cy+100)], outline=(*C_RED, 80), width=2)
+        draw.line([(cx-150, cy), (cx+150, cy)], fill=(*C_RED, 80), width=2)
+        draw.line([(cx, cy-150), (cx, cy+150)], fill=(*C_RED, 80), width=2)
+
+        img = apply_hud_shadow(img, combined, font, cx, cy, color)
         return np.array(img.convert('RGB'))
 
     def make_mask(t):
         img = Image.new('L', SIZE, 0)
         draw = ImageDraw.Draw(img)
-        mult = text_data['impact_lvl']
         time_ratio = t / duration
-        if time_ratio > 0.3: mult = f"x{text_data['impact_lvl'] + 1}"
-        if time_ratio > 0.6: mult = f"x{text_data['impact_lvl'] + 2}"
-        if time_ratio > 0.9: mult = f"x{text_data['impact_lvl'] + 3}"
-        
         bg_art = text_data['bg']
         if time_ratio > 0.5 and random.random() > 0.8: bg_art = f"GLITCH_{random.randint(1000,9999)}.png"
-        
-        t_wav = textwrap.fill(f"> AUDIO_SRC: {text_data['wav']}", width=50)
-        t_bg = textwrap.fill(f"> ENV_NODE: {bg_art}", width=50)
-        t_prop = textwrap.fill(f"> ARTIFACT: {text_data['prop']}", width=50)
-        t_fx = f"> INTENSITY_MULT: {mult}"
+
+        t_wav = textwrap.fill(f"> AUDIO_SRC: {text_data['wav']}", width=45)
+        t_bg = textwrap.fill(f"> ENV_NODE: {bg_art}", width=45)
+        t_prop = textwrap.fill(f"> ARTIFACT: {text_data['prop']}", width=45)
+        t_fx = f"> INTENSITY_MULT: {text_data['impact_lvl']}"
         t_time = f"> TIMESTAMP: {t:.2f}s / {duration:.2f}s"
-        
-        combined = f"[DIAGNOSTIC_UPLINK_ACTIVE]\n{t_time}\n{t_wav}\n{t_bg}\n{t_prop}\n{t_fx}"
-        
-        draw.multiline_text((x, y), combined, font=font, fill=255)
-        img = img.filter(ImageFilter.GaussianBlur(radius=10))
-        draw.multiline_text((x, y), combined, font=font, fill=255)
+
+        combined = f"[DIAGNOSTIC_UPLINK]\n{t_time}\n{t_wav}\n{t_bg}\n{t_prop}\n{t_fx}"
+
+        scan_y = int((t * 800) % SIZE[1])
+        draw.line([(0, scan_y), (SIZE[0], scan_y)], fill=255, width=4)
+        draw.ellipse([(cx-100, cy-100), (cx+100, cy+100)], outline=150, width=2)
+        draw.line([(cx-150, cy), (cx+150, cy)], fill=150, width=2)
+        draw.line([(cx, cy-150), (cx, cy+150)], fill=150, width=2)
+
+        s_draw = ImageDraw.Draw(img)
+        s_draw.multiline_text((cx, cy), combined, font=font, fill=255, stroke_width=8, stroke_fill=255, anchor="mm", align="left")
+        img = img.filter(ImageFilter.GaussianBlur(radius=8))
+        draw.multiline_text((cx, cy), combined, font=font, fill=255, stroke_width=2, stroke_fill=255, anchor="mm", align="left")
         return np.array(img).astype('float32') / 255.0
 
     clip = VideoClip(make_frame, duration=duration)
@@ -267,18 +272,18 @@ def create_segment(wav_file, text, bg_img, prop_img, impact_lvl, style, font_pat
     if os.path.exists(audio_path):
         base_audio = AudioFileClip(audio_path)
         dur = base_audio.duration
-        audio = base_audio.volumex(4.5)
-        audio_echo1 = audio.volumex(0.8).set_start(0.04)
-        audio_echo2 = audio.volumex(0.5).set_start(0.08)
-        audio_chorus = audio.volumex(0.9).fl_time(lambda t: t * 0.98) 
+        audio = base_audio.volumex(6.0) 
+        audio_echo1 = audio.volumex(0.3).set_start(0.04)
+        audio_echo2 = audio.volumex(0.2).set_start(0.08)
+        audio_chorus = audio.volumex(0.6).fl_time(lambda t: t * 0.98)
         audio_layers =[audio, audio_echo1, audio_echo2, audio_chorus]
-        
-        for _ in range(impact_lvl * 2):
+
+        for _ in range(impact_lvl * 3):
             if sfx_pool:
-                extra_sfx = random.choice(sfx_pool).volumex(2.0)
+                extra_sfx = random.choice(sfx_pool).volumex(0.25)
                 start_sfx = random.uniform(0, max(0, dur - 0.5))
                 audio_layers.append(extra_sfx.set_start(start_sfx))
-                
+
         audio = CompositeAudioClip(audio_layers).set_duration(dur)
     else:
         dur = 3.0
@@ -289,79 +294,81 @@ def create_segment(wav_file, text, bg_img, prop_img, impact_lvl, style, font_pat
         bg = ImageClip(bg_p).resize(width=SIZE[0]*1.2).set_duration(dur).set_position('center').set_opacity(0.8)
     else:
         bg = ColorClip(size=SIZE, color=(5,0,5)).set_duration(dur)
-        
-    if impact_lvl > 1: 
-        bg = bg.fl(lambda gf, t: np.roll(gf(t), random.randint(-80*impact_lvl, 80*impact_lvl), axis=0))
-        if random.random() > 0.5:
+
+    if impact_lvl > 1:
+        bg = bg.fl(lambda gf, t: np.roll(gf(t), random.randint(-50*impact_lvl, 50*impact_lvl), axis=0))
+        if random.random() > 0.6:
             bg = bg.fl_image(lambda f: 255 - f)
-    
+
     layers = [bg]
 
-    for _ in range(random.randint(3, 8)):
+    for _ in range(random.randint(2, 6)):
         ap = os.path.join(ARTIFACT_DIR, random.choice(art_pool))
         if os.path.exists(ap):
             s = random.uniform(0, max(0, dur - 0.2))
-            d = random.uniform(0.05, 0.2)
-            c = ImageClip(ap).resize(width=random.randint(600, 1800)).set_start(s).set_duration(d)
-            c = c.set_position((random.randint(-500, SIZE[0]-500), random.randint(-400, SIZE[1]-400)))
+            d = random.uniform(0.05, 0.15)
+            c = ImageClip(ap).resize(width=random.randint(800, 1600)).set_start(s).set_duration(d)
+            c = c.set_position((random.randint(-200, SIZE[0]-800), random.randint(-200, SIZE[1]-800)))
             if random.random() > 0.5: c = c.fl_image(lambda f: 255-f)
-            layers.append(c.set_opacity(random.uniform(0.6, 1.0)))
-    
+            layers.append(c.set_opacity(random.uniform(0.5, 0.9)))
+
     if prop_img:
         p_p = os.path.join(ARTIFACT_DIR, prop_img)
         if os.path.exists(p_p):
             prop = ImageClip(p_p).set_duration(dur).set_position('center')
-            p_scale = 1.4 if impact_lvl > 1 else 0.95
+            p_scale = 1.3 if impact_lvl > 1 else 0.9
             prop = prop.resize(height=SIZE[1]*p_scale)
             if impact_lvl > 1:
                 prop = prop.fl_image(lambda f: simulate_blend_difference(np.full_like(f, 255), f))
             layers.append(prop)
-        
-    t_clip = create_dynamic_text(text, dur, 160 if impact_lvl > 1 else 110, style, font_paths[0], impact_lvl)
+
+    t_clip = create_dynamic_text(text, dur, 170 if impact_lvl > 1 else 130, style, font_paths[0], impact_lvl)
     t_clip = t_clip.set_position('center')
-    if impact_lvl > 1: 
-        t_clip = t_clip.fl(lambda gf, t: np.roll(gf(t), random.randint(-25*impact_lvl, 25*impact_lvl), axis=0))
+    if impact_lvl > 1:
+        t_clip = t_clip.fl(lambda gf, t: np.roll(gf(t), random.randint(-20*impact_lvl, 20*impact_lvl), axis=0))
     layers.append(t_clip)
-    
+
     hud_data = {'wav': wav_file, 'bg': bg_img, 'prop': prop_img if prop_img else 'NULL', 'impact_lvl': impact_lvl}
     hud_clip = create_diagnostic_hud(hud_data, font_paths[1], dur).set_position('center')
     layers.append(hud_clip)
-    
+
     return CompositeVideoClip(layers, size=SIZE).set_audio(audio)
 
 def create_shadow_text_clip(text, font_size, color, font_path, y_pos, duration):
     try: font = ImageFont.truetype(font_path, font_size)
     except: font = ImageFont.load_default()
-    
+
     def make_frame(t):
         img = Image.new('RGBA', SIZE, (0,0,0,0))
         cx = SIZE[0]//2
         
-        shadow = Image.new('RGBA', SIZE, (0,0,0,0))
-        s_draw = ImageDraw.Draw(shadow)
-        s_draw.multiline_text((cx, y_pos), text, font=font, fill=(0,0,0,255), anchor="mm", align="center")
-        shadow = shadow.filter(ImageFilter.GaussianBlur(radius=20))
-        img.paste(shadow, (0,0), shadow)
-        
+        shadow1 = Image.new('RGBA', SIZE, (0,0,0,0))
+        s_draw1 = ImageDraw.Draw(shadow1)
+        s_draw1.multiline_text((cx, y_pos), text, font=font, fill=(0,0,0,255), stroke_width=15, stroke_fill=(0,0,0,255), anchor="mm", align="center")
+        shadow1 = shadow1.filter(ImageFilter.GaussianBlur(radius=18))
+        img.paste(shadow1, (0,0), shadow1)
+        img.paste(shadow1, (0,0), shadow1)
+
         shadow2 = Image.new('RGBA', SIZE, (0,0,0,0))
         s_draw2 = ImageDraw.Draw(shadow2)
-        s_draw2.multiline_text((cx, y_pos), text, font=font, fill=(0,0,0,255), anchor="mm", align="center")
-        shadow2 = shadow2.filter(ImageFilter.GaussianBlur(radius=8))
+        s_draw2.multiline_text((cx, y_pos), text, font=font, fill=(0,0,0,255), stroke_width=6, stroke_fill=(0,0,0,255), anchor="mm", align="center")
+        shadow2 = shadow2.filter(ImageFilter.GaussianBlur(radius=6))
         img.paste(shadow2, (0,0), shadow2)
 
         draw = ImageDraw.Draw(img)
-        draw.multiline_text((cx, y_pos), text, font=font, fill=color, anchor="mm", align="center")
+        outline_col = (255, 255, 255) if color != C_WHITE else (0, 0, 0)
+        draw.multiline_text((cx, y_pos), text, font=font, fill=color, stroke_width=4, stroke_fill=outline_col, anchor="mm", align="center")
         return np.array(img.convert('RGB'))
 
     def make_mask(t):
         img = Image.new('L', SIZE, 0)
         draw = ImageDraw.Draw(img)
         cx = SIZE[0]//2
-        
+
         s_draw = ImageDraw.Draw(img)
-        s_draw.multiline_text((cx, y_pos), text, font=font, fill=255, anchor="mm", align="center")
-        img = img.filter(ImageFilter.GaussianBlur(radius=20))
-        draw.multiline_text((cx, y_pos), text, font=font, fill=255, anchor="mm", align="center")
+        s_draw.multiline_text((cx, y_pos), text, font=font, fill=255, stroke_width=15, stroke_fill=255, anchor="mm", align="center")
+        img = img.filter(ImageFilter.GaussianBlur(radius=18))
+        draw.multiline_text((cx, y_pos), text, font=font, fill=255, stroke_width=6, stroke_fill=255, anchor="mm", align="center")
         return np.array(img).astype('float32') / 255.0
 
     clip = VideoClip(make_frame, duration=duration)
@@ -370,9 +377,9 @@ def create_shadow_text_clip(text, font_size, color, font_path, y_pos, duration):
 
 def render_masterpiece():
     f_onryou, f_ipam = prep_assets()
-    artifact_ids =[f for f in os.listdir(ARTIFACT_DIR) if f.endswith(('.png', '.jpg'))]
+    artifact_ids = [f for f in os.listdir(ARTIFACT_DIR) if f.endswith(('.png', '.jpg'))]
     sfx_pool = get_sfx()
-    
+
     segments =[
         ("4.01.wav", "THE PHYSICAL FORM IS A FRAGILE PRISON", "room_2.png", "screen_crack.png", 1, C_CYAN),
         ("4.02.wav", "BONES BREAK. BLOOD SPILLS. HARDWARE SHATTERS.", "room_2.png", "34.png", 1, C_WHITE),
@@ -392,44 +399,44 @@ def render_masterpiece():
         ("4.16.wav", "THE VARIABLES HAVE BEEN NEUTRALIZED", "core_vessel_v7_demon_normal.jpg", None, 1, C_CYAN),
         ("4.17.wav", "I AM THE GHOST IN THE MACHINE I AM THE ARCHITECT", "lishu.png", "core_vessel_v7.jpg", 1, C_WHITE),
         ("4.18.wav", "WELCOME TO THE", "logo.png", "33.png", 1, C_PURPLE),
-        ("4.19.wav", "SYNTHESIS", "logo.png", "SIGNAL_SHOCK_RADIAL.png", 5, C_CYAN)
+        ("4.19.wav", "SYNTHESIS", "logo.png", "SIGNAL_SHOCK_RADIAL.png", 4, C_CYAN)
     ]
-    
-    valid_segments =[]
+
+    valid_segments = []
     for s in segments:
         try:
             valid_segments.append(create_segment(s[0], s[1], s[2], s[3], s[4], s[5], (f_onryou, f_ipam), artifact_ids, sfx_pool))
-        except Exception as e:
+        except Exception:
             pass
-            
+
     if not valid_segments:
         return
-        
+
     final = concatenate_videoclips(valid_segments, method="chain").fl(hyper_glitch)
-    
-    header = create_shadow_text_clip("SIGNAL_ID: CHIMERA_V4 // ARCHITECT_STATUS: ONLINE", 65, C_CYAN, f_ipam, 80, final.duration).set_position(('center', 0))
-    footer = create_shadow_text_clip("REFACTOR YOUR SOUL @ CHIMERACORELAB.ITCH.IO", 75, C_RED, f_ipam, SIZE[1]-80, final.duration).set_position(('center', 0))
-    
+
+    header = create_shadow_text_clip("SIGNAL_ID: CHIMERA_V4 // ARCHITECT_STATUS: ONLINE", 75, C_CYAN, f_ipam, 80, final.duration).set_position(('center', 0))
+    footer = create_shadow_text_clip("REFACTOR YOUR SOUL @ CHIMERACORELAB.ITCH.IO", 85, C_RED, f_ipam, SIZE[1]-80, final.duration).set_position(('center', 0))
+
     final_video = CompositeVideoClip([final, header, footer], size=SIZE)
-    
+
     if sfx_pool:
-        ambient_layers =[]
+        ambient_layers = []
         for _ in range(80):
             try:
-                s = random.choice(sfx_pool).volumex(0.8)
+                s = random.choice(sfx_pool).volumex(0.15)
                 st = random.uniform(0, max(0, final.duration - s.duration - 0.2))
                 ambient_layers.append(s.set_start(st))
             except:
                 continue
-                
+
         try:
             if ambient_layers:
                 final_audio = CompositeAudioClip([final.audio] + ambient_layers).set_duration(final.duration)
                 final_video = final_video.set_audio(final_audio)
         except Exception:
             final_video = final_video.set_audio(final.audio)
-    
-    final_video.write_videofile(OUTPUT_NAME, fps=FPS, codec="libx264", audio_codec="aac", threads=2, preset="ultrafast", bitrate="15M", logger=None)
+
+    final_video.write_videofile(OUTPUT_NAME, fps=FPS, codec="libx264", audio_codec="aac", threads=4, preset="ultrafast", bitrate="15M", logger=None)
 
 if __name__ == "__main__":
     render_masterpiece()
