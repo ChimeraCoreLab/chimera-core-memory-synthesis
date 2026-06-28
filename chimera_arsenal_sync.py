@@ -208,7 +208,7 @@ def sync_github(logger):
         user_data = requests.get(f"https://api.github.com/users/{GITHUB_USER}", headers=GH_HEADERS).json()
         repos = requests.get(f"https://api.github.com/users/{GITHUB_USER}/repos?per_page=100&sort=updated", headers=GH_HEADERS).json()
         logger.add('G', f'PROFILE|{user_data.get("public_repos", 0)}|{sum(r.get("stargazers_count", 0) for r in repos)}|github.com/{GITHUB_USER}|STABLE_ACTIVE|PUBLIC_ENCRYPTED_READ')
-        extra_targets = ["synthesis.py", "DATA_LICENSE.md", "wav_audit.py", "artifact_audit.py", "chimera_arsenal_sync.py", "injector.py", "zip_tree_generator.py", "prism_engine.sh"]
+        extra_targets = ["synthesis.py", "DATA_LICENSE.md", "wav_audit.py", "artifact_audit.py", "chimera_arsenal_sync.py", "injector.py", "zip_tree_generator.py", "prism_engine.sh", "prompt.txt"]
         for r in repos:
             name = r['name']
             tree_items = get_gh_tree(GITHUB_USER, name, r.get('default_branch', 'main'))
