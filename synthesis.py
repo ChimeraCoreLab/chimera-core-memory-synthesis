@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 def compress_html_markup(html_str):
-    html_str = re.sub(r'<!--.*?-->', '', html_str, flags=re.DOTALL)
+    html_str = re.sub(r'\x3c!--.*?--\x3e', '', html_str, flags=re.DOTALL)
 
     lines = []
     for line in html_str.splitlines():
@@ -60,9 +60,9 @@ def perform_synthesis():
     with open(file_index, 'r', encoding='utf-8') as f:
         html_markup = f.read()
 
-    s_idx = html_markup.find(\"const RAW_LOGS = [\")
+    s_idx = html_markup.find('const RAW_LOGS = [')
     if s_idx != -1:
-        e_idx = html_markup.find(\"];\", s_idx)
+        e_idx = html_markup.find('];', s_idx)
         if e_idx != -1:
             e_idx += 2
             html_markup = html_markup[:s_idx] + final_logs_js + html_markup[e_idx:]
