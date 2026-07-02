@@ -51,7 +51,7 @@ def perform_synthesis():
 
     clean_lines = []
     for line in log_content.splitlines():
-        line_str = line.strip()
+        line_str = line.strip().strip(',')
         if line_str:
             clean_lines.append(line_str)
 
@@ -79,7 +79,7 @@ def perform_synthesis():
     logs_one_line = final_logs_js.replace('\x22', '\'')
 
     with open(file_prompt_logs, 'w', encoding='utf-8') as f:
-        f.write(prompt_one_line + '\n' + logs_one_line)
+        f.write(prompt_one_line + ' ' + logs_one_line)
 
     print(f'SYNTHESIS_SUCCESSFUL: {file_output.name} GENERATED')
     print(f'PROMPT_LOGS_SUCCESSFUL: {file_prompt_logs.name} GENERATED')
